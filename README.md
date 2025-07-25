@@ -1,16 +1,40 @@
-# React + Vite
+# ChibchaWeb - Hosting Platform Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-Primera interfaz sin botones funcionales
+Este es un proyecto frontend hecho con **React + Vite**, que simula una página para adquirir dominios y planes de hosting. Es una práctica personal basada en un diseño mockup. En el momento hay solo una interfaz sin funcionalidades.
 
 <img width="1846" height="963" alt="image" src="https://github.com/user-attachments/assets/071ca48f-4db4-46a3-84d6-b4b268d35eb3" />
+
+## 🚀 ¿Qué incluye?
+
+- Barra de navegación con logo, menú y carrito
+- Buscador de dominios
+- Footer personalizado
+- Código limpio y organizado en componentes
+- Estilos usando archivos `.css` (sin Tailwind)
+
+---
+
+## 🛠️ Requisitos previos
+
+- Tener instalado [Node.js](https://nodejs.org/)
+- Tener instalado [Git](https://git-scm.com/)
+
+---
+
+## 📦 Cómo clonar y ejecutar el proyecto
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/Rocnarx/Chibchaweb-Hosting-Platform-Frontend.git
+
+# 2. Entrar en la carpeta del proyecto
+cd Chibchaweb-Hosting-Platform-Frontend
+
+# 3. Instalar las dependencias
+npm install
+
+# 4. Ejecutar el proyecto en desarrollo
+npm run dev
+
+
+
