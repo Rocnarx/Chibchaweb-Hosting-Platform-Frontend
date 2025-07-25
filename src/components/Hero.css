@@ -1,0 +1,89 @@
+/* Hero.css */
+
+.hero-section {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #fff7f0;
+  font-family: sans-serif;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #6b3b00;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.hero-search {
+  display: flex;
+  justify-content: center;
+  gap: 16px; /* más espacio entre input y botón */
+  flex-wrap: wrap;
+}
+
+
+
+.hero-button {
+  background-color: #924600;
+  color: white;
+  border: none;
+  padding: 15px 30px;  /* más alto y más ancho */
+  border-radius: 10px;
+  font-size: 18px;     /* texto más grande */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.hero-input {
+  padding: 10px 35px 10px 15px;
+  font-size: 16px;
+  width: 280px;
+  max-width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+}
+
+.hero-button {
+  background-color: #924600;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+}
+.hero-button:hover {
+  background-color: #703700;
+}
+.input-container {
+  position: relative;
+  display: inline-block;
+  width: 280px;
+  max-width: 80%;
+}
+
+
+.clear-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #888;
+}
+
+.clear-button:hover {
+  color: #333;
+}
