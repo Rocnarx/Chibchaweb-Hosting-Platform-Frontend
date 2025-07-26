@@ -8,17 +8,20 @@ function Plans() {
   const plans = [
     {
       title: 'Todo lo que necesitas en un solo lugar',
-      description: 'Registra tu dominio y activa tu hosting sin complicaciones. No necesitas ir a ningún otro sitio web.',
+      description:
+        'Registra tu dominio y activa tu hosting sin complicaciones. No necesitas ir a ningún otro sitio web.',
       icon: iconoPrimero,
     },
     {
       title: 'Te ayudamos cuando lo necesitas',
-      description: '¿Tienes dudas? Estamos para ayudarte. Nuestro equipo de soporte está disponible para ti.',
+      description:
+        '¿Tienes dudas? Estamos para ayudarte. Nuestro equipo de soporte está disponible para ti.',
       icon: iconoSegundo,
     },
     {
       title: 'Tu sitio siempre disponible',
-      description: 'Nos encargamos de que tu página funcione sin interrupciones y esté accesible las 24 horas del día, los 7 días de la semana.',
+      description:
+        'Nos encargamos de que tu página funcione sin interrupciones y esté accesible las 24 horas del día, los 7 días de la semana.',
       icon: iconoTercero,
     },
   ];

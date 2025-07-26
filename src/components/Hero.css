@@ -28,15 +28,13 @@
   flex-wrap: wrap;
 }
 
-
-
 .hero-button {
   background-color: #924600;
   color: white;
   border: none;
-  padding: 15px 30px;  /* más alto y más ancho */
+  padding: 15px 30px; /* más alto y más ancho */
   border-radius: 10px;
-  font-size: 18px;     /* texto más grande */
+  font-size: 18px; /* texto más grande */
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -59,7 +57,6 @@
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
-
 }
 .hero-button:hover {
   background-color: #703700;
@@ -70,7 +67,6 @@
   width: 280px;
   max-width: 80%;
 }
-
 
 .clear-button {
   position: absolute;
