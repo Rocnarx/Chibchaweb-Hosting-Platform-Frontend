@@ -26,7 +26,7 @@ function Dominios() {
       <div className="buscador">
         <input
           type="text"
-          placeholder="ChibchaWeb.com.co"
+          placeholder="chibchaweb.com.co"
           value={dominio}
           onChange={e => setDominio(e.target.value)}
         />
@@ -37,10 +37,14 @@ function Dominios() {
         <>
           <div className="resultado">
             <div className="bloque no-disponible">
-              <strong>{dominio || 'chibchaweb.com.co'}</strong>
-              <p>Este dominio no está disponible</p>
-              <button disabled>Adquirir Dominio</button>
+              <div className="info-no-disponible">
+                <strong>{dominio || 'chibchaweb.com.co'}</strong>
+                <div className="precio-dominio-no-disponible">$</div>
+                <p>Este dominio no está disponible</p>
+              </div>
+              <button disabled className="boton-deshabilitado">Adquirir Dominio</button>
             </div>
+
 
             <div className="bloque hosting">
               <strong>
