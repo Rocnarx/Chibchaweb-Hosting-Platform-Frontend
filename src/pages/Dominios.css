@@ -1,11 +1,13 @@
 /* ===== Estructura general ===== */
 
 .dominios {
-  padding: 60px 5px;
-  font-family: sans-serif;
+  width: 80%;
   max-width: 1000px;
+  padding: 60px 40px;
+  font-family: sans-serif;
   margin: 0 auto;
 }
+
 
 /* ===== Buscador de dominio ===== */
 
@@ -173,4 +175,14 @@
   padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+/* Contenedor para precio + botón en alternativas */
+.precio-y-boton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.precio {
+  margin: 0px 10px;
 }

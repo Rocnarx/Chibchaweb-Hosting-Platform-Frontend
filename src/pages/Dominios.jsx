@@ -57,7 +57,7 @@ function Dominios() {
                 className={dominioDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
                 disabled={!dominioDisponible}
               >
-                Adquirir Dominio
+                Agregar al carrito
               </button>
             </div>
 
@@ -76,8 +76,10 @@ function Dominios() {
             {resultados.map((r, i) => (
               <div key={i} className="alternativa">
                 <span>{r.nombre}</span>
-                <span>${r.precio.toLocaleString()} COP</span>
-                <button>Adquirir Dominio</button>
+                <div className="precio-y-boton">
+                  <span className="precio">${r.precio.toLocaleString()} COP</span>
+                  <button>Agregar al carrito</button>
+                </div>
               </div>
             ))}
           </div>
