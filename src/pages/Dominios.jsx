@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import './Dominios.css';
-import { useLocation } from 'react-router-dom'
-
+import { useLocation } from 'react-router-dom';
 
 function Dominios() {
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const dominioBuscado = queryParams.get('nombre') || ''
-  const [dominio, setDominio] = useState(dominioBuscado)
-  const [buscado, setBuscado] = useState(dominioBuscado !== '')
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const dominioInicial = queryParams.get('nombre') || '';
+
+  const [input, setInput] = useState(dominioInicial);   // Lo que escribe el usuario
+  const [dominio, setDominio] = useState(dominioInicial); // Lo que se ha buscado
+  const [buscado, setBuscado] = useState(dominioInicial !== '');
 
   const resultados = [
     { nombre: 'chibchaweb.com', precio: 70000 },
@@ -18,8 +19,12 @@ function Dominios() {
   ];
 
   const manejarBusqueda = () => {
+    setDominio(input.trim());
     setBuscado(true);
   };
+
+  const dominioDisponible = dominio.toLowerCase() === 'chibchaweb.co';
+  const precioDominio = 10000;
 
   return (
     <main className="dominios">
@@ -27,8 +32,8 @@ function Dominios() {
         <input
           type="text"
           placeholder="chibchaweb.com.co"
-          value={dominio}
-          onChange={e => setDominio(e.target.value)}
+          value={input}
+          onChange={e => setInput(e.target.value)}
         />
         <button onClick={manejarBusqueda}>Buscar Dominio</button>
       </div>
@@ -36,15 +41,25 @@ function Dominios() {
       {buscado && (
         <>
           <div className="resultado">
-            <div className="bloque no-disponible">
-              <div className="info-no-disponible">
+            <div className="bloque resultado-dominio">
+              <div className="info-dominio">
                 <strong>{dominio || 'chibchaweb.com.co'}</strong>
-                <div className="precio-dominio-no-disponible">$</div>
-                <p>Este dominio no está disponible</p>
+                <div className="precio-dominio">
+                  {dominioDisponible ? `$${precioDominio.toLocaleString()} COP` : '$'}
+                </div>
+                <p>
+                  {dominioDisponible
+                    ? 'Este dominio está disponible'
+                    : 'Este dominio no está disponible'}
+                </p>
               </div>
-              <button disabled className="boton-deshabilitado">Adquirir Dominio</button>
+              <button
+                className={dominioDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
+                disabled={!dominioDisponible}
+              >
+                Adquirir Dominio
+              </button>
             </div>
-
 
             <div className="bloque hosting">
               <strong>
