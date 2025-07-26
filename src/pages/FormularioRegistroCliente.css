@@ -1,0 +1,119 @@
+  .registro-container {
+    display: flex;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .registro-form {
+    flex: 1;
+    padding: 3rem;
+    background-color: #f6e7dc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .registro-logo {
+    width: 180px;
+    margin-bottom: 1rem;
+  }
+
+  .subtitulo {
+    font-size: 1rem;
+    color: #6b3b00;
+    margin-bottom: 0.5rem;
+  }
+
+  .titulo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #3e1f00;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  form {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  form input {
+    padding: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid #c1a280;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  form button {
+    background-color: #6b3b00;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  form button:hover {
+    background-color: #522500;
+  }
+
+  .separador {
+    margin: 1.5rem 0;
+    font-size: 14px;
+    color: #704214;
+  }
+
+  .redes-sociales {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .social {
+    width: 40px;
+    height: 40px;
+    border: none;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .facebook {
+    background-color: #3b5998;
+    color: white;
+  }
+
+  .google {
+    background-color: white;
+    color: #333;
+    border: 1px solid #ccc;
+  }
+
+  .apple {
+    background-color: black;
+    color: white;
+  }
+
+  .login-link {
+    margin-top: 2rem;
+    font-size: 13px;
+    color: #4b2e00;
+  }
+
+  .login-link a {
+    color: #6b3b00;
+    text-decoration: underline;
+  }
+
+  .registro-imagen {
+  flex: 2;
+  max-width: 600px;
+  background-image: url("/registro-imagen.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
