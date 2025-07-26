@@ -3,6 +3,8 @@
 Este es un proyecto frontend hecho con **React + Vite**, que simula una página para adquirir dominios y planes de hosting. Es una práctica personal basada en un diseño mockup. En el momento hay solo una interfaz sin funcionalidades.
 
 <img width="1846" height="963" alt="image" src="https://github.com/user-attachments/assets/071ca48f-4db4-46a3-84d6-b4b268d35eb3" />
+<img width="1872" height="881" alt="image" src="https://github.com/user-attachments/assets/343c729a-7a7d-4b76-aeb9-15192617c337" />
+
 
 ## 🚀 ¿Qué incluye?
 
