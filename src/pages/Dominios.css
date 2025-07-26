@@ -51,6 +51,30 @@
   background: #f3e8e0;
 }
 
+.alternativas {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  max-height: 300px;       
+  overflow-y: auto;        
+  padding-right: 5px;      
+}
+
+.alternativas::-webkit-scrollbar {
+  width: 6px;
+}
+
+.alternativas::-webkit-scrollbar-thumb {
+  background-color: #924600;
+  border-radius: 3px;
+}
+
+.alternativas::-webkit-scrollbar-track {
+  background-color: #f3e8e0;
+}
+
+
 .bloque p {
   margin: 10px 0;
 }
