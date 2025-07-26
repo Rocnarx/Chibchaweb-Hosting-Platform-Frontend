@@ -6,6 +6,30 @@ body {
   background-color: #fefefe;
 }
 
+/* Estructura base para layout vertical */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  flex: 1;
+}
+
+/* El App completo ocupa todo el alto */
+body > div {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* El contenido principal crece, el footer se queda abajo */
+main {
+  flex: 1;
+}
+
 ul {
   list-style: none;
   padding: 0;
