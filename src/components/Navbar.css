@@ -87,7 +87,7 @@
 }
 
 /* Remueve el subrayado por defecto */
-.nav-link {
+.nav-link, .navbar-logo {
   text-decoration: none;
   color: inherit;
 }
@@ -96,6 +96,8 @@
 .nav-link.active {
   text-decoration: underline;
 }
+
+
 
 
 @media (max-width: 768px) {
