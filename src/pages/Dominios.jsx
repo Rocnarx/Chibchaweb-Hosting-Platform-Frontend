@@ -29,9 +29,19 @@ function Dominios() {
   const manejarBusqueda = async (valorManual = null) => {
     let nombre = (valorManual ?? input).trim().toLowerCase();
 
+
+    
     // Si termina en punto (ej. "holi.") => quitarlo
     if (nombre.endsWith('.')) {
       nombre = nombre.slice(0, -1);
+    }
+
+    // ❗ Si está vacío, mostramos un mensaje y detenemos
+    if (!nombre) {
+      setError('Por favor, escribe un nombre de dominio antes de buscar.');
+      setBuscando(false);
+      setBuscado(false);
+      return;
     }
 
     setError('');
