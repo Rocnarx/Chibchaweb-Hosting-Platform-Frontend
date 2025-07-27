@@ -50,7 +50,7 @@ function Navbar() {
           <li><NavLink to="/hosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
           <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
         </ul>
-        <button className="cart-button" onClick={handleMenuClick}>Carrito</button>
+        <NavLink to="/carrito" className="cart-button" onClick={handleMenuClick}>Carrito</NavLink>
       </div>
     </nav>
   );

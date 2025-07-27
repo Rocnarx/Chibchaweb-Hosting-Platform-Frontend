@@ -1,0 +1,94 @@
+.carrito {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: sans-serif;
+}
+
+.carrito h1 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.cantidad-items {
+  font-size: 18px;
+  font-weight: normal;
+  color: #555;
+}
+
+.carrito-contenido {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.lista-dominios {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.item-dominio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdf3ec;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e9d8c8;
+}
+
+.item-dominio .check {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #924600;
+}
+
+.item-dominio .nombre {
+  flex: 1;
+  font-weight: 600;
+}
+
+.item-dominio .precio {
+  font-weight: bold;
+}
+
+.resumen-pago {
+  flex: 1;
+  background-color: #fdf3ec;
+  border: 1px solid #e9d8c8;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.resumen-pago h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.linea {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.linea.total {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.btn-pago {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #924600;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
