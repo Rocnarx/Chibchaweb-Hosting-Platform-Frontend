@@ -86,7 +86,19 @@ function Dominios() {
         <button onClick={manejarBusqueda}>Buscar Dominio</button>
       </div>
 
-      {buscando && <p>⌛ Buscando dominio...</p>}
+{buscando && (
+  <div className="busqueda-especial">
+    <div className="spinner" />
+    <p className="texto-carga">
+      Consultando... <br />
+      <span>Buscando tu dominio perfecto</span>
+    </p>
+  </div>
+)}
+
+
+
+
       {error && (
         <div className="alerta-error">
           {error}

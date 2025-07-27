@@ -1,3 +1,16 @@
+:root {
+  --cafe: #924600;
+  --crema: #fdf3ec;
+  --crema-borde: #e8d6c1;
+  --error-fondo: #ffe5e5;
+  --error-borde: #f5c2c2;
+  --error-texto: #a94442;
+  --carga-fondo: #fff3e0;
+  --carga-borde: #896838;
+  --carga-brillo1: #c79e61;
+  --carga-brillo2: #ad8851;
+}
+
 /* ===== Estructura general ===== */
 
 .dominios {
@@ -7,7 +20,6 @@
   font-family: sans-serif;
   margin: 0 auto;
 }
-
 
 /* ===== Buscador de dominio ===== */
 
@@ -29,11 +41,79 @@
 
 .buscador button {
   padding: 10px 20px;
-  background-color: #924600;
+  background-color: var(--cafe);
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+/* ===== Alerta de error ===== */
+
+.alerta-error {
+  background-color: var(--error-fondo);
+  color: var(--error-texto);
+  border: 1px solid var(--error-borde);
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== Animación de búsqueda ===== */
+
+.busqueda-especial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: linear-gradient(135deg, var(--carga-fondo), #ffe0b2);
+  border: 2px dashed var(--carga-borde);
+  padding: 20px 30px;
+  border-radius: 12px;
+  margin: 30px auto;
+  max-width: 800px;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ffa726;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.texto-carga {
+  font-size: 18px;
+  color: #6d4c41;
+  font-weight: bold;
+  animation: floatText 1.5s ease-in-out infinite;
+  text-align: center;
+}
+
+/* Animaciones */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floatText {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px var(--carga-brillo1); }
+  to   { box-shadow: 0 0 20px var(--carga-brillo2); }
 }
 
 /* ===== Resultado principal (disponible / no disponible) ===== */
@@ -46,7 +126,7 @@
 }
 
 .resultado-dominio {
-  background: #fdf8f5;
+  background: var(--crema);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -55,6 +135,7 @@
   border-radius: 15px;
   flex: 1;
   min-width: 280px;
+  border: 1px solid var(--crema-borde);
 }
 
 .info-dominio {
@@ -68,15 +149,23 @@
   color: #333;
 }
 
-/* ===== Botones principales ===== */
+/* ===== Botones ===== */
 
-.boton-adquirir {
-  background-color: #924600;
+.boton-adquirir,
+.bloque.hosting button,
+.alternativa button {
+  background-color: var(--cafe);
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
+}
+
+.bloque.hosting button {
+  display: block;
+  margin: 0 auto;
 }
 
 .boton-deshabilitado {
@@ -93,45 +182,14 @@
 .bloque {
   flex: 1;
   min-width: 280px;
-  background: #f8f1eb;
+  background: var(--crema);
   padding: 20px;
   border-radius: 10px;
+  border: 1px solid var(--crema-borde);
 }
 
 .bloque p {
   margin: 10px 0;
-}
-
-.bloque.hosting button {
-  background-color: #924600;
-  color: white;
-  display: block;
-  margin: 0 auto;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* ===== No disponible (bloque anterior) ===== */
-
-.no-disponible {
-  background: #f3e8e0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
-
-.info-no-disponible {
-  display: flex;
-  flex-direction: column;
-}
-
-.precio-dominio-no-disponible {
-  font-size: 18px;
-  color: #444;
-  margin: 8px 0;
 }
 
 /* ===== Alternativas con scroll ===== */
@@ -150,7 +208,7 @@
 }
 
 .alternativas::-webkit-scrollbar-thumb {
-  background-color: #924600;
+  background-color: var(--cafe);
   border-radius: 3px;
 }
 
@@ -168,35 +226,14 @@
   background-color: #fff;
 }
 
-.alternativa button {
-  background-color: #924600;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
+/* ===== Precio + botón en una fila ===== */
 
-/* Contenedor para precio + botón en alternativas */
 .precio-y-boton {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .precio {
   margin: 0px 10px;
-}
-
-.alerta-error {
-  background-color: #ffe5e5;
-  color: #a94442;
-  border: 1px solid #f5c2c2;
-  padding: 12px 20px;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  font-weight: bold;
-  text-align: center;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
 }
