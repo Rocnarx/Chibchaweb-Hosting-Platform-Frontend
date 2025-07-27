@@ -35,13 +35,7 @@ function Dominios() {
       console.log("Respuesta del backend:", data);
 
       const nombreBuscado = input.trim().toLowerCase();
-
-      // Detectar si el nombre ya incluye una extensión conocida
-      const tieneExtension = nombreBuscado.includes('.') && EXTENSIONS.some(ext => nombreBuscado.endsWith(`.${ext}`));
-
-      // Si ya tiene extensión, usarlo como está. Si no, agregar .com
-      const dominioPrincipal = tieneExtension ? nombreBuscado : `${nombreBuscado}.com`;
-
+      const dominioPrincipal = `${nombreBuscado}.com`;
 
       const estadoPrincipal = data.alternativas.find(d => d.domain === dominioPrincipal);
       setPrincipalDisponible(estadoPrincipal && estadoPrincipal.registered === false);
