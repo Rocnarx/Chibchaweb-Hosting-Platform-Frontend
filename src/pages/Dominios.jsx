@@ -29,14 +29,10 @@ function Dominios() {
   const manejarBusqueda = async (valorManual = null) => {
     let nombre = (valorManual ?? input).trim().toLowerCase();
 
-
-    
-    // Si termina en punto (ej. "holi.") => quitarlo
     if (nombre.endsWith('.')) {
       nombre = nombre.slice(0, -1);
     }
 
-    // ❗ Si está vacío, mostramos un mensaje y detenemos
     if (!nombre) {
       setError('Por favor, escribe un nombre de dominio antes de buscar.');
       setBuscando(false);
@@ -60,15 +56,19 @@ function Dominios() {
 
     try {
       const response = await fetch(
-        `https://fastapi-app-production-d0f4.up.railway.app/Dominios`,
+        `${import.meta.env.VITE_API_URL}/DominiosDisponible`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY
           },
-          body: JSON.stringify({ domain: nombre.includes('.') ? nombre.split('.')[0] : nombre }),
+          body: JSON.stringify({
+            domain: nombre.includes('.') ? nombre.split('.')[0] : nombre
+          })
         }
       );
+
 
       const data = await response.json();
 
