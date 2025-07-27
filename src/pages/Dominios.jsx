@@ -19,7 +19,13 @@ function Dominios() {
   const EXTENSIONS = ["com", "net", "org", "co", "io", "app", "info", "dev", "online", "store"];
 
   const manejarBusqueda = async () => {
-    const nombre = input.trim().toLowerCase();
+    let nombre = input.trim().toLowerCase();
+
+    // Si termina en punto (ej. "facebook."), se lo quitamos
+    if (nombre.endsWith('.')) {
+      nombre = nombre.slice(0, -1);
+    }
+
     if (!nombre) return;
 
     setBuscado(false);
