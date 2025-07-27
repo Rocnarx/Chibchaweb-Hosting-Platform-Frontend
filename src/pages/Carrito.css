@@ -1,33 +1,37 @@
 .carrito {
-  max-width: 1100px;
+  width: 80%;
+  max-width: 1000px;
+  padding: 60px 40px;
   margin: 0 auto;
-  padding: 40px 20px;
-  font-family: sans-serif;
 }
 
 .carrito h1 {
   font-size: 32px;
   font-weight: 600;
-  margin-bottom: 30px;
+  margin-bottom: 36px; /* más separación del contenido */
 }
 
 .cantidad-items {
   font-size: 18px;
   font-weight: normal;
   color: #555;
+  margin-left: 10px;
 }
 
 .carrito-contenido {
   display: flex;
-  gap: 40px;
+  gap: 48px;
   flex-wrap: wrap;
+  align-items: flex-start;
 }
+
+/* DOMINIOS */
 
 .lista-dominios {
   flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px; /* más separación entre ítems */
 }
 
 .item-dominio {
@@ -35,55 +39,61 @@
   align-items: center;
   justify-content: space-between;
   background-color: #fdf3ec;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 24px 28px; /* más espacio interno */
+  border-radius: 14px;
   border: 1px solid #e9d8c8;
 }
 
 .item-dominio .check {
-  font-size: 20px;
-  margin-right: 10px;
+  font-size: 22px;
+  margin-right: 16px;
   color: #924600;
 }
 
 .item-dominio .nombre {
   flex: 1;
   font-weight: 600;
+  font-size: 16px;
 }
 
 .item-dominio .precio {
   font-weight: bold;
+  font-size: 16px;
 }
+
+/* RESUMEN */
 
 .resumen-pago {
   flex: 1;
   background-color: #fdf3ec;
   border: 1px solid #e9d8c8;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 24px;
+  border-radius: 14px;
+  min-width: 260px;
 }
 
 .resumen-pago h2 {
   font-size: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .linea {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 15px;
 }
 
 .linea.total {
   font-weight: bold;
   font-size: 16px;
+  margin-top: 16px;
 }
 
 .btn-pago {
-  margin-top: 20px;
+  margin-top: 28px;
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   background-color: #924600;
   color: white;
   border: none;
@@ -92,6 +102,8 @@
   font-size: 16px;
   cursor: pointer;
 }
+
+/* BOTÓN DE NAVBAR */
 
 .cart-button {
   background-color: #924600;
@@ -109,4 +121,12 @@
 .cart-button.active {
   box-shadow: 0 0 0 2px #92460044;
   outline: 2px solid #92460088;
+text-decoration: underline;
+}
+
+.linea-separadora {
+  height: 1px;
+  background-color: #ddd; /* un gris claro, puedes ajustar */
+  margin: 10px 0 32px; /* espacio arriba y abajo */
+  width: 100%;
 }

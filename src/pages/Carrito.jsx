@@ -5,6 +5,7 @@ function Carrito() {
     { dominio: 'chibchaweb.com', precio: 70000 },
     { dominio: 'chibchaweb.online', precio: 7000 },
     { dominio: 'chibchaweb.xyz', precio: 3000 },
+    
   ];
 
   const subtotal = items.reduce((acc, item) => acc + item.precio, 0);
@@ -14,6 +15,8 @@ function Carrito() {
   return (
     <main className="carrito">
       <h1>Carrito <span className="cantidad-items">{items.length} items</span></h1>
+      <div className="linea-separadora" />
+
 
       <div className="carrito-contenido">
         <div className="lista-dominios">
