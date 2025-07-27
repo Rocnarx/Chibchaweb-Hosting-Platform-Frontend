@@ -130,3 +130,32 @@ text-decoration: underline;
   margin: 10px 0 32px; /* espacio arriba y abajo */
   width: 100%;
 }
+
+.lista-dominios {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 8px; /* margen para el scroll */
+
+  /* estética suave */
+  scrollbar-width: thin;
+  scrollbar-color: #cba27e #fdf3ec; /* thumb y track */
+}
+
+/* Para navegadores basados en WebKit (Chrome, Edge, Safari) */
+.lista-dominios::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lista-dominios::-webkit-scrollbar-thumb {
+  background-color: #cba27e;
+  border-radius: 6px;
+}
+
+.lista-dominios::-webkit-scrollbar-track {
+  background-color: #fdf3ec;
+  border-radius: 6px;
+}

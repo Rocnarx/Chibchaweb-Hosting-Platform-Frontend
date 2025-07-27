@@ -195,25 +195,31 @@
 /* ===== Alternativas con scroll ===== */
 
 .alternativas {
+  flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-height: 300px;
+  gap: 24px;
+  max-height: 400px;
   overflow-y: auto;
-  padding-right: 5px;
+  padding-right: 8px; /* margen para el scroll */
+
+  /* estética suave */
+  scrollbar-width: thin;
+  scrollbar-color: #cba27e #fdf3ec; /* thumb y track */
 }
 
 .alternativas::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .alternativas::-webkit-scrollbar-thumb {
-  background-color: var(--cafe);
-  border-radius: 3px;
+  background-color: #cba27e;
+  border-radius: 6px;
 }
 
 .alternativas::-webkit-scrollbar-track {
-  background-color: #f3e8e0;
+  background-color: #fdf3ec;
+  border-radius: 6px;
 }
 
 .alternativa {
