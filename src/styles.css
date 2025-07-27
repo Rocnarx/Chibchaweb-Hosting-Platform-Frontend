@@ -61,3 +61,19 @@ button {
     align-items: flex-start;
   }
 }
+
+button,
+.boton-registro,
+.hero-button,
+.plan-button,
+.cart-button {
+  transition: background-color 0.3s ease;
+}
+
+button:hover,
+.boton-registro:hover,
+.hero-button:hover,
+.plan-button:hover,
+.cart-button:hover {
+  filter: brightness(0.9);
+}
