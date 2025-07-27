@@ -7,31 +7,67 @@ function Dominios() {
   const queryParams = new URLSearchParams(location.search);
   const dominioInicial = queryParams.get('nombre') || '';
 
-  const [input, setInput] = useState(dominioInicial);   // Lo que escribe el usuario
-  const [dominio, setDominio] = useState(dominioInicial); // Lo que se ha buscado
+  const [input, setInput] = useState(dominioInicial);
+  const [dominio, setDominio] = useState(dominioInicial);
   const [buscado, setBuscado] = useState(dominioInicial !== '');
+  const [resultados, setResultados] = useState([]);
+  const [principalDisponible, setPrincipalDisponible] = useState(false);
 
-  const resultados = [
-    { nombre: 'chibchaweb.com', precio: 70000 },
-    { nombre: 'chibchaweb.co', precio: 7000 },
-    { nombre: 'chibchaweb.net', precio: 3000 },
-    { nombre: 'chibchaweb.org', precio: 10000 },
-  ];
-
-  const manejarBusqueda = () => {
-    setDominio(input.trim());
-    setBuscado(true);
-  };
-
-  const dominioDisponible = dominio.toLowerCase() === 'chibchaweb.co';
   const precioDominio = 10000;
+
+  const manejarBusqueda = async () => {
+    if (!input.trim()) return;
+
+    setBuscado(false);
+    try {
+      const response = await fetch(
+        `https://fastapi-app-production-d0f4.up.railway.app/Dominios`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ domain: input.trim().toLowerCase() }),
+        }
+      );
+
+      const data = await response.json();
+      console.log("Respuesta del backend:", data);
+
+      const nombreBuscado = input.trim().toLowerCase();
+
+      // Detectar si el nombre ya incluye una extensión conocida
+      const tieneExtension = nombreBuscado.includes('.') && EXTENSIONS.some(ext => nombreBuscado.endsWith(`.${ext}`));
+
+      // Si ya tiene extensión, usarlo como está. Si no, agregar .com
+      const dominioPrincipal = tieneExtension ? nombreBuscado : `${nombreBuscado}.com`;
+
+
+      const estadoPrincipal = data.alternativas.find(d => d.domain === dominioPrincipal);
+      setPrincipalDisponible(estadoPrincipal && estadoPrincipal.registered === false);
+
+      const disponibles = data.alternativas.filter((d) => d.registered === false);
+      const conPrecios = disponibles.map((dom) => ({
+        nombre: dom.domain,
+        precio: precioDominio,
+      }));
+
+      setDominio(nombreBuscado);
+      setResultados(conPrecios);
+      setBuscado(true);
+    } catch (error) {
+      console.error("Error al consultar dominios:", error);
+      setResultados([]);
+      setBuscado(true);
+    }
+  };
 
   return (
     <main className="dominios">
       <div className="buscador">
         <input
           type="text"
-          placeholder="chibchaweb.com.co"
+          placeholder="chibchaweb"
           value={input}
           onChange={e => setInput(e.target.value)}
         />
@@ -43,19 +79,19 @@ function Dominios() {
           <div className="resultado">
             <div className="bloque resultado-dominio">
               <div className="info-dominio">
-                <strong>{dominio || 'chibchaweb.com.co'}</strong>
+                <strong>{dominio}.com</strong>
                 <div className="precio-dominio">
-                  {dominioDisponible ? `$${precioDominio.toLocaleString()} COP` : '$'}
+                  {principalDisponible ? `$${precioDominio.toLocaleString()} COP` : '$'}
                 </div>
                 <p>
-                  {dominioDisponible
+                  {principalDisponible
                     ? 'Este dominio está disponible'
                     : 'Este dominio no está disponible'}
                 </p>
               </div>
               <button
-                className={dominioDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
-                disabled={!dominioDisponible}
+                className={principalDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
+                disabled={!principalDisponible}
               >
                 Agregar al carrito
               </button>
