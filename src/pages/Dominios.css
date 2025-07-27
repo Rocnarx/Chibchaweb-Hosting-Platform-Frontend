@@ -186,3 +186,17 @@
 .precio {
   margin: 0px 10px;
 }
+
+.alerta-error {
+  background-color: #ffe5e5;
+  color: #a94442;
+  border: 1px solid #f5c2c2;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}

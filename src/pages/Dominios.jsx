@@ -9,34 +9,50 @@ function Dominios() {
 
   const [input, setInput] = useState(dominioInicial);
   const [dominio, setDominio] = useState(dominioInicial);
+  const [buscando, setBuscando] = useState(false);
   const [buscado, setBuscado] = useState(dominioInicial !== '');
   const [resultados, setResultados] = useState([]);
   const [principalDisponible, setPrincipalDisponible] = useState(false);
+  const [error, setError] = useState('');
 
   const precioDominio = 10000;
+  const EXTENSIONS = ["com", "net", "org", "co", "io", "app", "info", "dev", "online", "store"];
 
   const manejarBusqueda = async () => {
-    if (!input.trim()) return;
+    const nombre = input.trim().toLowerCase();
+    if (!nombre) return;
 
     setBuscado(false);
+    setBuscando(true);
+    setError('');
+    setResultados([]);
+    setPrincipalDisponible(false);
+
+    // Detectar si tiene extensión
+    const tieneExtension = nombre.includes('.') && EXTENSIONS.some(ext => nombre.endsWith(`.${ext}`));
+
+    if (nombre.includes('.') && !tieneExtension) {
+      setError('La extensión del dominio no es válida.');
+      setBuscando(false);
+      return;
+    }
+
     try {
       const response = await fetch(
-        `https://corsproxy.io/?https://fastapi-app-production-d0f4.up.railway.app/Dominios`,
+        `https://fastapi-app-production-d0f4.up.railway.app/Dominios`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ domain: input.trim().toLowerCase() }),
+          body: JSON.stringify({ domain: nombre.includes('.') ? nombre.split('.')[0] : nombre }),
         }
       );
 
       const data = await response.json();
       console.log("Respuesta del backend:", data);
 
-      const nombreBuscado = input.trim().toLowerCase();
-      const dominioPrincipal = `${nombreBuscado}.com`;
-
+      const dominioPrincipal = tieneExtension ? nombre : `${nombre}.com`;
       const estadoPrincipal = data.alternativas.find(d => d.domain === dominioPrincipal);
       setPrincipalDisponible(estadoPrincipal && estadoPrincipal.registered === false);
 
@@ -46,12 +62,14 @@ function Dominios() {
         precio: precioDominio,
       }));
 
-      setDominio(nombreBuscado);
+      setDominio(nombre);
       setResultados(conPrecios);
+      setBuscando(false);
       setBuscado(true);
     } catch (error) {
       console.error("Error al consultar dominios:", error);
-      setResultados([]);
+      setError('Ocurrió un error al consultar los dominios.');
+      setBuscando(false);
       setBuscado(true);
     }
   };
@@ -68,12 +86,20 @@ function Dominios() {
         <button onClick={manejarBusqueda}>Buscar Dominio</button>
       </div>
 
-      {buscado && (
+      {buscando && <p>⌛ Buscando dominio...</p>}
+      {error && (
+        <div className="alerta-error">
+          {error}
+        </div>
+      )}
+
+
+      {buscado && !buscando && !error && (
         <>
           <div className="resultado">
             <div className="bloque resultado-dominio">
               <div className="info-dominio">
-                <strong>{dominio}.com</strong>
+                <strong>{dominio.includes('.') ? dominio : `${dominio}.com`}</strong>
                 <div className="precio-dominio">
                   {principalDisponible ? `$${precioDominio.toLocaleString()} COP` : '$'}
                 </div>
