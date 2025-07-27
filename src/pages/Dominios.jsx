@@ -21,7 +21,7 @@ function Dominios() {
     setBuscado(false);
     try {
       const response = await fetch(
-        `https://fastapi-app-production-d0f4.up.railway.app/Dominios`,
+        `https://corsproxy.io/?https://fastapi-app-production-d0f4.up.railway.app/Dominios`,
         {
           method: "POST",
           headers: {
