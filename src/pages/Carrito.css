@@ -92,3 +92,21 @@
   font-size: 16px;
   cursor: pointer;
 }
+
+.cart-button {
+  background-color: #924600;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.cart-button:hover {
+  background-color: #7a3900;
+}
+
+.cart-button.active {
+  box-shadow: 0 0 0 2px #92460044;
+  outline: 2px solid #92460088;
+}

@@ -50,7 +50,18 @@ function Navbar() {
           <li><NavLink to="/hosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
           <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
         </ul>
-        <NavLink to="/carrito" className="cart-button" onClick={handleMenuClick}>Carrito</NavLink>
+<NavLink
+  to="/carrito"
+  className={({ isActive }) =>
+    `cart-button${isActive ? ' active' : ''}`
+  }
+  onClick={handleMenuClick}
+>
+  Carrito
+</NavLink>
+
+
+
       </div>
     </nav>
   );
