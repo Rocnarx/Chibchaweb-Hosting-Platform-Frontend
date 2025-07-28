@@ -1,6 +1,6 @@
-import Hero from '../components/Hero';
-import Plans from '../components/Plans';
-import Footer from '../components/Footer';
+import Hero from '../Components/Hero';
+import Plans from '../Components/Plans';
+import Footer from '../Components/Footer';
 
 function Home() {
   return (
