@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import './Dominios.css';
 import { useLocation } from 'react-router-dom';
+import { useUser } from "../Context/UserContext";
+
 
 function Dominios() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const dominioInicial = queryParams.get('nombre') || '';
+  const { usuario } = useUser();
+  
 
   const [input, setInput] = useState(dominioInicial);
   const [dominio, setDominio] = useState('');
@@ -94,32 +98,38 @@ function Dominios() {
   };
 
   const agregarAlCarrito = async (dom) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/agregarDominio`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Chibcha-api-key': import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify({
-          iddominio: dom.id,
-          nombrepagina: dom.nombre,
-          preciodominio: dom.precio,
-          ocupado: false
-        })
-      });
+  if (!usuario || !usuario.identificacion) {
+    alert("Debes iniciar sesión para agregar dominios al carrito.");
+    return;
+  }
 
-      if (response.ok) {
-        alert(`Dominio ${dom.nombre} agregado al carrito.`);
-      } else {
-        console.error("Error al agregar dominio:", await response.text());
-        alert("No se pudo agregar el dominio.");
-      }
-    } catch (err) {
-      console.error("Error de red:", err);
-      alert("Error al conectar con la API.");
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/agregarDominio`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Chibcha-api-key': import.meta.env.VITE_API_KEY
+      },
+      body: JSON.stringify({
+        iddominio: dom.id,
+        nombrepagina: dom.nombre,
+        preciodominio: dom.precio,
+        ocupado: false,
+        identificacion: usuario.identificacion 
+      })
+    });
+
+    if (response.ok) {
+      alert(`Dominio ${dom.nombre} agregado al carrito.`);
+    } else {
+      console.error("Error al agregar dominio:", await response.text());
+      alert("No se pudo agregar el dominio.");
     }
-  };
+  } catch (err) {
+    console.error("Error de red:", err);
+    alert("Error al conectar con la API.");
+  }
+};
 
   return (
     <main className="dominios">
