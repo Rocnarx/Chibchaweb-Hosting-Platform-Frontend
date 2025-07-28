@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
-import logo from "../components/resources/logo.png";
+import logo from "../Components/resources/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext"; // Si estás usando contexto
 
