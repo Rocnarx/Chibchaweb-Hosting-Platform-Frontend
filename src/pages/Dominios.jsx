@@ -105,7 +105,7 @@ function Dominios() {
           iddominio: dom.id,
           nombrepagina: dom.nombre,
           preciodominio: dom.precio,
-          ocupado: true
+          ocupado: false
         })
       });
 
