@@ -1,12 +1,44 @@
 import './Carrito.css';
+import { useEffect, useState } from 'react';
+import { useUser } from '../Context/UserContext';
 
 function Carrito() {
-  const items = [
-    { dominio: 'chibchaweb.com', precio: 70000 },
-    { dominio: 'chibchaweb.online', precio: 7000 },
-    { dominio: 'chibchaweb.xyz', precio: 3000 },
-    
-  ];
+  const { usuario } = useUser();
+  const [items, setItems] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const cargarCarrito = async () => {
+      if (!usuario || !usuario.idcuenta) return;
+
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`, {
+          headers: {
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY
+          }
+        });
+
+        if (!res.ok) throw new Error("No se pudo obtener el carrito");
+
+        const datos = await res.json();
+
+        const dominios = datos.map(d => ({
+          nombre: d.dominio,
+          precio: d.precio
+        }));
+
+        setItems(dominios);
+      } catch (err) {
+        console.error("Error al cargar el carrito:", err);
+        setError("No se pudo cargar el carrito.");
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarCarrito();
+  }, [usuario]);
 
   const subtotal = items.reduce((acc, item) => acc + item.precio, 0);
   const impuestos = Math.round(subtotal * 0.19);
@@ -17,38 +49,43 @@ function Carrito() {
       <h1>Carrito <span className="cantidad-items">{items.length} items</span></h1>
       <div className="linea-separadora" />
 
+      {cargando ? (
+        <p>Cargando carrito...</p>
+      ) : error ? (
+        <p className="mensaje-error">{error}</p>
+      ) : (
+        <div className="carrito-contenido">
+          <div className="lista-dominios">
+            {items.map((item, i) => (
+              <div key={i} className="item-dominio">
+                <span className="check">✔</span>
+                <span className="nombre">{item.nombre}</span>
+                <span className="precio">${item.precio.toLocaleString()} COP</span>
+              </div>
+            ))}
+          </div>
 
-      <div className="carrito-contenido">
-        <div className="lista-dominios">
-          {items.map((item, i) => (
-            <div key={i} className="item-dominio">
-              <span className="check">✔</span>
-              <span className="nombre">{item.dominio}</span>
-              <span className="precio">${item.precio.toLocaleString()} COP</span>
+          <div className="resumen-pago">
+            <h2>Resumen de orden</h2>
+            <div className="linea">
+              <span>Subtotal</span>
+              <span>${subtotal.toLocaleString()} COP</span>
             </div>
-          ))}
+            <div className="linea">
+              <span>Impuestos</span>
+              <span>${impuestos.toLocaleString()} COP</span>
+            </div>
+            <hr />
+            <div className="linea total">
+              <span>Total</span>
+              <span>${total.toLocaleString()} COP</span>
+            </div>
+            <button className="btn-pago">
+              Realizar el pago →
+            </button>
+          </div>
         </div>
-
-        <div className="resumen-pago">
-          <h2>Order summary</h2>
-          <div className="linea">
-            <span>Subtotal</span>
-            <span>${subtotal.toLocaleString()} COP</span>
-          </div>
-          <div className="linea">
-            <span>Impuestos</span>
-            <span>${impuestos.toLocaleString()} COP</span>
-          </div>
-          <hr />
-          <div className="linea total">
-            <span>Total</span>
-            <span>${total.toLocaleString()} COP</span>
-          </div>
-          <button className="btn-pago">
-            Realizar el pago →
-          </button>
-        </div>
-      </div>
+      )}
     </main>
   );
 }
