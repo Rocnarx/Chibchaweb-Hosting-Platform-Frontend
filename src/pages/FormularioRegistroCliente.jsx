@@ -29,59 +29,97 @@ export default function FormularioRegistro() {
     return null;
   };
 
-  const manejarSubmit = async (e) => {
-    e.preventDefault();
-    setMensaje("");
+const manejarSubmit = async (e) => {
+  e.preventDefault();
+  setMensaje("");
 
-    const error = validar();
-    if (error) {
-      setMensaje(error);
+  const error = validar();
+  if (error) {
+    setMensaje(error);
+    return;
+  }
+
+  const datos = {
+    identificacion: form.identificacion,
+    nombrecuenta: form.nombreCuenta,
+    correo: form.correo,
+    telefono: form.telefono ? parseInt(form.telefono) : undefined,
+    direccion: form.direccion,
+    idtipocuenta: 1,
+    idpais: parseInt(form.idpais),
+    idplan: "0",
+    password: form.contrasenaCuenta
+  };
+
+  try {
+    // 1. Registrar la cuenta
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Chibcha-api-key": import.meta.env.VITE_API_KEY
+      },
+      body: JSON.stringify(datos)
+    });
+
+    if (!res.ok) {
+      const texto = await res.text();
+      setMensaje(`❌ Error: ${texto}`);
       return;
     }
 
-    const datos = {
-      identificacion: form.identificacion,
-      nombrecuenta: form.nombreCuenta,
-      correo: form.correo,
-      telefono: form.telefono ? parseInt(form.telefono) : undefined,
-      direccion: form.direccion,
-      idtipocuenta: 1,     // fijo como cliente
-      idpais: parseInt(form.idpais),
-      idplan: "0",           // fijo como plan intermedio
-      password: form.contrasenaCuenta
-    };
+    // 2. Login automático para obtener idcuenta
+    const loginRes = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Chibcha-api-key": import.meta.env.VITE_API_KEY
+      },
+      body: JSON.stringify({
+        identificacion: form.identificacion,
+        password: form.contrasenaCuenta
+      })
+    });
 
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify(datos)
-      });
-
-      if (res.ok) {
-        setMensaje("✅ ¡Cuenta registrada con éxito!");
-        setForm({
-          nombreCuenta: "",
-          identificacion: "",
-          direccion: "",
-          correo: "",
-          telefono: "",
-          idCredencialCuenta: "",
-          contrasenaCuenta: "",
-          idpais: "170"
-        });
-      } else {
-        const texto = await res.text();
-        setMensaje(`❌ Error: ${texto}`);
-      }
-    } catch (err) {
-      console.error("Error de red:", err);
-      setMensaje("❌ Error de red al registrar la cuenta.");
+    if (!loginRes.ok) {
+      setMensaje("✅ Cuenta creada, pero no se pudo iniciar sesión automáticamente.");
+      return;
     }
-  };
+
+    const usuario = await loginRes.json();
+
+    // 3. Crear el carrito
+    await fetch(`${import.meta.env.VITE_API_URL}/agregarCarrito`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Chibcha-api-key": import.meta.env.VITE_API_KEY
+      },
+      body: JSON.stringify({
+        idestadocarrito: "0",
+        idcuenta: usuario.idcuenta,
+        idmetodopagocuenta: "1"
+      })
+    });
+
+    setMensaje("✅ Cuenta registrada y carrito creado con éxito.");
+    setForm({
+      nombreCuenta: "",
+      identificacion: "",
+      direccion: "",
+      correo: "",
+      telefono: "",
+      idCredencialCuenta: "",
+      contrasenaCuenta: "",
+      idpais: "170"
+    });
+
+  } catch (err) {
+    console.error("Error de red:", err);
+    setMensaje("❌ Error de red al registrar la cuenta.");
+  }
+};
+
 
   return (
     <div className="registro-container">
