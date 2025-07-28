@@ -121,7 +121,10 @@ export default function FormularioRegistro() {
         {mensaje && <p className="mensaje-estado">{mensaje}</p>}
 
         <p className="login-link">
-          ¿Ya tienes una cuenta? <a href="#">Inicia sesión</a>
+          ¿Ya tienes una cuenta?{" "}
+          <a href="#" onClick={e => { e.preventDefault(); window.location.href = "/login"; }}>
+            Inicia sesión
+          </a>
         </p>
       </div>
 
