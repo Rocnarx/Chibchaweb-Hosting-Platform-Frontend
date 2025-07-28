@@ -47,7 +47,7 @@ export default function FormularioRegistro() {
       direccion: form.direccion,
       idtipocuenta: 1,     // fijo como cliente
       idpais: parseInt(form.idpais),
-      idplan: 1,           // fijo como plan intermedio
+      idplan: "0",           // fijo como plan intermedio
       password: form.contrasenaCuenta
     };
 
