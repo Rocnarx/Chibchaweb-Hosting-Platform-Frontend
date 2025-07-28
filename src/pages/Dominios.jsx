@@ -69,7 +69,6 @@ function Dominios() {
         }
       );
 
-
       const data = await response.json();
 
       const dominioPrincipal = tieneExtension ? nombre : `${nombre}.com`;
@@ -78,6 +77,7 @@ function Dominios() {
 
       const disponibles = data.alternativas.filter((d) => d.registered === false);
       const conPrecios = disponibles.map((dom) => ({
+        id: dom.domain, // usaremos el nombre como ID simplificada
         nombre: dom.domain,
         precio: precioDominio,
       }));
@@ -90,6 +90,34 @@ function Dominios() {
     } finally {
       setBuscando(false);
       setBuscado(true);
+    }
+  };
+
+  const agregarAlCarrito = async (dom) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/agregarDominio`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Chibcha-api-key': import.meta.env.VITE_API_KEY
+        },
+        body: JSON.stringify({
+          iddominio: dom.id,
+          nombrepagina: dom.nombre,
+          preciodominio: dom.precio,
+          ocupado: true
+        })
+      });
+
+      if (response.ok) {
+        alert(`Dominio ${dom.nombre} agregado al carrito.`);
+      } else {
+        console.error("Error al agregar dominio:", await response.text());
+        alert("No se pudo agregar el dominio.");
+      }
+    } catch (err) {
+      console.error("Error de red:", err);
+      alert("Error al conectar con la API.");
     }
   };
 
@@ -139,6 +167,11 @@ function Dominios() {
               <button
                 className={principalDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
                 disabled={!principalDisponible}
+                onClick={() => principalDisponible && agregarAlCarrito({
+                  id: dominio.includes('.') ? dominio : `${dominio}.com`,
+                  nombre: dominio.includes('.') ? dominio : `${dominio}.com`,
+                  precio: precioDominio
+                })}
               >
                 Agregar al carrito
               </button>
@@ -165,7 +198,9 @@ function Dominios() {
                   <span>{r.nombre}</span>
                   <div className="precio-y-boton">
                     <span className="precio">${r.precio.toLocaleString()} COP</span>
-                    <button>Agregar al carrito</button>
+                    <button onClick={() => agregarAlCarrito(r)}>
+                      Agregar al carrito
+                    </button>
                   </div>
                 </div>
               ))
