@@ -14,15 +14,29 @@ function Carrito() {
       if (!usuario || !usuario.idcuenta) return;
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`, {
-          headers: {
-            "Chibcha-api-key": import.meta.env.VITE_API_KEY
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`,
+          {
+            headers: {
+              "Chibcha-api-key": import.meta.env.VITE_API_KEY
+            }
           }
-        });
-
-        if (!res.ok) throw new Error("No se pudo obtener el carrito");
+        );
 
         const datos = await res.json();
+
+        if (!res.ok) {
+          // Si vino un mensaje tipo { detail: "algo" }, mostrar carrito vacío
+          if (datos.detail && datos.detail.includes("No se encontraron dominios")) {
+            setItems([]); // carrito vacío
+            return;
+          }
+          throw new Error("No se pudo obtener el carrito");
+        }
+
+        if (!Array.isArray(datos)) {
+          throw new Error("Respuesta inesperada del servidor");
+        }
 
         const dominios = datos.map(d => ({
           nombre: d.dominio,
@@ -30,6 +44,7 @@ function Carrito() {
         }));
 
         setItems(dominios);
+        setError(""); // Limpia cualquier error anterior
       } catch (err) {
         console.error("Error al cargar el carrito:", err);
         setError("No se pudo cargar el carrito.");
@@ -37,6 +52,7 @@ function Carrito() {
         setCargando(false);
       }
     };
+
 
     cargarCarrito();
   }, [usuario]);
