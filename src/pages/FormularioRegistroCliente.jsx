@@ -53,7 +53,7 @@ const manejarSubmit = async (e) => {
 
   try {
     // 1. Registrar la cuenta
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,41 +67,6 @@ const manejarSubmit = async (e) => {
       setMensaje(`❌ Error: ${texto}`);
       return;
     }
-
-    // 2. Login automático para obtener idcuenta
-    const loginRes = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Chibcha-api-key": import.meta.env.VITE_API_KEY
-      },
-      body: JSON.stringify({
-        identificacion: form.identificacion,
-        password: form.contrasenaCuenta
-      })
-    });
-
-    if (!loginRes.ok) {
-      setMensaje("✅ Cuenta creada, pero no se pudo iniciar sesión automáticamente.");
-      return;
-    }
-
-    const usuario = await loginRes.json();
-
-    // 3. Crear el carrito
-    await fetch(`${import.meta.env.VITE_API_URL}/agregarCarrito`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Chibcha-api-key": import.meta.env.VITE_API_KEY
-      },
-      body: JSON.stringify({
-        idestadocarrito: "0",
-        idcuenta: usuario.idcuenta,
-        idmetodopagocuenta: "1"
-      })
-    });
-
     setMensaje("✅ Cuenta registrada y carrito creado con éxito.");
     setForm({
       nombreCuenta: "",

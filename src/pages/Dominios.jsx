@@ -97,13 +97,14 @@ function Dominios() {
     }
   };
 
-  const agregarAlCarrito = async (dom) => {
-  if (!usuario || !usuario.identificacion) {
+const agregarAlCarrito = async (dom) => {
+  if (!usuario || !usuario.identificacion || !usuario.idcuenta) {
     alert("Debes iniciar sesión para agregar dominios al carrito.");
     return;
   }
 
   try {
+    // 1. Registrar el dominio
     const response = await fetch(`${import.meta.env.VITE_API_URL}/agregarDominio`, {
       method: 'POST',
       headers: {
@@ -119,12 +120,30 @@ function Dominios() {
       })
     });
 
-    if (response.ok) {
-      alert(`Dominio ${dom.nombre} agregado al carrito.`);
-    } else {
+    if (!response.ok) {
       console.error("Error al agregar dominio:", await response.text());
       alert("No se pudo agregar el dominio.");
+      return;
     }
+
+    // 2. Agregar a carrito existente
+await fetch(`${import.meta.env.VITE_API_URL}/dominios/agregar-a-carrito-existente`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Chibcha-api-key': import.meta.env.VITE_API_KEY
+      },
+      body: JSON.stringify({
+        iddominio: dom.id,
+        idcuenta: usuario.idcuenta,
+      })
+    });
+
+    console.log('🟡 ID Dominio:', dom.id);
+console.log('🟡 ID Cuenta:', usuario.idcuenta);
+
+    alert(`✅ Dominio ${dom.nombre} agregado al carrito.`);
+
   } catch (err) {
     console.error("Error de red:", err);
     alert("Error al conectar con la API.");
