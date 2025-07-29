@@ -7,8 +7,9 @@ import { useUser } from "../Context/UserContext"; // Si estás usando contexto
 export default function Login() {
   const [form, setForm] = useState({ usuario: "", password: "" });
   const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(false); // Nuevo estado para bloquear botón
   const navigate = useNavigate();
-  const { setUsuario } = useUser(); // Si usas contexto para guardar usuario
+  const { setUsuario } = useUser();
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -18,6 +19,7 @@ export default function Login() {
   const manejarSubmit = async (e) => {
     e.preventDefault();
     setMensaje("");
+    setCargando(true); // Desactivar botón
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
@@ -27,7 +29,7 @@ export default function Login() {
           "Chibcha-api-key": import.meta.env.VITE_API_KEY,
         },
         body: JSON.stringify({
-          identificacion: form.usuario, // ✅ lo que espera el backend
+          identificacion: form.usuario,
           password: form.password,
         }),
       });
@@ -35,7 +37,7 @@ export default function Login() {
       if (res.ok) {
         const datos = await res.json();
         console.log("✅ Datos del backend:", datos);
-        setUsuario(datos); // Guardar usuario en contexto si lo usas
+        setUsuario(datos);
         setMensaje("✅ ¡Bienvenido!");
         navigate("/perfil");
       } else {
@@ -46,6 +48,8 @@ export default function Login() {
     } catch (err) {
       console.error("❌ Error de red:", err);
       setMensaje("❌ Error de red al intentar iniciar sesión");
+    } finally {
+      setCargando(false); // Reactivar botón
     }
   };
 
@@ -73,7 +77,9 @@ export default function Login() {
             onChange={manejarCambio}
             required
           />
-          <button type="submit">Entrar</button>
+          <button type="submit" disabled={cargando}> {/* DESABILITA BOTON DE INICIO PARA EMPEZAR LA CARGA */}
+            {cargando ? "Entrando..." : "Entrar"}
+          </button>
         </form>
 
         {mensaje && <p className="mensaje">{mensaje}</p>}

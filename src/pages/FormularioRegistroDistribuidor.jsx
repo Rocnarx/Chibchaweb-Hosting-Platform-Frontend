@@ -1,16 +1,23 @@
-
-import React from "react";
+import React, { useState } from "react";
 import "./FormularioRegistroDistribuidor.css";
 import logo from "../Components/resources/logo.png"; 
 
 export default function FormularioRegistro() {
+  const [formDisabled, setFormDisabled] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormDisabled(true);
+
+    console.log("Formulario enviado");
+  };
+
   return (
-    
     <div className="registro-container">
-      {/* Columna izquierda*/}
+      {/* Columna izquierda */}
       <div className="registro-distribuidor"></div>
 
-     {/* Columna centro*/}
+      {/* Columna centro */}
       <div className="registro-form">
         <img src={logo} alt="ChibchaWeb logo" className="registro-logo" />
 
@@ -19,21 +26,25 @@ export default function FormularioRegistro() {
           Regístrate como distribuidor y comienza a generar ingresos hoy mismo
         </h1>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="separador-formulario">Datos de la empresa</div>
 
           <input type="text" placeholder="Razón social" name="razonSocial" required />
           <input type="text" placeholder="Nit de la empresa" name="nit" required />
+
           <div className="separador-formulario">Datos de contacto</div>
           <input type="email" placeholder="Correo electrónico" name="correo" required />
           <input type="tel" placeholder="Teléfono" name="telefono" />
           <input type="text" placeholder="Dirección" name="direccion" />
+
           <div className="separador-formulario">Credenciales</div>
           <input type="text" placeholder="Nombre de usuario" name="idCredencialCuenta" />
           <input type="password" placeholder="Contraseña" name="contrasenaCuenta" required />
           <input type="password" placeholder="Repetir contraseña" name="contrasena" required />
 
-          <button type="subm  it">Registrarse</button>
+          <button type="submit" disabled={formDisabled}>
+            {formDisabled ? "Enviando..." : "Registrarse"}
+          </button>
         </form>
 
         <p className="login-link">
@@ -41,7 +52,7 @@ export default function FormularioRegistro() {
         </p>
       </div>
 
-      {/* Columna derecha*/}
+      {/* Columna derecha */}
       <div className="registro-distribuidor"></div>
     </div>
   );

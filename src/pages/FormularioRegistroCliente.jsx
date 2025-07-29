@@ -15,6 +15,7 @@ export default function FormularioRegistro() {
   });
 
   const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(false); // estado para desactivar botón
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -29,62 +30,64 @@ export default function FormularioRegistro() {
     return null;
   };
 
-const manejarSubmit = async (e) => {
-  e.preventDefault();
-  setMensaje("");
+  const manejarSubmit = async (e) => {
+    e.preventDefault();
+    setMensaje("");
 
-  const error = validar();
-  if (error) {
-    setMensaje(error);
-    return;
-  }
-
-  const datos = {
-    identificacion: form.identificacion,
-    nombrecuenta: form.nombreCuenta,
-    correo: form.correo,
-    telefono: form.telefono ? parseInt(form.telefono) : undefined,
-    direccion: form.direccion,
-    idtipocuenta: 1,
-    idpais: parseInt(form.idpais),
-    idplan: "0",
-    password: form.contrasenaCuenta
-  };
-
-  try {
-    // 1. Registrar la cuenta
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Chibcha-api-key": import.meta.env.VITE_API_KEY
-      },
-      body: JSON.stringify(datos)
-    });
-
-    if (!res.ok) {
-      const texto = await res.text();
-      setMensaje(`❌ Error: ${texto}`);
+    const error = validar();
+    if (error) {
+      setMensaje(error);
       return;
     }
-    setMensaje("✅ Cuenta registrada y carrito creado con éxito.");
-    setForm({
-      nombreCuenta: "",
-      identificacion: "",
-      direccion: "",
-      correo: "",
-      telefono: "",
-      idCredencialCuenta: "",
-      contrasenaCuenta: "",
-      idpais: "170"
-    });
 
-  } catch (err) {
-    console.error("Error de red:", err);
-    setMensaje("❌ Error de red al registrar la cuenta.");
-  }
-};
+    setCargando(true); //  desactiva el botón
 
+    const datos = {
+      identificacion: form.identificacion,
+      nombrecuenta: form.nombreCuenta,
+      correo: form.correo,
+      telefono: form.telefono ? parseInt(form.telefono, 10) : undefined,
+      direccion: form.direccion,
+      idtipocuenta: 1,
+      idpais: parseInt(form.idpais, 10),
+      idplan: "0",
+      password: form.contrasenaCuenta,
+    };
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify(datos),
+      });
+
+      if (!res.ok) {
+        const texto = await res.text();
+        setMensaje(`❌ Error: ${texto}`);
+        return;
+      }
+
+      setMensaje("✅ Cuenta registrada y carrito creado con éxito.");
+      setForm({
+        nombreCuenta: "",
+        identificacion: "",
+        direccion: "",
+        correo: "",
+        telefono: "",
+        idCredencialCuenta: "",
+        contrasenaCuenta: "",
+        idpais: "170",
+      });
+    } catch (err) {
+      console.error("Error de red:", err);
+      setMensaje("❌ Error de red al registrar la cuenta.");
+    } finally {
+      setCargando(false); //  Reactiva el botón
+    }
+  };
 
   return (
     <div className="registro-container">
@@ -118,7 +121,9 @@ const manejarSubmit = async (e) => {
             <option value="862">Venezuela</option>
           </select>
 
-          <button type="submit">Registrarse</button>
+          <button type="submit" disabled={cargando}>
+            {cargando ? "Registrando..." : "Registrarse"}
+          </button>
         </form>
 
         {mensaje && <p className="mensaje-estado">{mensaje}</p>}

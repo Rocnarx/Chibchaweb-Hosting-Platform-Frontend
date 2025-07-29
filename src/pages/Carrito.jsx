@@ -6,6 +6,7 @@ function Carrito() {
   const { usuario } = useUser();
   const [items, setItems] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [pagando, setPagando] = useState(false); // Estado para bloquear botón de pagon
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -44,6 +45,22 @@ function Carrito() {
   const impuestos = Math.round(subtotal * 0.19);
   const total = subtotal + impuestos;
 
+  const manejarPago = async () => {
+    setPagando(true);
+
+    try {
+      console.log("🧾 Iniciando proceso de pago...");
+      await new Promise(resolve => setTimeout(resolve, 2000)); 
+
+      alert("✅ Pago realizado correctamente (simulado)");
+    } catch (err) {
+      console.error("❌ Error durante el pago:", err);
+      alert("❌ Ocurrió un error durante el pago.");
+    } finally {
+      setPagando(false);
+    }
+  };
+
   return (
     <main className="carrito">
       <h1>Carrito <span className="cantidad-items">{items.length} items</span></h1>
@@ -53,6 +70,8 @@ function Carrito() {
         <p>Cargando carrito...</p>
       ) : error ? (
         <p className="mensaje-error">{error}</p>
+      ) : items.length === 0 ? (
+        <p className="carrito-vacio">Tu carrito está vacío.</p>
       ) : (
         <div className="carrito-contenido">
           <div className="lista-dominios">
@@ -80,8 +99,12 @@ function Carrito() {
               <span>Total</span>
               <span>${total.toLocaleString()} COP</span>
             </div>
-            <button className="btn-pago">
-              Realizar el pago →
+            <button
+              className="btn-pago"
+              onClick={manejarPago}
+              disabled={pagando} // DESABILITAR BOTON, INICIO DE CARGA
+            >
+              {pagando ? "Procesando..." : "Realizar el pago →"}
             </button>
           </div>
         </div>
