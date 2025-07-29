@@ -80,6 +80,44 @@ const manejarPago = async () => {
   }
 };
 
+
+const eliminarDominio = async (iddominio) => {
+  if (!usuario || !usuario.idcuenta) return;
+
+  console.log("🧹 Eliminando del carrito:", {
+    idcuenta: usuario.idcuenta,
+    iddominio: iddominio
+  });
+
+  try {
+    const respuesta = await fetch(
+      `${import.meta.env.VITE_API_URL}/EliminarDominioCarrito?idcuenta=${usuario.idcuenta}&iddominio=${iddominio}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY
+        }
+      }
+    );
+
+    if (!respuesta.ok) throw new Error("Error al eliminar dominio del carrito");
+
+    // Eliminar del estado local
+    setItems(prev => prev.filter(item => item.nombre !== iddominio));
+
+    // Mostrar mensaje
+    alert(`Se ha eliminado "${iddominio}" del carrito.`);
+  } catch (err) {
+    console.error("❌ Error eliminando dominio:", err);
+    alert("No se pudo eliminar el dominio del carrito.");
+  }
+};
+
+
+
+
+
+
   return (
     <main className="carrito">
       <h1>Carrito <span className="cantidad-items">{items.length} items</span></h1>
@@ -95,12 +133,16 @@ const manejarPago = async () => {
         <div className="carrito-contenido">
           <div className="lista-dominios">
             {items.map((item, i) => (
-              <div key={i} className="item-dominio">
-                <span className="check">✔</span>
-                <span className="nombre">{item.nombre}</span>
-                <span className="precio">${item.precio.toLocaleString()} COP</span>
-              </div>
-            ))}
+  <div key={i} className="item-dominio">
+    <span className="check">✔</span>
+    <span className="nombre">{item.nombre}</span>
+    <span className="precio">${item.precio.toLocaleString()} COP</span>
+    <button className="btn-eliminar" onClick={() => eliminarDominio(item.nombre)}>
+      🗑
+    </button>
+  </div>
+))}
+
           </div>
 
           <div className="resumen-pago">

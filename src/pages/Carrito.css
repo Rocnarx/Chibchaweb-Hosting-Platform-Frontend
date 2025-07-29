@@ -159,3 +159,17 @@ text-decoration: underline;
   background-color: #fdf3ec;
   border-radius: 6px;
 }
+
+.btn-eliminar {
+  background: none;
+  border: none;
+  color: #924600;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: color 0.2s;
+}
+
+.btn-eliminar:hover {
+  color: #c0392b;
+}
