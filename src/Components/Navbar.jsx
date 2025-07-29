@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import './Navbar.css';
 import logo from './resources/logo.png';
-import { NavLink } from 'react-router-dom'
-
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useUser } from '../Context/UserContext';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
+  const { usuario } = useUser();
+  const navigate = useNavigate();
 
   // Cierra el menú si se hace clic fuera
   useEffect(() => {
@@ -22,6 +24,15 @@ function Navbar() {
 
   // Cierra menú al hacer clic en un link
   const handleMenuClick = () => setMenuOpen(false);
+
+  const irAlCarrito = () => {
+    handleMenuClick();
+    if (!usuario || !usuario.idcuenta) {
+      alert("Debes iniciar sesión para ver tu carrito.");
+    } else {
+      navigate("/carrito");
+    }
+  };
 
   return (
     <nav className="navbar">
@@ -50,18 +61,10 @@ function Navbar() {
           <li><NavLink to="/hosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
           <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
         </ul>
-<NavLink
-  to="/carrito"
-  className={({ isActive }) =>
-    `cart-button${isActive ? ' active' : ''}`
-  }
-  onClick={handleMenuClick}
->
-  Carrito
-</NavLink>
 
-
-
+        <button className="cart-button" onClick={irAlCarrito}>
+          Carrito
+        </button>
       </div>
     </nav>
   );
