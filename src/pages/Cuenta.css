@@ -14,7 +14,7 @@
   text-align: center;
   margin-bottom: 2rem;
   font-size: 1.8rem;
-  color: #1e3a8a; /* azul oscuro */
+  color: #1e3a8a; 
   border-bottom: 2px solid #1e3a8a;
   padding-bottom: 0.5rem;
 }
@@ -35,8 +35,15 @@
   color: #1e40af;
   font-weight: 600;
 }
-.btn-cerrar-sesion {
+
+/* Botón cerrar sesión alineado a la derecha */
+.contenedor-cerrar-sesion {
+  display: flex;
+  justify-content: flex-end;
   margin-top: 2rem;
+}
+
+.btn-cerrar-sesion {
   padding: 10px 20px;
   background-color: #6b3b00;
   color: white;
@@ -49,4 +56,33 @@
 
 .btn-cerrar-sesion:hover {
   background-color: #8a4b00;
+}
+
+/* Botón agregar método alineado a la izquierda */
+.contenedor-boton-metodo {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+.btn-metodo-pago {
+  background-color: #868e9e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-metodo-pago:hover {
+  background-color: #6d779a;
+  transform: scale(1.05);
+}
+.botones-accion {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
 }

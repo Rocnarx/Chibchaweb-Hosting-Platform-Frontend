@@ -8,9 +8,9 @@ export default function Cuenta() {
   const navigate = useNavigate();
 
   const cerrarSesion = () => {
-    setUsuario(null); // Limpia el contexto
-    localStorage.removeItem("usuario"); // Limpia localStorage si se usó
-    navigate("/login"); // Redirige a login
+    setUsuario(null); 
+    localStorage.removeItem("usuario"); 
+    navigate("/login"); 
   };
 
   return (
@@ -22,10 +22,22 @@ export default function Cuenta() {
       <div className="cuenta-dato"><strong>Teléfono:</strong> {usuario.telefono}</div>
       <div className="cuenta-dato"><strong>Dirección:</strong> {usuario.direccion}</div>
       <div className="cuenta-dato"><strong>País:</strong> {usuario.pais}</div>
+      
+        <div className="botones-accion">
+  <button
+    className="btn-metodo-pago"
+    onClick={() => navigate("/Tarjeta")}
+  >
+    ➕ Agregar método de pago
+  </button>
 
-      <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
-        Cerrar sesión
-      </button>
+  <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
+    Cerrar sesión
+  </button>
+</div>
+
+
+
     </div>
   );
 }

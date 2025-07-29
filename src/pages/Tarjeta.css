@@ -1,0 +1,91 @@
+.tarjeta-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tarjeta-formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjeta-titulo {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.iconos-marcas {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.iconos-marcas img {
+  width: 40px;
+  height: auto;
+}
+
+
+label {
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.tarjeta-flex {
+  display: flex;
+  gap: 1rem;
+}
+
+.guardar-check {
+  margin-top: 1.5rem;
+  border: 1px solid #4CAF50;
+  padding: 0.8rem;
+  border-radius: 8px;
+  background-color: #f9fff9;
+  font-size: 14px;
+}
+
+.guardar-check input {
+  margin-right: 8px;
+}
+
+.descripcion {
+  display: block;
+  color: #555;
+  margin-left: 24px;
+  margin-top: 4px;
+}
+
+button[type="submit"] {
+  margin-top: 2rem;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
