@@ -45,21 +45,40 @@ function Carrito() {
   const impuestos = Math.round(subtotal * 0.19);
   const total = subtotal + impuestos;
 
-  const manejarPago = async () => {
-    setPagando(true);
+const manejarPago = async () => {
+  setPagando(true);
 
-    try {
-      console.log("🧾 Iniciando proceso de pago...");
-      await new Promise(resolve => setTimeout(resolve, 2000)); 
+  try {
+    console.log("🧾 Iniciando proceso de pago...");
 
-      alert("✅ Pago realizado correctamente (simulado)");
-    } catch (err) {
-      console.error("❌ Error durante el pago:", err);
-      alert("❌ Ocurrió un error durante el pago.");
-    } finally {
-      setPagando(false);
+    // Iterar sobre los dominios en el carrito y actualizar cada uno como ocupado
+    for (const item of items) {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/ActualizarOcupadoDominio`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({
+          iddominio: item.nombre,
+          ocupado: true,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error actualizando dominio ${item.nombre}: ${errorText}`);
+      }
     }
-  };
+
+    alert("✅ Pago realizado y dominios actualizados correctamente.");
+  } catch (err) {
+    console.error("❌ Error durante el pago:", err);
+    alert("❌ Ocurrió un error durante el pago. Revisa la consola.");
+  } finally {
+    setPagando(false);
+  }
+};
 
   return (
     <main className="carrito">
