@@ -35,7 +35,7 @@ export default function Cuenta() {
     className="btn-metodo-pago"
     onClick={() => navigate("/metodos")}
   >
-    ➕ Agregar método de pago
+    Mis metodos
   </button>
 
   <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
