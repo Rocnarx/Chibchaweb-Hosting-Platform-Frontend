@@ -8,8 +8,10 @@ import Login from './pages/Login'
 import Cuenta from './pages/Cuenta'
 import Tarjeta from './pages/Tarjeta'
 import MetodosPago from './pages/MetodosPago'
+import Extensiones from './pages/Extensiones';
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useUser } from './Context/UserContext'
+
 
 function App() {
   const { usuario } = useUser();
@@ -25,6 +27,7 @@ function App() {
         <Route path="/registro" element={<FormularioC />} />
         <Route path="/tarjeta" element={<Tarjeta />} />
         <Route path="/metodos" element={<MetodosPago />} />
+        <Route path="/extensiones" element={<Extensiones />} />
         <Route
           path="/perfil"
           element={usuario ? <Cuenta /> : <Navigate to="/login" />}

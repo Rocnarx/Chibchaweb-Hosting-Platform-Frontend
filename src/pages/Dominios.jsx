@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import './Dominios.css';
 import { useLocation } from 'react-router-dom';
 import { useUser } from "../Context/UserContext";
-
+import { usePreciosExtensiones } from "../Context/ExtensionContext";
 
 function Dominios() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const dominioInicial = queryParams.get('nombre') || '';
   const { usuario } = useUser();
-  
 
   const [input, setInput] = useState(dominioInicial);
   const [dominio, setDominio] = useState('');
@@ -19,8 +18,8 @@ function Dominios() {
   const [principalDisponible, setPrincipalDisponible] = useState(false);
   const [error, setError] = useState('');
 
-  const precioDominio = 10000;
-  const EXTENSIONS = ["com", "net", "org", "co", "io", "app", "info", "dev", "online", "store"];
+  const { precios } = usePreciosExtensiones();
+  const EXTENSIONS = Object.keys(precios);
 
   useEffect(() => {
     if (dominioInicial) {
@@ -81,9 +80,9 @@ function Dominios() {
 
       const disponibles = data.alternativas.filter((d) => d.registered === false);
       const conPrecios = disponibles.map((dom) => ({
-        id: dom.domain, // usaremos el nombre como ID simplificada
+        id: dom.domain,
         nombre: dom.domain,
-        precio: precioDominio,
+        precio: precios[dom.domain.split('.').pop()] ?? 10000,
       }));
 
       setDominio(nombre);
@@ -97,58 +96,55 @@ function Dominios() {
     }
   };
 
-const agregarAlCarrito = async (dom) => {
-  if (!usuario || !usuario.identificacion || !usuario.idcuenta) {
-    alert("Debes iniciar sesión para agregar dominios al carrito.");
-    return;
-  }
-
-  try {
-    // 1. Registrar el dominio
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/agregarDominio`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Chibcha-api-key': import.meta.env.VITE_API_KEY
-      },
-      body: JSON.stringify({
-        iddominio: dom.id,
-        nombrepagina: dom.nombre,
-        preciodominio: dom.precio,
-        ocupado: false,
-        identificacion: usuario.identificacion 
-      })
-    });
-
-    if (!response.ok) {
-      console.error("Error al agregar dominio:", await response.text());
-      alert("No se pudo agregar el dominio.");
+  const agregarAlCarrito = async (dom) => {
+    if (!usuario || !usuario.identificacion || !usuario.idcuenta) {
+      alert("Debes iniciar sesión para agregar dominios al carrito.");
       return;
     }
 
-    // 2. Agregar a carrito existente
-await fetch(`${import.meta.env.VITE_API_URL}/dominios/agregar-a-carrito-existente`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Chibcha-api-key': import.meta.env.VITE_API_KEY
-      },
-      body: JSON.stringify({
-        iddominio: dom.id,
-        idcuenta: usuario.idcuenta,
-      })
-    });
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/agregarDominio`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Chibcha-api-key': import.meta.env.VITE_API_KEY
+        },
+        body: JSON.stringify({
+          iddominio: dom.id,
+          nombrepagina: dom.nombre,
+          preciodominio: dom.precio,
+          ocupado: false,
+          identificacion: usuario.identificacion 
+        })
+      });
 
-    console.log('🟡 ID Dominio:', dom.id);
-console.log('🟡 ID Cuenta:', usuario.idcuenta);
+      if (!response.ok) {
+        console.error("Error al agregar dominio:", await response.text());
+        alert("No se pudo agregar el dominio.");
+        return;
+      }
 
-    alert(`✅ Dominio ${dom.nombre} agregado al carrito.`);
+      await fetch(`${import.meta.env.VITE_API_URL}/dominios/agregar-a-carrito-existente`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Chibcha-api-key': import.meta.env.VITE_API_KEY
+        },
+        body: JSON.stringify({
+          iddominio: dom.id,
+          idcuenta: usuario.idcuenta,
+        })
+      });
 
-  } catch (err) {
-    console.error("Error de red:", err);
-    alert("Error al conectar con la API.");
-  }
-};
+      console.log('🟡 ID Dominio:', dom.id);
+      console.log('🟡 ID Cuenta:', usuario.idcuenta);
+
+      alert(`✅ Dominio ${dom.nombre} agregado al carrito.`);
+    } catch (err) {
+      console.error("Error de red:", err);
+      alert("Error al conectar con la API.");
+    }
+  };
 
   return (
     <main className="dominios">
@@ -185,7 +181,11 @@ console.log('🟡 ID Cuenta:', usuario.idcuenta);
               <div className="info-dominio">
                 <strong>{dominio.includes('.') ? dominio : `${dominio}.com`}</strong>
                 <div className="precio-dominio">
-                  {principalDisponible ? `$${precioDominio.toLocaleString()} COP` : '$'}
+                  {principalDisponible
+                    ? `$${(
+                        precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ?? 10000
+                      ).toLocaleString()} COP`
+                    : '$'}
                 </div>
                 <p>
                   {principalDisponible
@@ -196,11 +196,16 @@ console.log('🟡 ID Cuenta:', usuario.idcuenta);
               <button
                 className={principalDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
                 disabled={!principalDisponible}
-                onClick={() => principalDisponible && agregarAlCarrito({
-                  id: dominio.includes('.') ? dominio : `${dominio}.com`,
-                  nombre: dominio.includes('.') ? dominio : `${dominio}.com`,
-                  precio: precioDominio
-                })}
+                onClick={() =>
+                  principalDisponible &&
+                  agregarAlCarrito({
+                    id: dominio.includes('.') ? dominio : `${dominio}.com`,
+                    nombre: dominio.includes('.') ? dominio : `${dominio}.com`,
+                    precio:
+                      precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ??
+                      10000,
+                  })
+                }
               >
                 Agregar al carrito
               </button>
