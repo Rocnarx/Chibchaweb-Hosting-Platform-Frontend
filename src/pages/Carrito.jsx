@@ -9,53 +9,56 @@ function Carrito() {
   const [pagando, setPagando] = useState(false); // Estado para bloquear botón de pagon
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const cargarCarrito = async () => {
-      if (!usuario || !usuario.idcuenta) return;
 
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`,
-          {
-            headers: {
-              "Chibcha-api-key": import.meta.env.VITE_API_KEY
-            }
-          }
-        );
+  const cargarCarrito = async () => {
+  if (!usuario || !usuario.idcuenta) return;
 
-        const datos = await res.json();
-
-        if (!res.ok) {
-          // Si vino un mensaje tipo { detail: "algo" }, mostrar carrito vacío
-          if (datos.detail && datos.detail.includes("No se encontraron dominios")) {
-            setItems([]); // carrito vacío
-            return;
-          }
-          throw new Error("No se pudo obtener el carrito");
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`,
+      {
+        headers: {
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY
         }
-
-        if (!Array.isArray(datos)) {
-          throw new Error("Respuesta inesperada del servidor");
-        }
-
-        const dominios = datos.map(d => ({
-          nombre: d.dominio,
-          precio: d.precio
-        }));
-
-        setItems(dominios);
-        setError(""); // Limpia cualquier error anterior
-      } catch (err) {
-        console.error("Error al cargar el carrito:", err);
-        setError("No se pudo cargar el carrito.");
-      } finally {
-        setCargando(false);
       }
-    };
+    );
+
+    const datos = await res.json();
+
+    if (!res.ok) {
+      if (datos.detail && datos.detail.includes("No se encontraron dominios")) {
+        setItems([]);
+        return;
+      }
+      throw new Error("No se pudo obtener el carrito");
+    }
+
+    if (!Array.isArray(datos)) {
+      throw new Error("Respuesta inesperada del servidor");
+    }
+
+    const dominios = datos.map(d => ({
+      nombre: d.dominio,
+      precio: d.precio
+    }));
+
+    setItems(dominios);
+    setError("");
+  } catch (err) {
+    console.error("Error al cargar el carrito:", err);
+    setError("No se pudo cargar el carrito.");
+  } finally {
+    setCargando(false);
+  }
+};
+
+useEffect(() => {
+  cargarCarrito();
+}, [usuario]);
 
 
-    cargarCarrito();
-  }, [usuario]);
+
+
 
   const subtotal = items.reduce((acc, item) => acc + item.precio, 0);
   const impuestos = Math.round(subtotal * 0.19);
@@ -67,34 +70,39 @@ const manejarPago = async () => {
   try {
     console.log("🧾 Iniciando proceso de pago...");
 
-    // Iterar sobre los dominios en el carrito y actualizar cada uno como ocupado
-    for (const item of items) {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/ActualizarOcupadoDominio`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-        body: JSON.stringify({
-          iddominio: item.nombre,
-          ocupado: true,
-        }),
-      });
+    // Construye la lista de dominios
+    const dominiosAActualizar = items.map((item) => ({
+      iddominio: item.nombre,
+    }));
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error actualizando dominio ${item.nombre}: ${errorText}`);
-      }
+    // Llama al endpoint con la lista de dominios
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/ActualizarOcupadoDominio`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+      },
+      body: JSON.stringify({ dominios: dominiosAActualizar }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error actualizando dominios: ${errorText}`);
     }
+
+    // ✅ ACTUALIZA LA VISTA
+    await cargarCarrito(); // ← AQUÍ es el lugar exacto
 
     alert("✅ Pago realizado y dominios actualizados correctamente.");
   } catch (err) {
     console.error("❌ Error durante el pago:", err);
-    alert("❌ Ocurrió un error durante el pago. Revisa la consola.");
+    alert("❌ Ocurrió un error durante el pago.");
   } finally {
     setPagando(false);
   }
 };
+
+
 
 
 const eliminarDominio = async (iddominio) => {
