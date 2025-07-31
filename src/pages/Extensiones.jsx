@@ -1,7 +1,8 @@
 // src/pages/Extensiones.jsx
 import React, { useState } from "react";
 import { usePreciosExtensiones } from "../Context/ExtensionContext";
-import "./Extensiones.css"; // Opcional, para estilos
+import "./Extensiones.css"; 
+import Loader from "../Components/Loader";
 
 export default function Extensiones() {
   const {
@@ -15,7 +16,6 @@ export default function Extensiones() {
   const [editando, setEditando] = useState(null);
   const [precioTemp, setPrecioTemp] = useState("");
 
-  if (cargando) return <p>Cargando precios...</p>;
   if (error) return <p>{error}</p>;
 
   return (
@@ -61,7 +61,9 @@ export default function Extensiones() {
       </div>
 
       <div style={{ marginTop: "2rem" }}>
-        <button onClick={guardarPrecios}>💾 Guardar todos los cambios</button>
+        <button className="boton-guardar-global" onClick={guardarPrecios}>
+          Guardar todos los cambios
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './Dominios.css';
+import Loader from "../Components/Loader";
 import { useLocation } from 'react-router-dom';
 import { useUser } from "../Context/UserContext";
 import { usePreciosExtensiones } from "../Context/ExtensionContext";
@@ -158,15 +159,8 @@ function Dominios() {
         <button onClick={() => manejarBusqueda()}>Buscar Dominio</button>
       </div>
 
-      {buscando && (
-        <div className="busqueda-especial">
-          <div className="spinner" />
-          <p className="texto-carga">
-            Consultando... <br />
-            <span>Buscando tu dominio perfecto </span>
-          </p>
-        </div>
-      )}
+      {buscando && <Loader mensaje="Consultando dominios disponibles" />}
+
 
       {error && (
         <div className="alerta-error">

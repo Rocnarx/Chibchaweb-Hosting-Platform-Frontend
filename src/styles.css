@@ -95,3 +95,53 @@ button:hover,
   border-radius: 10px;
   width: 400px;
 }
+
+/* ===== Loader animado global ===== */
+
+.busqueda-especial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  border: 2px dashed #896838;
+  padding: 20px 30px;
+  border-radius: 12px;
+  margin: 30px auto;
+  max-width: 800px;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ffa726;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.texto-carga {
+  font-size: 18px;
+  color: #6d4c41;
+  font-weight: bold;
+  animation: floatText 1.5s ease-in-out infinite;
+  text-align: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floatText {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px #c79e61; }
+  to   { box-shadow: 0 0 20px #ad8851; }
+}
