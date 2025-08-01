@@ -6,141 +6,143 @@ function Carrito() {
   const { usuario } = useUser();
   const [items, setItems] = useState([]);
   const [cargando, setCargando] = useState(true);
-  const [pagando, setPagando] = useState(false); // Estado para bloquear botón de pagon
+  const [pagando, setPagando] = useState(false);
   const [error, setError] = useState("");
-
+  const [comision, setComision] = useState(0); 
 
   const cargarCarrito = async () => {
-  if (!usuario || !usuario.idcuenta) return;
+    if (!usuario || !usuario.idcuenta) return;
 
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`,
-      {
-        headers: {
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`,
+        {
+          headers: {
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY
+          }
         }
+      );
+
+      const datos = await res.json();
+
+      if (!res.ok) {
+        if (datos.detail && datos.detail.includes("No se encontraron dominios")) {
+          setItems([]);
+          return;
+        }
+        throw new Error("No se pudo obtener el carrito");
       }
-    );
 
-    const datos = await res.json();
-
-    if (!res.ok) {
-      if (datos.detail && datos.detail.includes("No se encontraron dominios")) {
-        setItems([]);
-        return;
+      if (!Array.isArray(datos)) {
+        throw new Error("Respuesta inesperada del servidor");
       }
-      throw new Error("No se pudo obtener el carrito");
+
+      const dominios = datos.map(d => ({
+        nombre: d.dominio,
+        precio: d.precio
+      }));
+
+      setItems(dominios);
+      setError("");
+    } catch (err) {
+      console.error("Error al cargar el carrito:", err);
+      setError("No se pudo cargar el carrito.");
+    } finally {
+      setCargando(false);
     }
+  };
 
-    if (!Array.isArray(datos)) {
-      throw new Error("Respuesta inesperada del servidor");
+  const cargarComision = async () => {
+    if (!usuario || !usuario.idcuenta || usuario.tipocuenta?.toUpperCase() !== "DISTRIBUIDOR") return;
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/MiPlan?idcuenta=${usuario.idcuenta}`, {
+        headers: {
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+      });
+
+      if (!res.ok) throw new Error("No se pudo obtener el plan");
+
+      const datos = await res.json();
+      console.log("🔍 Plan del usuario:", datos);
+
+      if (typeof datos.comision === "number") {
+        setComision(datos.comision);
+      }
+    } catch (err) {
+      console.error("Error al obtener la comisión:", err);
     }
+  };
 
-    const dominios = datos.map(d => ({
-      nombre: d.dominio,
-      precio: d.precio
-    }));
-
-    setItems(dominios);
-    setError("");
-  } catch (err) {
-    console.error("Error al cargar el carrito:", err);
-    setError("No se pudo cargar el carrito.");
-  } finally {
-    setCargando(false);
-  }
-};
-
-useEffect(() => {
-  cargarCarrito();
-}, [usuario]);
-
-
-
-
+  useEffect(() => {
+    cargarCarrito();
+    cargarComision();
+  }, [usuario]);
 
   const subtotal = items.reduce((acc, item) => acc + item.precio, 0);
   const impuestos = Math.round(subtotal * 0.19);
   const total = subtotal + impuestos;
+  const descuento = Math.round((subtotal * comision) / 100);
+  const totalConDescuento = total - descuento;
 
-const manejarPago = async () => {
-  setPagando(true);
+  const manejarPago = async () => {
+    setPagando(true);
 
-  try {
-    console.log("🧾 Iniciando proceso de pago...");
+    try {
+      console.log("🧾 Iniciando proceso de pago...");
 
-    // Construye la lista de dominios
-    const dominiosAActualizar = items.map((item) => ({
-      iddominio: item.nombre,
-    }));
+      const dominiosAActualizar = items.map((item) => ({
+        iddominio: item.nombre,
+      }));
 
-    // Llama al endpoint con la lista de dominios
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/ActualizarOcupadoDominio`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-      },
-      body: JSON.stringify({ dominios: dominiosAActualizar }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Error actualizando dominios: ${errorText}`);
-    }
-
-    // ✅ ACTUALIZA LA VISTA
-    await cargarCarrito(); // ← AQUÍ es el lugar exacto
-
-    alert("✅ Pago realizado y dominios actualizados correctamente.");
-  } catch (err) {
-    console.error("❌ Error durante el pago:", err);
-    alert("❌ Ocurrió un error durante el pago.");
-  } finally {
-    setPagando(false);
-  }
-};
-
-
-
-
-const eliminarDominio = async (iddominio) => {
-  if (!usuario || !usuario.idcuenta) return;
-
-  console.log("🧹 Eliminando del carrito:", {
-    idcuenta: usuario.idcuenta,
-    iddominio: iddominio
-  });
-
-  try {
-    const respuesta = await fetch(
-      `${import.meta.env.VITE_API_URL}/EliminarDominioCarrito?idcuenta=${usuario.idcuenta}&iddominio=${iddominio}`,
-      {
-        method: "DELETE",
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/ActualizarOcupadoDominio`, {
+        method: "PUT",
         headers: {
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY
-        }
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({ dominios: dominiosAActualizar }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error actualizando dominios: ${errorText}`);
       }
-    );
 
-    if (!respuesta.ok) throw new Error("Error al eliminar dominio del carrito");
+      await cargarCarrito();
+      alert("✅ Pago realizado y dominios actualizados correctamente.");
+    } catch (err) {
+      console.error("❌ Error durante el pago:", err);
+      alert("❌ Ocurrió un error durante el pago.");
+    } finally {
+      setPagando(false);
+    }
+  };
 
-    // Eliminar del estado local
-    setItems(prev => prev.filter(item => item.nombre !== iddominio));
+  const eliminarDominio = async (iddominio) => {
+    if (!usuario || !usuario.idcuenta) return;
 
-    // Mostrar mensaje
-    alert(`Se ha eliminado "${iddominio}" del carrito.`);
-  } catch (err) {
-    console.error("❌ Error eliminando dominio:", err);
-    alert("No se pudo eliminar el dominio del carrito.");
-  }
-};
+    try {
+      const respuesta = await fetch(
+        `${import.meta.env.VITE_API_URL}/EliminarDominioCarrito?idcuenta=${usuario.idcuenta}&iddominio=${iddominio}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY
+          }
+        }
+      );
 
+      if (!respuesta.ok) throw new Error("Error al eliminar dominio del carrito");
 
-
-
-
+      setItems(prev => prev.filter(item => item.nombre !== iddominio));
+      alert(`Se ha eliminado "${iddominio}" del carrito.`);
+    } catch (err) {
+      console.error("❌ Error eliminando dominio:", err);
+      alert("No se pudo eliminar el dominio del carrito.");
+    }
+  };
 
   return (
     <main className="carrito">
@@ -157,16 +159,15 @@ const eliminarDominio = async (iddominio) => {
         <div className="carrito-contenido">
           <div className="lista-dominios">
             {items.map((item, i) => (
-  <div key={i} className="item-dominio">
-    <span className="check">✔</span>
-    <span className="nombre">{item.nombre}</span>
-    <span className="precio">${item.precio.toLocaleString()} COP</span>
-    <button className="btn-eliminar" onClick={() => eliminarDominio(item.nombre)}>
-      🗑
-    </button>
-  </div>
-))}
-
+              <div key={i} className="item-dominio">
+                <span className="check">✔</span>
+                <span className="nombre">{item.nombre}</span>
+                <span className="precio">${item.precio.toLocaleString()} COP</span>
+                <button className="btn-eliminar" onClick={() => eliminarDominio(item.nombre)}>
+                  🗑
+                </button>
+              </div>
+            ))}
           </div>
 
           <div className="resumen-pago">
@@ -179,15 +180,25 @@ const eliminarDominio = async (iddominio) => {
               <span>Impuestos</span>
               <span>${impuestos.toLocaleString()} COP</span>
             </div>
+
+            {comision > 0 && (
+              <div className="linea">
+                <span>Descuento ({comision}%)</span>
+                <span>– ${descuento.toLocaleString()} COP</span>
+              </div>
+            )}
+
             <hr />
+
             <div className="linea total">
               <span>Total</span>
-              <span>${total.toLocaleString()} COP</span>
+              <span>${totalConDescuento.toLocaleString()} COP</span>
             </div>
+
             <button
               className="btn-pago"
               onClick={manejarPago}
-              disabled={pagando} // DESABILITAR BOTON, INICIO DE CARGA
+              disabled={pagando}
             >
               {pagando ? "Procesando..." : "Realizar el pago →"}
             </button>
