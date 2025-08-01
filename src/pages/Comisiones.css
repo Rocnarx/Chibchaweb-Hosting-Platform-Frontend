@@ -1,0 +1,86 @@
+.comisiones-wrapper {
+  background: #fff8f3;
+  padding: 30px 20px 100px;
+  min-height: 100vh;
+}
+
+.comisiones-contenedor {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.comisiones-contenedor h1 {
+  font-size: 35px;
+  color: #6d3200;
+  margin-bottom: 12px;
+}
+
+.comisiones-contenedor p {
+  margin-bottom: 32px;
+  color: #444;
+}
+
+.comisiones-grid {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.comision-card {
+  background: #fcf7f4;
+  border-radius: 10px;
+  padding: 20px;
+  width: 260px;
+  box-shadow: 0 0 0 1px #e0cfc2;
+  text-align: left;
+}
+
+.comision-card h2 {
+  color: #4b2e1e;
+  margin-bottom: 12px;
+}
+
+.comision-card p {
+  margin: 10px 0;
+  color: #333;
+}
+
+.clickeable {
+  cursor: pointer;
+  color: #6d3200;
+}
+
+.editor-campo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editor-campo input {
+  width: 70px;
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.editor-campo input:focus {
+  border-color: #b97144;
+  outline: none;
+}
+
+.editor-campo button {
+  background: #924600;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
