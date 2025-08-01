@@ -60,6 +60,7 @@ function Navbar() {
           <li><NavLink to="/planes" className="nav-link" onClick={handleMenuClick}>Planes</NavLink></li>
           <li><NavLink to="/hosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
           <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
+          <li><NavLink to="/DominiosAdquiridos" className="nav-link" onClick={handleMenuClick}>Mis dominios</NavLink></li>
         </ul>
 
         <button className="cart-button" onClick={irAlCarrito}>

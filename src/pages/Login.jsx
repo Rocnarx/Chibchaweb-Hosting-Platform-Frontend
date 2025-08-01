@@ -61,6 +61,7 @@ export default function Login() {
         <h2 className="titulo-login">Iniciar sesión</h2>
 
         <form onSubmit={manejarSubmit}>
+
           <input
             type="text"
             name="usuario"
@@ -86,6 +87,9 @@ export default function Login() {
 
         <p className="enlace">
           ¿No tienes cuenta? <a href="/registro">Regístrate</a>
+          <p className="enlace-prueba">
+          ¿Eres una empresa?<a href="/registroDistribuidor">¡Regístrate como distribuidor!</a>
+          </p>
         </p>
       </div>
     </div>

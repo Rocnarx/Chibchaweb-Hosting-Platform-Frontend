@@ -1,0 +1,75 @@
+.mis-dominios {
+  width: 80%;
+  max-width: 1000px;
+  padding: 60px 40px;
+  margin: 0 auto;
+}
+
+.mis-dominios h1 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 36px;
+}
+
+.cantidad-items {
+  font-size: 18px;
+  font-weight: normal;
+  color: #555;
+  margin-left: 10px;
+}
+
+.linea-separadora {
+  height: 1px;
+  background-color: #ddd;
+  margin: 10px 0 32px;
+  width: 100%;
+}
+
+/* Lista de dominios */
+
+.lista-dominios {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 8px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #cba27e #fdf3ec;
+}
+
+.lista-dominios::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lista-dominios::-webkit-scrollbar-thumb {
+  background-color: #cba27e;
+  border-radius: 6px;
+}
+
+.lista-dominios::-webkit-scrollbar-track {
+  background-color: #fdf3ec;
+  border-radius: 6px;
+}
+
+.dominio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fdf3ec;
+  padding: 24px 28px;
+  border-radius: 14px;
+  border: 1px solid #e9d8c8;
+}
+
+.dominio-item .nombre {
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+}
+
+.dominio-item .vence {
+  font-size: 15px;
+  color: #444;
+}

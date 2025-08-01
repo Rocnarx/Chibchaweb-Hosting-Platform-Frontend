@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import "./FormularioRegistroDistribuidor.css";
+import "./FormularioRegistroCliente.css";
 import logo from "../Components/resources/logo.png";
 
-export default function FormularioRegistroDistribuidor() {
+export default function FormularioRegistroEmpleado() {
   const [form, setForm] = useState({
-    nombrecuenta: "",
-    identificacion: "",
-    correo: "",
-    telefono: "",
-    direccion: "",
-    password: "",
-    idpais: "170",     // Colombia por defecto
-    idtipocuenta: "2", // Distribuidor o tipo 4
-    idplan: "0",       // Plan básico por defecto
-  });
+      nombreCuenta: "",
+      identificacion: "",
+      direccion: "",
+      correo: "",
+      telefono: "",
+      idCredencialCuenta: "",
+      contrasenaCuenta: "",
+      idpais: "170", // Colombia por defecto
+    });
 
   const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
@@ -27,9 +26,6 @@ export default function FormularioRegistroDistribuidor() {
     const paisesValidos = ["76", "170", "218", "604", "862"];
     if (!paisesValidos.includes(form.idpais)) {
       return "❌ País no soportado.";
-    }
-    if (!form.password || form.password.length < 6) {
-      return "❌ La contraseña debe tener al menos 6 caracteres.";
     }
     return null;
   };
@@ -47,15 +43,15 @@ export default function FormularioRegistroDistribuidor() {
     setCargando(true);
 
     const datos = {
-      nombrecuenta: form.nombrecuenta,
       identificacion: form.identificacion,
+      nombrecuenta: form.nombreCuenta,
       correo: form.correo,
       telefono: form.telefono ? parseInt(form.telefono, 10) : undefined,
-      direccion: form.direccion || "N/A",
-      password: form.password,
+      direccion: form.direccion,
+      idtipocuenta: 4,
       idpais: parseInt(form.idpais, 10),
-      idtipocuenta: parseInt(form.idtipocuenta, 10),
       idplan: "0",
+      password: form.contrasenaCuenta,
     };
 
     try {
@@ -74,21 +70,20 @@ export default function FormularioRegistroDistribuidor() {
         return;
       }
 
-      setMensaje("✅ Distribuidor registrado con éxito.");
+      setMensaje("✅ Empleado registrado con éxito.");
       setForm({
-        nombrecuenta: "",
+        nombreCuenta: "",
         identificacion: "",
+        direccion: "",
         correo: "",
         telefono: "",
-        direccion: "",
-        password: "",
+        idCredencialCuenta: "",
+        contrasenaCuenta: "",
         idpais: "170",
-        idtipocuenta: "4",
-        idplan: "0",
       });
     } catch (err) {
       console.error("Error de red:", err);
-      setMensaje("❌ Error de red al registrar el distribuidor.");
+      setMensaje("❌ Error de red al registrar el empleado.");
     } finally {
       setCargando(false);
     }
@@ -96,70 +91,26 @@ export default function FormularioRegistroDistribuidor() {
 
   return (
     <div className="registro-container">
-      <div className="registro-distribuidor"></div>
+      <div className="registro-imagen"></div>
 
       <div className="registro-form">
         <img src={logo} alt="ChibchaWeb logo" className="registro-logo" />
-
-        <h3 className="subtitulo">
-          Accede a nuestros planes de distribución y beneficios exclusivos
-        </h3>
-        <h1 className="titulo">
-          Regístrate como distribuidor y comienza a generar ingresos hoy mismo
-        </h1>
+        <h3 className="subtitulo">Administra tu equipo desde aquí</h3>
+        <h1 className="titulo">Registrar nuevo empleado</h1>
 
         <form onSubmit={manejarSubmit}>
-          <div className="separador-formulario">Datos de la empresa</div>
-          <input
-            type="text"
-            placeholder="Razón social"
-            name="nombrecuenta"
-            required
-            value={form.nombrecuenta}
-            onChange={manejarCambio}
-          />
-          <input
-            type="text"
-            placeholder="NIT"
-            name="identificacion"
-            required
-            value={form.identificacion}
-            onChange={manejarCambio}
-          />
+          <div className="separador-formulario">Datos personales</div>
+          <input type="text" placeholder="Nombre completo" name="nombreCuenta" required value={form.nombreCuenta} onChange={manejarCambio} />
+          <input type="text" placeholder="Identificación" name="identificacion" required value={form.identificacion} onChange={manejarCambio} />
+          <input type="text" placeholder="Dirección (opcional)" name="direccion" value={form.direccion} onChange={manejarCambio} />
 
           <div className="separador-formulario">Datos de contacto</div>
-          <input
-            type="email"
-            placeholder="Correo electrónico"
-            name="correo"
-            required
-            value={form.correo}
-            onChange={manejarCambio}
-          />
-          <input
-            type="tel"
-            placeholder="Teléfono"
-            name="telefono"
-            value={form.telefono}
-            onChange={manejarCambio}
-          />
-          <input
-            type="text"
-            placeholder="Dirección"
-            name="direccion"
-            value={form.direccion}
-            onChange={manejarCambio}
-          />
+          <input type="email" placeholder="Correo electrónico" name="correo" required value={form.correo} onChange={manejarCambio} />
+          <input type="tel" placeholder="Teléfono (opcional)" name="telefono" value={form.telefono} onChange={manejarCambio} />
 
           <div className="separador-formulario">Credenciales</div>
-          <input
-            type="password"
-            placeholder="Contraseña"
-            name="password"
-            required
-            value={form.password}
-            onChange={manejarCambio}
-          />
+          <input type="text" placeholder="Nombre de usuario" name="idCredencialCuenta" value={form.idCredencialCuenta} onChange={manejarCambio} />
+          <input type="password" placeholder="Contraseña" name="contrasenaCuenta" required value={form.contrasenaCuenta} onChange={manejarCambio} />
 
           <div className="separador-formulario">País</div>
           <select name="idpais" value={form.idpais} onChange={manejarCambio}>
@@ -178,14 +129,14 @@ export default function FormularioRegistroDistribuidor() {
         {mensaje && <p className="mensaje-estado">{mensaje}</p>}
 
         <p className="login-link">
-          ¿Ya tienes una cuenta?{" "}
+          ¿Ya eres parte del equipo?{" "}
           <a href="#" onClick={e => { e.preventDefault(); window.location.href = "/login"; }}>
             Inicia sesión
           </a>
         </p>
       </div>
 
-      <div className="registro-distribuidor"></div>
+      <div className="registro-imagen"></div>
     </div>
   );
 }
