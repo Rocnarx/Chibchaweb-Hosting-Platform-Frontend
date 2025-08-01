@@ -84,3 +84,29 @@
   cursor: pointer;
   font-size: 14px;
 }
+.boton-guardar-wrapper {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.boton-guardar-global {
+  background-color: #b97144;
+  color: white;
+  font-size: 17px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-guardar-global:hover {
+  background-color: #924600;
+  transform: scale(1.02);
+}
+
+.mensaje-guardado {
+  margin-top: 12px;
+  color: green;
+  font-weight: bold;
+}
