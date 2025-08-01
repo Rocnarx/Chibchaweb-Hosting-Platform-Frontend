@@ -17,7 +17,9 @@ function Dominios() {
   const [buscado, setBuscado] = useState(false);
   const [resultados, setResultados] = useState([]);
   const [principalDisponible, setPrincipalDisponible] = useState(false);
+  const [mostrarPrincipal, setMostrarPrincipal] = useState(true);
   const [error, setError] = useState('');
+  const [dominiosAgregados, setDominiosAgregados] = useState(new Set());
 
   const { precios } = usePreciosExtensiones();
   const EXTENSIONS = Object.keys(precios);
@@ -29,6 +31,32 @@ function Dominios() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const obtenerDominiosEnCarrito = async () => {
+    if (!usuario || !usuario.idcuenta) return new Set();
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`,
+        {
+          headers: {
+            'Chibcha-api-key': import.meta.env.VITE_API_KEY,
+          },
+        }
+      );
+
+      if (!res.ok) return new Set();
+
+      const datos = await res.json();
+      if (!Array.isArray(datos)) return new Set();
+
+      const dominios = datos.map(d => d.dominio);
+      return new Set(dominios);
+    } catch (err) {
+      console.error("Error al obtener dominios del carrito:", err);
+      return new Set();
+    }
+  };
 
   const manejarBusqueda = async (valorManual = null) => {
     let nombre = (valorManual ?? input).trim().toLowerCase();
@@ -49,6 +77,8 @@ function Dominios() {
     setBuscado(false);
     setResultados([]);
     setPrincipalDisponible(false);
+    setMostrarPrincipal(true);
+    setDominiosAgregados(new Set());
 
     const tieneExtension = nombre.includes('.') && EXTENSIONS.some(ext => nombre.endsWith(`.${ext}`));
 
@@ -77,9 +107,19 @@ function Dominios() {
 
       const dominioPrincipal = tieneExtension ? nombre : `${nombre}.com`;
       const estadoPrincipal = data.alternativas.find(d => d.domain === dominioPrincipal);
-      setPrincipalDisponible(estadoPrincipal && estadoPrincipal.registered === false);
+      const estaDisponible = estadoPrincipal && estadoPrincipal.registered === false;
 
-      const disponibles = data.alternativas.filter((d) => d.registered === false);
+      setPrincipalDisponible(estaDisponible);
+
+      const dominiosEnCarrito = await obtenerDominiosEnCarrito();
+
+      setMostrarPrincipal(!dominiosEnCarrito.has(dominioPrincipal));
+
+      const disponibles = data.alternativas.filter((d) =>
+        d.registered === false &&
+        !dominiosEnCarrito.has(d.domain)
+      );
+
       const conPrecios = disponibles.map((dom) => ({
         id: dom.domain,
         nombre: dom.domain,
@@ -137,9 +177,7 @@ function Dominios() {
         })
       });
 
-      console.log('🟡 ID Dominio:', dom.id);
-      console.log('🟡 ID Cuenta:', usuario.idcuenta);
-
+      setDominiosAgregados(prev => new Set(prev).add(dom.id));
       alert(`✅ Dominio ${dom.nombre} agregado al carrito.`);
     } catch (err) {
       console.error("Error de red:", err);
@@ -161,7 +199,6 @@ function Dominios() {
 
       {buscando && <Loader mensaje="Consultando dominios disponibles" />}
 
-
       {error && (
         <div className="alerta-error">
           {error}
@@ -170,47 +207,52 @@ function Dominios() {
 
       {buscado && !buscando && !error && (
         <>
-          <div className="resultado">
-            <div className="bloque resultado-dominio">
-              <div className="info-dominio">
-                <strong>{dominio.includes('.') ? dominio : `${dominio}.com`}</strong>
-                <div className="precio-dominio">
-                  {principalDisponible
-                    ? `$${(
-                        precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ?? 10000
-                      ).toLocaleString()} COP`
-                    : '$'}
+          {mostrarPrincipal && (
+            <div className="resultado">
+              <div className="bloque resultado-dominio">
+                <div className="info-dominio">
+                  <strong>{dominio.includes('.') ? dominio : `${dominio}.com`}</strong>
+                  <div className="precio-dominio">
+                    {principalDisponible
+                      ? `$${(
+                          precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ?? 10000
+                        ).toLocaleString()} COP`
+                      : '$'}
+                  </div>
+                  <p>
+                    {principalDisponible
+                      ? 'Este dominio está disponible'
+                      : 'Este dominio no está disponible'}
+                  </p>
                 </div>
-                <p>
-                  {principalDisponible
-                    ? 'Este dominio está disponible'
-                    : 'Este dominio no está disponible'}
-                </p>
+                <button
+                  className={principalDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
+                  disabled={
+                    !principalDisponible ||
+                    dominiosAgregados.has(dominio.includes('.') ? dominio : `${dominio}.com`)
+                  }
+                  onClick={() =>
+                    agregarAlCarrito({
+                      id: dominio.includes('.') ? dominio : `${dominio}.com`,
+                      nombre: dominio.includes('.') ? dominio : `${dominio}.com`,
+                      precio:
+                        precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ?? 10000,
+                    })
+                  }
+                >
+                  {dominiosAgregados.has(dominio.includes('.') ? dominio : `${dominio}.com`)
+                    ? "Agregado"
+                    : "Agregar al carrito"}
+                </button>
               </div>
-              <button
-                className={principalDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
-                disabled={!principalDisponible}
-                onClick={() =>
-                  principalDisponible &&
-                  agregarAlCarrito({
-                    id: dominio.includes('.') ? dominio : `${dominio}.com`,
-                    nombre: dominio.includes('.') ? dominio : `${dominio}.com`,
-                    precio:
-                      precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ??
-                      10000,
-                  })
-                }
-              >
-                Agregar al carrito
-              </button>
-            </div>
 
-            <div className="bloque hosting">
-              <strong>¿Ya cuenta con servicio de Hosting para su sitio web?</strong>
-              <p>ChibchaWeb ofrece este servicio a precios justos</p>
-              <button>Adquirir Hosting</button>
+              <div className="bloque hosting">
+                <strong>¿Ya cuenta con servicio de Hosting para su sitio web?</strong>
+                <p>ChibchaWeb ofrece este servicio a precios justos</p>
+                <button>Adquirir Hosting</button>
+              </div>
             </div>
-          </div>
+          )}
 
           <h3>Alternativas</h3>
 
@@ -226,8 +268,11 @@ function Dominios() {
                   <span>{r.nombre}</span>
                   <div className="precio-y-boton">
                     <span className="precio">${r.precio.toLocaleString()} COP</span>
-                    <button onClick={() => agregarAlCarrito(r)}>
-                      Agregar al carrito
+                    <button
+                      onClick={() => agregarAlCarrito(r)}
+                      disabled={dominiosAgregados.has(r.id)}
+                    >
+                      {dominiosAgregados.has(r.id) ? "Agregado" : "Agregar al carrito"}
                     </button>
                   </div>
                 </div>
