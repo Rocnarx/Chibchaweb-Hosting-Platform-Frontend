@@ -44,6 +44,10 @@ function Dominios() {
         }
       );
 
+      if (res.status === 404) {
+        // No hay dominios previos, no es un error fatal
+        return new Set();
+      }
       if (!res.ok) return new Set();
 
       const datos = await res.json();
