@@ -29,7 +29,6 @@ function Dominios() {
       setInput(dominioInicial);
       manejarBusqueda(dominioInicial);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const obtenerDominiosEnCarrito = async () => {
@@ -194,7 +193,7 @@ function Dominios() {
           value={input}
           onChange={e => setInput(e.target.value)}
         />
-        <button onClick={() => manejarBusqueda()}>Buscar Dominio</button>
+        <button className="boton-adquirir" onClick={() => manejarBusqueda()}>Buscar Dominio</button>
       </div>
 
       {buscando && <Loader mensaje="Consultando dominios disponibles" />}
@@ -226,7 +225,7 @@ function Dominios() {
                   </p>
                 </div>
                 <button
-                  className={principalDisponible ? 'boton-adquirir' : 'boton-deshabilitado'}
+                  className={principalDisponible ? 'btn-agregar' : 'boton-deshabilitado'}
                   disabled={
                     !principalDisponible ||
                     dominiosAgregados.has(dominio.includes('.') ? dominio : `${dominio}.com`)
@@ -249,7 +248,7 @@ function Dominios() {
               <div className="bloque hosting">
                 <strong>¿Ya cuenta con servicio de Hosting para su sitio web?</strong>
                 <p>ChibchaWeb ofrece este servicio a precios justos</p>
-                <button>Adquirir Hosting</button>
+                <button className="btn-agregar">Adquirir Hosting</button>
               </div>
             </div>
           )}
@@ -269,6 +268,7 @@ function Dominios() {
                   <div className="precio-y-boton">
                     <span className="precio">${r.precio.toLocaleString()} COP</span>
                     <button
+                      className="boton-adquirir"
                       onClick={() => agregarAlCarrito(r)}
                       disabled={dominiosAgregados.has(r.id)}
                     >

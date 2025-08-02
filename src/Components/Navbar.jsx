@@ -3,6 +3,9 @@ import './Navbar.css';
 import logo from './resources/logo.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from '../Context/UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMoon } from '@fortawesome/free-solid-svg-icons';
+import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -11,7 +14,6 @@ function Navbar() {
   const { usuario } = useUser();
   const navigate = useNavigate();
 
-  // Al cargar, recupera el modo guardado en localStorage
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedMode);
@@ -35,7 +37,6 @@ function Navbar() {
     }
   };
 
-  // Cierra el menú si se hace clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -59,7 +60,6 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      {/* Logo + marca */}
       <NavLink to="/" className="navbar-logo">
         <div className="navbar-left">
           <img src={logo} alt="Logo" className="logo-img" />
@@ -70,12 +70,10 @@ function Navbar() {
         </div>
       </NavLink>
 
-      {/* Icono hamburguesa */}
       <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         ☰
       </div>
 
-      {/* Menú y botones */}
       <div className={`navbar-right ${menuOpen ? 'open' : ''}`} ref={menuRef}>
         <ul className="navbar-menu">
           <li><NavLink to="/" className="nav-link" onClick={handleMenuClick}>Inicio</NavLink></li>
@@ -91,7 +89,7 @@ function Navbar() {
         </button>
 
         <button className="mode-toggle-button" onClick={toggleDarkMode}>
-          {darkMode ? "◯ Claro" : "◉ Oscuro"}
+          <FontAwesomeIcon icon={darkMode ? faCircleHalfStroke : faMoon} />
         </button>
       </div>
     </nav>

@@ -1,6 +1,8 @@
 import './Carrito.css';
 import { useEffect, useState } from 'react';
 import { useUser } from '../Context/UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Carrito() {
   const { usuario } = useUser();
@@ -164,7 +166,7 @@ function Carrito() {
                 <span className="nombre">{item.nombre}</span>
                 <span className="precio">${item.precio.toLocaleString()} COP</span>
                 <button className="btn-eliminar" onClick={() => eliminarDominio(item.nombre)}>
-                  🗑
+                  <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>
             ))}
@@ -193,7 +195,7 @@ function Carrito() {
             <div className="linea total">
               <span>Total</span>
               <span>${totalConDescuento.toLocaleString()} COP</span>
-            </div>
+            </div >
 
             <button
               className="btn-pago"

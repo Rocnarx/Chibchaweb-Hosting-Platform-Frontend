@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import "./Login.css";
 import logo from "../Components/resources/logo.png";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../Context/UserContext"; // Si estás usando contexto
+import { useUser } from "../Context/UserContext";
 
 export default function Login() {
   const [form, setForm] = useState({ usuario: "", password: "" });
   const [mensaje, setMensaje] = useState("");
-  const [cargando, setCargando] = useState(false); // Nuevo estado para bloquear botón
+  const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
   const { setUsuario } = useUser();
 
@@ -19,7 +19,7 @@ export default function Login() {
   const manejarSubmit = async (e) => {
     e.preventDefault();
     setMensaje("");
-    setCargando(true); // Desactivar botón
+    setCargando(true);
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
@@ -49,7 +49,7 @@ export default function Login() {
       console.error("❌ Error de red:", err);
       setMensaje("❌ Error de red al intentar iniciar sesión");
     } finally {
-      setCargando(false); // Reactivar botón
+      setCargando(false);
     }
   };
 
@@ -61,7 +61,6 @@ export default function Login() {
         <h2 className="titulo-login">Iniciar sesión</h2>
 
         <form onSubmit={manejarSubmit}>
-
           <input
             type="text"
             name="usuario"
@@ -78,7 +77,8 @@ export default function Login() {
             onChange={manejarCambio}
             required
           />
-          <button type="submit" disabled={cargando}> {/* DESABILITA BOTON DE INICIO PARA EMPEZAR LA CARGA */}
+          {/* botón sin clases externas */}
+          <button type="submit" disabled={cargando}>
             {cargando ? "Entrando..." : "Entrar"}
           </button>
         </form>
@@ -88,7 +88,7 @@ export default function Login() {
         <p className="enlace">
           ¿No tienes cuenta? <a href="/registro">Regístrate</a>
           <p className="enlace-prueba">
-          ¿Eres una empresa?<a href="/registroDistribuidor">¡Regístrate como distribuidor!</a>
+            ¿Eres una empresa? <a href="/registroDistribuidor">¡Regístrate como distribuidor!</a>
           </p>
         </p>
       </div>

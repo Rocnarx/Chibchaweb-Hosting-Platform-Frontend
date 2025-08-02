@@ -91,9 +91,9 @@
 }
 
 .btn-pago {
-  margin-top: 28px;
-  width: 100%;
-  padding: 14px;
+  display: block;
+  margin: 28px auto 0 auto;
+  padding: 14px 24px;
   background-color: #924600;
   color: white;
   border: none;
@@ -101,7 +101,9 @@
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
+  width: fit-content;
 }
+
 
 /* BOTÓN DE NAVBAR */
 
@@ -161,18 +163,24 @@ text-decoration: underline;
 }
 
 .btn-eliminar {
-  background: none;
+  background: rgba(255, 169, 77, 0.2); /* fondo translúcido */
   border: none;
-  color: #924600;
+  color: var(--cafe); /* color por defecto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 4px;
   font-size: 18px;
-  cursor: pointer;
-  margin-left: 12px;
-  transition: color 0.2s;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .btn-eliminar:hover {
-  color: #c0392b;
+  background-color: rgba(146, 70, 0, 0.2);
+  color: #7a3600;
 }
+
+
 
 /* ===== MODO OSCURO: Carrito ===== */
 body.dark-mode .carrito {
@@ -216,9 +224,11 @@ body.dark-mode .lista-dominios::-webkit-scrollbar-track {
 }
 
 body.dark-mode .btn-eliminar {
-  color: #FFA94D;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 body.dark-mode .btn-eliminar:hover {
-  color: #ff5c5c;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ff5555; /* o blanco si lo prefieres */
 }

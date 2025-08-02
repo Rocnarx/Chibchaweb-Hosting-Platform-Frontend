@@ -72,42 +72,39 @@
 
 /* Botón carrito */
 .cart-button {
-  background-color: #924600;
+  background-color: #a45200;
   color: white;
   border: none;
-  padding: 10px 22px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 8px 16px;
+  font-weight: bold;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s;
 }
 
 .cart-button:hover {
-  background-color: #703700;
+  background-color: #873d00;
 }
 
-/* Botón modo oscuro/claro */
+/* Botón modo oscuro/claro — mismo estilo que carrito */
 .mode-toggle-button {
-  background-color: #924600;
+  background-color: #a45200;
   color: white;
   border: none;
-  padding: 10px 22px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 8px 16px;
+  font-weight: bold;
+  border-radius: 10px;
   cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  transition: background 0.3s;
 }
 
 .mode-toggle-button:hover {
-  background-color: #703700;
+  background-color: #873d00;
 }
 
 /* Remueve el subrayado por defecto */
-.nav-link, .navbar-logo {
+.nav-link,
+.navbar-logo {
   text-decoration: none;
   color: inherit;
 }
@@ -184,9 +181,7 @@ body.dark-mode .mode-toggle-button:hover {
     overflow: hidden;
     max-height: 0;
     opacity: 0;
-    transition:
-      max-height 0.4s ease,
-      opacity 0.3s ease;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
     border-top: 1px solid #eee;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     z-index: 5;
@@ -203,16 +198,22 @@ body.dark-mode .mode-toggle-button:hover {
     margin-top: 10px;
   }
 
-  .cart-button,
-  .mode-toggle-button {
-    width: 90%;
-    text-align: center;
-    margin-bottom: 10px;
+  .btn-modo {
+    background-color: #ffaa4d;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  body.dark-mode .navbar-right {
-    background-color: #1E1E1E;
-    border-top: 1px solid #333;
-    box-shadow: 0 2px 6px rgba(255, 255, 255, 0.05);
+  .btn-modo:hover {
+    background-color: #e6952e;
   }
+  
 }
