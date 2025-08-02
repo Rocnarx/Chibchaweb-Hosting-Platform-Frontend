@@ -92,12 +92,11 @@ function Carrito() {
     setPagando(true);
 
     try {
-      console.log("🧾 Iniciando proceso de pago...");
-
       const dominiosAActualizar = items.map((item) => ({
         iddominio: item.nombre,
       }));
 
+      // Paso 1: Llamar al endpoint para actualizar los dominios y generar factura
       const response = await fetch(`${import.meta.env.VITE_API_URL}/ActualizarOcupadoDominio`, {
         method: "PUT",
         headers: {
@@ -112,15 +111,40 @@ function Carrito() {
         throw new Error(`Error actualizando dominios: ${errorText}`);
       }
 
-      await cargarCarrito();
-      alert("✅ Pago realizado y dominios actualizados correctamente.");
+      const resultado = await response.json();
+      const facturaId = resultado.factura_id;
+
+      // Paso 2: Llamar al endpoint para enviar la factura
+      if (facturaId) {
+          const envio = await fetch(`${import.meta.env.VITE_API_URL}/EnviarFactura/${facturaId}`, {
+          headers: {
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          },
+        });
+
+        const datosEnvio = await envio.json();
+          console.log("📩 Respuesta al enviar factura:", envio.status, datosEnvio);
+
+
+        if (!envio.ok) {
+          throw new Error(`Error enviando la factura: ${datosEnvio?.mensaje || 'sin detalles'}`);
+        }
+
+        // Paso 3: Mostrar mensaje final
+        alert(`✅ ${datosEnvio.mensaje}`);
+      } else {
+        throw new Error("No se pudo obtener el ID de la factura.");
+      }
+
+      await cargarCarrito(); // Vaciar o actualizar carrito si aplica
     } catch (err) {
       console.error("❌ Error durante el pago:", err);
-      alert("❌ Ocurrió un error durante el pago.");
+      alert("❌ Ocurrió un error durante el proceso de pago.");
     } finally {
       setPagando(false);
     }
   };
+
 
   const eliminarDominio = async (iddominio) => {
     if (!usuario || !usuario.idcuenta) return;
