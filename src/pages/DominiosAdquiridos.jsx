@@ -16,36 +16,58 @@ function DominiosAdquiridos() {
     if (!usuario?.idcuenta) return;
 
     setCargando(true);
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/dominios/vigencia?idcuenta=${encodeURIComponent(String(usuario.idcuenta))}`,
-        {
-          headers: {
-            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error("Error al obtener dominios");
-
-      const data = await res.json();
-
-      if (Array.isArray(data)) {
-        setDominios(
-          data.map((d) => ({
-            nombre: d.nombre_dominio,
-            diasRestantes: d.dias_restantes,
-          }))
-        );
-      } else {
-        setDominios([]);
-      }
-    } catch (err) {
-      console.error("❌ Error al cargar dominios:", err.message || err);
-      setError("❌ Error al cargar dominios");
-    } finally {
-      setCargando(false);
+try {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/dominios/vigencia?idcuenta=${encodeURIComponent(String(usuario.idcuenta))}`,
+    {
+      headers: {
+        "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+      },
     }
+  );
+
+  // Si es 404 con mensaje "No se encontraron dominios", lo tratamos como respuesta vacía
+  if (res.status === 404) {
+    const texto = await res.text();
+    const json = JSON.parse(texto);
+
+    if (json?.detail?.includes("No se encontraron dominios")) {
+      setDominios([]);
+      setError(""); // no mostrar error
+      return;
+    } else {
+      throw new Error(`(404) ${texto}`);
+    }
+  }
+
+  if (!res.ok) {
+    const texto = await res.text();
+    throw new Error(`(${res.status}) ${texto}`);
+  }
+
+  const data = await res.json();
+
+  if (Array.isArray(data)) {
+    setDominios(
+      data.map((d) => ({
+        nombre: d.nombre_dominio,
+        diasRestantes: d.dias_restantes,
+      }))
+    );
+  } else {
+    setDominios([]);
+  }
+} catch (err) {
+  console.error("❌ Error al cargar dominios:", err);
+  if (err instanceof Error) {
+    setError("❌ Error al cargar dominios: " + err.message);
+  } else {
+    setError("❌ Error al cargar dominios");
+  }
+} finally {
+  setCargando(false);
+}
+
   };
 
   useEffect(() => {
