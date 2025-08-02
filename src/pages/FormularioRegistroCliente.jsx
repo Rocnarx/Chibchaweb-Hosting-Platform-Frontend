@@ -11,14 +11,20 @@ export default function FormularioRegistro() {
     telefono: "",
     idCredencialCuenta: "",
     contrasenaCuenta: "",
-    idpais: "170", // Colombia por defecto
+    idpais: "170",
+    idplan: "1"
   });
 
   const [mensaje, setMensaje] = useState("");
-  const [cargando, setCargando] = useState(false); // estado para desactivar botón
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
+
+    // Solo permitir números en identificación y teléfono
+    if ((name === "identificacion" || name === "telefono") && /[^\d]/.test(value)) {
+      return;
+    }
+
     setForm({ ...form, [name]: value });
   };
 
@@ -40,102 +46,172 @@ export default function FormularioRegistro() {
       return;
     }
 
-    setCargando(true); //  desactiva el botón
-
     const datos = {
       identificacion: form.identificacion,
       nombrecuenta: form.nombreCuenta,
       correo: form.correo,
-      telefono: form.telefono ? parseInt(form.telefono, 10) : undefined,
+      telefono: form.telefono ? parseInt(form.telefono) : undefined,
       direccion: form.direccion,
       idtipocuenta: 1,
-      idpais: parseInt(form.idpais, 10),
-      idplan: "0",
-      password: form.contrasenaCuenta,
+      idpais: parseInt(form.idpais),
+      idplan: form.idplan,
+      password: form.contrasenaCuenta
     };
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY
         },
-        body: JSON.stringify(datos),
+        body: JSON.stringify(datos)
       });
 
-      if (!res.ok) {
+      if (res.ok) {
+        const respuesta = await res.json();
+        const idcuenta = respuesta.idcuenta;
+
+        // ✅ Crear el carrito
+        const nuevoCarrito = {
+          idestadocarrito: "1",
+          idcuenta: idcuenta,
+          idmetodopagocuenta: "1"
+        };
+
+        const resCarrito = await fetch(`${import.meta.env.VITE_API_URL}/agregarCarrito`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY
+          },
+          body: JSON.stringify(nuevoCarrito)
+        });
+
+        if (resCarrito.ok) {
+          setMensaje("¡Cuenta registrada y carrito creado!");
+        } else {
+          setMensaje("Cuenta registrada, pero no se pudo crear el carrito.");
+        }
+
+        setForm({
+          nombreCuenta: "",
+          identificacion: "",
+          direccion: "",
+          correo: "",
+          telefono: "",
+          idCredencialCuenta: "",
+          contrasenaCuenta: "",
+          idpais: "170",
+          idplan: "1"
+        });
+      } else {
         const texto = await res.text();
-        setMensaje(`❌ Error: ${texto}`);
-        return;
+        setMensaje(`Error: ${texto}`);
       }
-
-      setMensaje("✅ Cuenta registrada y carrito creado con éxito.");
-      setForm({
-        nombreCuenta: "",
-        identificacion: "",
-        direccion: "",
-        correo: "",
-        telefono: "",
-        idCredencialCuenta: "",
-        contrasenaCuenta: "",
-        idpais: "170",
-      });
     } catch (err) {
-      console.error("Error de red:", err);
-      setMensaje("❌ Error de red al registrar la cuenta.");
-    } finally {
-      setCargando(false); //  Reactiva el botón
+      setMensaje("Error de red al registrar la cuenta.");
     }
   };
 
   return (
     <div className="registro-container">
       <div className="registro-imagen"></div>
-
+<div className="form-wrapper">
       <div className="registro-form">
         <img src={logo} alt="ChibchaWeb logo" className="registro-logo" />
         <h3 className="subtitulo">Accede a nuestros planes de hosting</h3>
         <h1 className="titulo">Crea tu cuenta y empieza a construir tu presencia en la web</h1>
 
-        <form onSubmit={manejarSubmit}>
-          <div className="separador-formulario">Datos personales</div>
-          <input type="text" placeholder="Nombre completo" name="nombreCuenta" required value={form.nombreCuenta} onChange={manejarCambio} />
-          <input type="text" placeholder="Identificación" name="identificacion" required value={form.identificacion} onChange={manejarCambio} />
-          <input type="text" placeholder="Dirección (opcional)" name="direccion" value={form.direccion} onChange={manejarCambio} />
+        <div className="form-wrapper">
+          <form onSubmit={manejarSubmit} className="form-dos-columnas">
+            {/* Columna izquierda */}
+            <div className="columna-formulario">
+              <div className="separador-formulario">Datos personales</div>
+              <input
+                type="text"
+                placeholder="Nombre completo"
+                name="nombreCuenta"
+                required
+                value={form.nombreCuenta}
+                onChange={manejarCambio}
+              />
+              <input
+                type="text"
+                placeholder="Identificación"
+                name="identificacion"
+                required
+                value={form.identificacion}
+                onChange={manejarCambio}
+                maxLength={10}
+              />
+              <input
+                type="text"
+                placeholder="Dirección (opcional)"
+                name="direccion"
+                value={form.direccion}
+                onChange={manejarCambio}
+              />
 
-          <div className="separador-formulario">Datos de contacto</div>
-          <input type="email" placeholder="Correo electrónico" name="correo" required value={form.correo} onChange={manejarCambio} />
-          <input type="tel" placeholder="Teléfono (opcional)" name="telefono" value={form.telefono} onChange={manejarCambio} />
+              <div className="separador-formulario">Datos de contacto</div>
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                name="correo"
+                required
+                value={form.correo}
+                onChange={manejarCambio}
+              />
+              <input
+                type="tel"
+                placeholder="Teléfono (opcional)"
+                name="telefono"
+                value={form.telefono}
+                onChange={manejarCambio}
+                maxLength={10}
+              />
+            </div>
 
-          <div className="separador-formulario">Credenciales</div>
-          <input type="text" placeholder="Nombre de usuario" name="idCredencialCuenta" value={form.idCredencialCuenta} onChange={manejarCambio} />
-          <input type="password" placeholder="Contraseña" name="contrasenaCuenta" required value={form.contrasenaCuenta} onChange={manejarCambio} />
+            {/* Columna derecha */}
+            <div className="columna-formulario">
+              <div className="separador-formulario">Credenciales</div>
+              <input
+                type="text"
+                placeholder="Nombre de usuario"
+                name="idCredencialCuenta"
+                value={form.idCredencialCuenta}
+                onChange={manejarCambio}
+              />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                name="contrasenaCuenta"
+                required
+                value={form.contrasenaCuenta}
+                onChange={manejarCambio}
+              />
 
-          <div className="separador-formulario">País</div>
-          <select name="idpais" value={form.idpais} onChange={manejarCambio}>
-            <option value="76">Brasil</option>
-            <option value="170">Colombia</option>
-            <option value="218">Ecuador</option>
-            <option value="604">Perú</option>
-            <option value="862">Venezuela</option>
-          </select>
+              <div className="separador-formulario">País</div>
+              <select name="idpais" value={form.idpais} onChange={manejarCambio}>
+                <option value="76">Brasil</option>
+                <option value="170">Colombia</option>
+                <option value="218">Ecuador</option>
+                <option value="604">Perú</option>
+                <option value="862">Venezuela</option>
+              </select>
 
-          <button type="submit" disabled={cargando}>
-            {cargando ? "Registrando..." : "Registrarse"}
-          </button>
-        </form>
+              <button type="submit">Registrarse</button>
+            </div>
+          </form>
+        </div>
 
         {mensaje && <p className="mensaje-estado">{mensaje}</p>}
 
         <p className="login-link">
-          ¿Ya tienes una cuenta?{" "}
-          <a href="#" onClick={e => { e.preventDefault(); window.location.href = "/login"; }}>
-            Inicia sesión
-          </a>
+          ¿Ya tienes una cuenta? <a href="#">Inicia sesión</a>
         </p>
       </div>
-
+</div>
       <div className="registro-imagen"></div>
     </div>
   );

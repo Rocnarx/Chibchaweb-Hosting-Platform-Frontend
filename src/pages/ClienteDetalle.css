@@ -1,0 +1,55 @@
+.cliente-detalle-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.cliente-detalle-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.cliente-info p {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  color: #333;
+}
+
+.cliente-info strong {
+  color: #1a5276;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.cargando {
+  text-align: center;
+  color: #666;
+  margin-top: 2rem;
+}
+
+.btn-volver {
+  margin-top: 2rem;
+  display: block;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-volver:hover {
+  background-color: #1f6391;
+}

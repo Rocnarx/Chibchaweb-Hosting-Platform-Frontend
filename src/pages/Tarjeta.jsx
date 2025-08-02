@@ -24,8 +24,8 @@ export default function Tarjeta() {
     setMensaje("");
 
     try {
-      // Validar número de tarjeta (máximo 10 dígitos)
-      const numeroLimpio = form.numero.replace(/\D/g, ""); // solo números
+      
+      const numeroLimpio = form.numero.replace(/\D/g, ""); 
       if (numeroLimpio.length !== 10 || isNaN(numeroLimpio)) {
         throw new Error("Número de tarjeta inválido. Debe tener 10 dígitos numéricos.");
       }
@@ -37,7 +37,7 @@ export default function Tarjeta() {
       }
 
       const tarjetaPayload = {
-        idtipotarjeta: 1, // 1 = Mastercard (ajústalo según corresponda)
+        idtipotarjeta: 1, 
         numerotarjeta: parseInt(numeroLimpio),
         ccv: parseInt(form.cvc),
         fechavto: `20${anio}-${mes}-01`,
@@ -58,7 +58,7 @@ export default function Tarjeta() {
       }
 
       const tarjetaData = await resTarjeta.json();
-      const idtarjeta = String(tarjetaData.idtarjeta ?? "11"); // Fallback para pruebas
+      const idtarjeta = String(tarjetaData.idtarjeta ?? "11"); 
 
       const metodoPagoPayload = {
         idmetodopagocuenta: "1111111224",
@@ -82,10 +82,10 @@ export default function Tarjeta() {
         throw new Error(errorMetodo.detail || "Error al asociar el método de pago");
       }
 
-      setMensaje("✅ Tarjeta y método de pago guardados correctamente.");
+      setMensaje(" Tarjeta y método de pago guardados correctamente.");
     } catch (error) {
-      console.error("❌ Error al guardar tarjeta:", error);
-      setMensaje(`❌ ${error.message}`);
+      console.error(" Error al guardar tarjeta:", error);
+      setMensaje(` ${error.message}`);
     }
   };
 

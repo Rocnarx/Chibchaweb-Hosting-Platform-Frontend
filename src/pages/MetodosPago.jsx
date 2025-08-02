@@ -25,7 +25,7 @@ export default function MetodosPago() {
         const data = await res.json();
         setMetodos(data.metodos_pago || []);
       } catch (err) {
-        console.error("❌ Error:", err);
+        console.error(" Error:", err);
         setError("No se pudieron cargar los métodos de pago.");
       } finally {
         setCargando(false);

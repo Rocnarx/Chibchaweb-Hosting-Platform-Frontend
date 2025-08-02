@@ -1,0 +1,106 @@
+.navbar-admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background-color: #1f1f1f;
+  font-family: 'Segoe UI', sans-serif;
+  border-bottom: 2px solid #ffc107;
+  position: relative;
+  z-index: 10;
+  color: white;
+}
+
+.navbar-left-admin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img-admin {
+  height: 48px;
+  width: 48px;
+  object-fit: contain;
+}
+
+.brand-text-admin {
+  display: flex;
+  flex-direction: column;
+  color: #ffc107;
+  font-size: 16px;
+}
+
+.subtitle-admin {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.hamburger-admin {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: white;
+}
+
+.navbar-right-admin {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.navbar-menu-admin {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-menu-admin li {
+  cursor: pointer;
+}
+
+.nav-link-admin {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav-link-admin:hover,
+.nav-link-admin.active {
+  color: #ffc107;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hamburger-admin {
+    display: block;
+  }
+
+  .navbar-right-admin {
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 100%;
+    background-color: #1f1f1f;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    border-top: 1px solid #ffc107;
+  }
+
+  .navbar-right-admin.open {
+    max-height: 300px;
+    opacity: 1;
+  }
+
+  .navbar-menu-admin {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+  }
+}
