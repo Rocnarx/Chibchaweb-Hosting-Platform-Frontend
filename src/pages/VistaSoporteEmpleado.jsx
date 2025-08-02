@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './VistaSoporteEmpleado.css';
+import { mockTickets } from '../data/mockTickets';
 
 function VistaSoporteEmpleado() {
   const [tickets, setTickets] = useState([]);
