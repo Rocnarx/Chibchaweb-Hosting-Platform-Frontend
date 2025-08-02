@@ -34,3 +34,12 @@
   align-items: center;
   justify-content: center;
 }
+
+body.dark-mode .plans-section {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+body.dark-mode .plans-heading {
+  color: #FFA94D;
+}

@@ -218,4 +218,45 @@
     opacity: 1;
     transform: translateY(0);
   }
+  
 }
+
+/* ===== MODO OSCURO: redefinición de variables ===== */
+body.dark-mode {
+  --cafe: #FFA94D;
+  --crema: #2c2c2c;
+  --crema-borde: #444;
+  --error-fondo: #4e0000;
+  --error-borde: #b94a48;
+  --error-texto: #ffaaaa;
+  --carga-fondo: #2c2c2c;
+  --carga-borde: #FFA94D;
+  --carga-brillo1: #e38b31;
+  --carga-brillo2: #ffb155;
+}
+
+/* Estilos adicionales por si hay elementos que usan color fijo */
+body.dark-mode .precio-dominio,
+body.dark-mode .alternativa .precio,
+body.dark-mode .bloque p {
+  color: #ffffff;
+}
+
+body.dark-mode .alternativa {
+  background-color: var(--crema);
+  border: 1px solid var(--crema-borde);
+}
+
+body.dark-mode .buscador input {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+body.dark-mode .boton-adquirir,
+body.dark-mode .bloque.hosting button,
+body.dark-mode .alternativa button,
+body.dark-mode .buscador button {
+  color: #000000 !important;
+}
+

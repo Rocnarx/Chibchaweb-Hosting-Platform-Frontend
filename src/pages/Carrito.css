@@ -173,3 +173,52 @@ text-decoration: underline;
 .btn-eliminar:hover {
   color: #c0392b;
 }
+
+/* ===== MODO OSCURO: Carrito ===== */
+body.dark-mode .carrito {
+  color: #ffffff;
+}
+
+body.dark-mode .cantidad-items {
+  color: #cccccc;
+}
+
+body.dark-mode .item-dominio,
+body.dark-mode .resumen-pago {
+  background-color: #2c2c2c;
+  border: 1px solid #444;
+}
+
+body.dark-mode .item-dominio .check {
+  color: #FFA94D;
+}
+
+body.dark-mode .linea-separadora {
+  background-color: #444;
+}
+
+body.dark-mode .btn-pago {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode .btn-pago:hover {
+  background-color: #e38b31;
+}
+
+/* Scrollbar */
+body.dark-mode .lista-dominios::-webkit-scrollbar-thumb {
+  background-color: #FFA94D;
+}
+
+body.dark-mode .lista-dominios::-webkit-scrollbar-track {
+  background-color: #2c2c2c;
+}
+
+body.dark-mode .btn-eliminar {
+  color: #FFA94D;
+}
+
+body.dark-mode .btn-eliminar:hover {
+  color: #ff5c5c;
+}

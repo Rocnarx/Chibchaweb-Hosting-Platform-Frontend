@@ -73,3 +73,37 @@
   font-size: 15px;
   color: #444;
 }
+
+/* ===== MODO OSCURO: Mis Dominios ===== */
+body.dark-mode .mis-dominios {
+  color: #ffffff;
+}
+
+body.dark-mode .cantidad-items {
+  color: #cccccc;
+}
+
+body.dark-mode .linea-separadora {
+  background-color: #444;
+}
+
+body.dark-mode .lista-dominios::-webkit-scrollbar-thumb {
+  background-color: #FFA94D;
+}
+
+body.dark-mode .lista-dominios::-webkit-scrollbar-track {
+  background-color: #2c2c2c;
+}
+
+body.dark-mode .dominio-item {
+  background-color: #2c2c2c;
+  border: 1px solid #555;
+}
+
+body.dark-mode .dominio-item .nombre {
+  color: #ffffff;
+}
+
+body.dark-mode .dominio-item .vence {
+  color: #cccccc;
+}

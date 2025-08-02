@@ -114,3 +114,56 @@
   background-color: #924600;
   transform: scale(1.02);
 }
+
+/* ===== MODO OSCURO: Extensiones ===== */
+body.dark-mode .extensiones-wrapper {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+body.dark-mode .extensiones-contenedor {
+  background-color: #2c2c2c;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .extensiones-contenedor h1 {
+  color: #FFA94D;
+}
+
+body.dark-mode .extensiones-contenedor p {
+  color: #cccccc;
+}
+
+body.dark-mode .ext-card {
+  background-color: #3a3a3a;
+  box-shadow: 0 0 0 1px #555;
+}
+
+body.dark-mode .ext-card span,
+body.dark-mode .ext-card strong {
+  color: #ffffff;
+}
+
+body.dark-mode .editor-precio input {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #777;
+}
+
+body.dark-mode .editor-precio input:focus {
+  border-color: #FFA94D;
+}
+
+body.dark-mode .editor-precio button {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode .boton-guardar-global {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode .boton-guardar-global:hover {
+  background-color: #e38b31;
+}

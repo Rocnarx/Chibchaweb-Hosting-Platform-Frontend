@@ -145,3 +145,28 @@ button:hover,
   from { box-shadow: 0 0 10px #c79e61; }
   to   { box-shadow: 0 0 20px #ad8851; }
 }
+
+body.dark-mode {
+  background-color: #1E1E1E;
+  color: #FFFFFF;
+}
+
+body,
+body * {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+.cuenta-container,
+.navbar,
+.hero-section,
+.footer,
+button,
+input,
+main,
+section,
+.plan-card,
+.tarjeta,
+.modal,
+.ext-card {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}

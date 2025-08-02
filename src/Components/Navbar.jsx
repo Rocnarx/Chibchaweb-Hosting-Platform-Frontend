@@ -6,9 +6,34 @@ import { useUser } from '../Context/UserContext';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const menuRef = useRef();
   const { usuario } = useUser();
   const navigate = useNavigate();
+
+  // Al cargar, recupera el modo guardado en localStorage
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedMode);
+
+    if (savedMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem("darkMode", newMode);
+
+    if (newMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  };
 
   // Cierra el menú si se hace clic fuera
   useEffect(() => {
@@ -17,12 +42,10 @@ function Navbar() {
         setMenuOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Cierra menú al hacer clic en un link
   const handleMenuClick = () => setMenuOpen(false);
 
   const irAlCarrito = () => {
@@ -52,7 +75,7 @@ function Navbar() {
         ☰
       </div>
 
-      {/* Menú y carrito */}
+      {/* Menú y botones */}
       <div className={`navbar-right ${menuOpen ? 'open' : ''}`} ref={menuRef}>
         <ul className="navbar-menu">
           <li><NavLink to="/" className="nav-link" onClick={handleMenuClick}>Inicio</NavLink></li>
@@ -65,6 +88,10 @@ function Navbar() {
 
         <button className="cart-button" onClick={irAlCarrito}>
           Carrito
+        </button>
+
+        <button className="mode-toggle-button" onClick={toggleDarkMode}>
+          {darkMode ? "◯ Claro" : "◉ Oscuro"}
         </button>
       </div>
     </nav>

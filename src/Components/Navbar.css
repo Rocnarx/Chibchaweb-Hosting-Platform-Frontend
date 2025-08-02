@@ -86,6 +86,26 @@
   background-color: #703700;
 }
 
+/* Botón modo oscuro/claro */
+.mode-toggle-button {
+  background-color: #924600;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-toggle-button:hover {
+  background-color: #703700;
+}
+
 /* Remueve el subrayado por defecto */
 .nav-link, .navbar-logo {
   text-decoration: none;
@@ -97,13 +117,63 @@
   text-decoration: underline;
 }
 
+/* ==== MODO OSCURO ==== */
+body.dark-mode .navbar {
+  background-color: #1E1E1E;
+  border-bottom: 1px solid #333;
+}
+
+body.dark-mode .brand-text {
+  color: #FFA94D;
+}
+
+body.dark-mode .subtitle {
+  color: #CCCCCC;
+}
+
+body.dark-mode .navbar-menu li,
+body.dark-mode .nav-link {
+  color: #FFFFFF;
+}
+
+body.dark-mode .navbar-menu li:hover {
+  color: #FFA94D;
+}
+
+body.dark-mode .nav-link.active {
+  color: #FFA94D;
+  text-decoration: underline;
+}
+
+body.dark-mode .navbar-right {
+  background-color: #1E1E1E;
+}
+
+body.dark-mode .cart-button {
+  background-color: #FFA94D;
+  color: black;
+}
+
+body.dark-mode .cart-button:hover {
+  background-color: #e38b31;
+}
+
+body.dark-mode .mode-toggle-button {
+  background-color: #FFA94D;
+  color: black;
+}
+
+body.dark-mode .mode-toggle-button:hover {
+  background-color: #e38b31;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .hamburger {
     display: block;
   }
 
   .navbar-right {
-    display: flex;
     flex-direction: column;
     align-items: center;
     position: absolute;
@@ -123,7 +193,7 @@
   }
 
   .navbar-right.open {
-    max-height: 500px; /* Suficiente para el contenido del menú */
+    max-height: 500px;
     opacity: 1;
   }
 
@@ -133,9 +203,16 @@
     margin-top: 10px;
   }
 
-  .cart-button {
+  .cart-button,
+  .mode-toggle-button {
     width: 90%;
     text-align: center;
     margin-bottom: 10px;
+  }
+
+  body.dark-mode .navbar-right {
+    background-color: #1E1E1E;
+    border-top: 1px solid #333;
+    box-shadow: 0 2px 6px rgba(255, 255, 255, 0.05);
   }
 }
