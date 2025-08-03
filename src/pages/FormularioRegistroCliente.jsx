@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./FormularioRegistroCliente.css";
 import logo from "../Components/resources/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function FormularioRegistro() {
   const [form, setForm] = useState({
@@ -15,7 +16,8 @@ export default function FormularioRegistro() {
   });
 
   const [mensaje, setMensaje] = useState("");
-  const [cargando, setCargando] = useState(false); // estado para desactivar botón
+  const [cargando, setCargando] = useState(false);
+  const navigate = useNavigate();
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -40,13 +42,13 @@ export default function FormularioRegistro() {
       return;
     }
 
-    setCargando(true); //  desactiva el botón
+    setCargando(true);
 
     const datos = {
       identificacion: form.identificacion,
       nombrecuenta: form.nombreCuenta,
       correo: form.correo,
-      telefono: form.telefono ? parseInt(form.telefono, 10) : undefined,
+      telefono: form.telefono ? parseInt(form.telefono, 10) : 0,
       direccion: form.direccion,
       idtipocuenta: 1,
       idpais: parseInt(form.idpais, 10),
@@ -70,7 +72,20 @@ export default function FormularioRegistro() {
         return;
       }
 
-      setMensaje("✅ Cuenta registrada y carrito creado con éxito.");
+      const respuesta = await res.json();
+      const idcuenta = respuesta.idcuenta;
+
+      // Guardar el ID de cuenta
+      localStorage.setItem("idCuenta", idcuenta);
+
+      // ✅ Guardar credenciales para login automático
+      localStorage.setItem("loginTemp", JSON.stringify({
+        identificacion: datos.identificacion,
+        password: datos.password,
+      }));
+
+      setMensaje("✅ Cuenta registrada. Redirigiendo a verificación...");
+
       setForm({
         nombreCuenta: "",
         identificacion: "",
@@ -81,11 +96,15 @@ export default function FormularioRegistro() {
         contrasenaCuenta: "",
         idpais: "170",
       });
+
+      setTimeout(() => {
+        navigate("/verificar");
+      }, 1500);
     } catch (err) {
       console.error("Error de red:", err);
       setMensaje("❌ Error de red al registrar la cuenta.");
     } finally {
-      setCargando(false); //  Reactiva el botón
+      setCargando(false);
     }
   };
 

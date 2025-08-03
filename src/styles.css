@@ -48,6 +48,8 @@ ul {
 }
 
 button {
+  background-color: var(--cafe);
+  color: var(--texto-boton);
   cursor: pointer;
 }
 
@@ -190,7 +192,6 @@ body,
 body * {
   transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
-
 .cuenta-container,
 .navbar,
 .hero-section,
