@@ -232,6 +232,198 @@ body.dark-mode .badge-items {
   background-color: #FFA94D;
   color: #1e1e1e;
 }
+/* ===== MODO OSCURO ===== */
+body.dark-mode .mis-dominios {
+  color: #ffffff;
+}
+
+body.dark-mode .linea-separadora {
+  background-color: #444;
+}
+
+body.dark-mode .titulo-dominios,
+body.dark-mode .icono {
+  color: #FFA94D;
+}
+
+body.dark-mode .subtexto-dominios {
+  color: #cccccc;
+}
+
+body.dark-mode .cantidad-items {
+  color: #aaaaaa;
+}
+
+body.dark-mode .badge-items {
+  background-color: #FFA94D;
+  color: #1e1e1e;
+}
+
+/* Scroll en modo oscuro */
+body.dark-mode .lista-dominios::-webkit-scrollbar-thumb {
+  background-color: #FFA94D;
+}
+
+body.dark-mode .lista-dominios::-webkit-scrollbar-track {
+  background-color: #2c2c2c;
+}
+
+/* Ítems de dominio */
+body.dark-mode .dominio-item {
+  background-color: #2c2c2c;
+  border: 1px solid #555;
+}
+
+body.dark-mode .dominio-item .nombre {
+  color: #ffffff;
+}
+
+body.dark-mode .dominio-item .vence {
+  color: #cccccc;
+}
+
+/* Modal de transferencia */
+body.dark-mode .modal-contenido {
+  background-color: #1e1e1e;
+  color: #FFA94D;
+  border: 1px solid #444;
+}
+
+body.dark-mode .modal-contenido h2 {
+  color: #FFA94D;
+}
+
+body.dark-mode .dominio-transferencia {
+  background-color: #2c2c2c;
+  color: #FFA94D;
+  border: 1px solid #555;
+}
+
+body.dark-mode .grupo-input label {
+  color: #ccc;
+}
+
+body.dark-mode .input-con-icono input {
+  background-color: #2c2c2c;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+body.dark-mode .input-con-icono input::placeholder {
+  color: #aaa;
+}
+
+body.dark-mode .modal-contenido .fa-envelope {
+  color: #FFA94D !important;
+}
+
+/* Error */
+body.dark-mode .error-box {
+  background-color: #3c2c2c;
+  color: #f8d7da;
+  border-color: #c97;
+}
+
+/* Botón Transferir (activo) - naranja */
+body.dark-mode .modal-contenido .grupo-botones button:first-child {
+  background-color: #FFA94D;
+  color: #1e1e1e;
+}
+
+/* Hover botón Transferir */
+body.dark-mode .modal-contenido .grupo-botones button:first-child:hover:not(:disabled) {
+  background-color: #ff9800;
+}
+
+/* Botón Transferir deshabilitado */
+body.dark-mode .modal-contenido .grupo-botones button:first-child:disabled {
+  background-color: #555;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Botón Cancelar */
+body.dark-mode .modal-contenido .cancelar {
+  background-color: #333 !important;
+  color: #ccc !important;
+}
+
+/* Estilo para el nombre del dominio en el modal */
+.dominio-transferencia {
+  background-color: #fdf3ec;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  border: 1px solid #e2c8b0;
+  word-break: break-word;
+}
+
+/* Grupo para el label e input */
+.grupo-input {
+  text-align: left;
+  width: 100%;
+}
+
+.grupo-input label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #555;
+}
+
+.input-con-icono {
+  position: relative;
+}
+
+.input-con-icono i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.input-con-icono input {
+  width: 100%;
+  padding: 12px 16px 12px 38px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.input-error {
+  border: 1px solid #e57373 !important;
+}
+
+/* Error de transferencia */
+.error-box {
+  margin-top: 8px;
+  color: #b94a48;
+  background-color: #fcebea;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* Botones al pie del modal */
+.grupo-botones {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cancelar {
+  background-color: #eee !important;
+  color: #333 !important;
+}
 
 @media (max-width: 600px) {
   .titulo-dominios {

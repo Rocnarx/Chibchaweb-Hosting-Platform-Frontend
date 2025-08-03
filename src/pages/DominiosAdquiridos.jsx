@@ -7,14 +7,12 @@ function DominiosAdquiridos() {
   const [dominios, setDominios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
-
   const [dominioSeleccionado, setDominioSeleccionado] = useState(null);
   const [correoDestino, setCorreoDestino] = useState("");
   const [errorTransferencia, setErrorTransferencia] = useState("");
 
   const cargarDominios = async () => {
     if (!usuario?.idcuenta) return;
-
     setCargando(true);
     try {
       const res = await fetch(
@@ -25,11 +23,22 @@ function DominiosAdquiridos() {
           },
         }
       );
-
-      if (!res.ok) throw new Error("Error al obtener dominios");
-
+      if (res.status === 404) {
+        const texto = await res.text();
+        const json = JSON.parse(texto);
+        if (json?.detail?.includes("No se encontraron dominios")) {
+          setDominios([]);
+          setError("");
+          return;
+        } else {
+          throw new Error(`(404) ${texto}`);
+        }
+      }
+      if (!res.ok) {
+        const texto = await res.text();
+        throw new Error(`(${res.status}) ${texto}`);
+      }
       const data = await res.json();
-
       if (Array.isArray(data)) {
         setDominios(
           data.map((d) => ({
@@ -41,8 +50,12 @@ function DominiosAdquiridos() {
         setDominios([]);
       }
     } catch (err) {
-      console.error("❌ Error al cargar dominios:", err.message || err);
-      setError("❌ Error al cargar dominios");
+      console.error("❌ Error al cargar dominios:", err);
+      if (err instanceof Error) {
+        setError("❌ Error al cargar dominios: " + err.message);
+      } else {
+        setError("❌ Error al cargar dominios");
+      }
     } finally {
       setCargando(false);
     }
@@ -54,7 +67,6 @@ function DominiosAdquiridos() {
 
   const manejarTransferencia = async () => {
     if (!correoDestino || errorTransferencia) return;
-
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/TransferenciaDominio`, {
         method: "PUT",
@@ -68,9 +80,7 @@ function DominiosAdquiridos() {
           correo_destino: correoDestino,
         }),
       });
-
       const data = await res.json();
-
       if (!res.ok) {
         if (data?.detail === "Cuenta de destino no encontrada") {
           setErrorTransferencia("El correo no está asociado a ninguna cuenta.");
@@ -79,7 +89,6 @@ function DominiosAdquiridos() {
         }
         return;
       }
-
       alert(`✅ Dominio "${dominioSeleccionado}" transferido a ${correoDestino}`);
       setCorreoDestino("");
       setDominioSeleccionado(null);
@@ -93,17 +102,14 @@ function DominiosAdquiridos() {
 
   return (
     <main className="mis-dominios">
-<div className="cabecera-dominios">
-  <h1 className="titulo-dominios">
-    <i className="fa-solid fa-globe icono"></i>
-    Mis Dominios
-  <span className="badge-items">{dominios.length}</span>
-  </h1>
-  <p className="subtexto-dominios">Seleccione un dominio si desea transferirlo</p>
-</div>
-
-
-
+      <div className="cabecera-dominios">
+        <h1 className="titulo-dominios">
+          <i className="fa-solid fa-globe icono"></i>
+          Mis Dominios
+          <span className="badge-items">{dominios.length}</span>
+        </h1>
+        <p className="subtexto-dominios">Seleccione un dominio si desea transferirlo</p>
+      </div>
 
       <div className="linea-separadora" />
 
@@ -128,9 +134,7 @@ function DominiosAdquiridos() {
             >
               <span className="nombre">{dom.nombre}</span>
               <span className="vence">
-                {dom.diasRestantes > 0
-                  ? `Vence en: ${dom.diasRestantes} día(s)`
-                  : "Dominio vencido"}
+                {dom.diasRestantes > 0 ? `Vence en: ${dom.diasRestantes} día(s)` : "Dominio vencido"}
               </span>
             </div>
           ))}
@@ -140,50 +144,12 @@ function DominiosAdquiridos() {
       {dominioSeleccionado && (
         <div className="modal-overlay">
           <div className="modal-contenido">
-            <h2 style={{ fontSize: '26px', marginBottom: '16px', color: '#333' }}>
-              Transferir dominio
-            </h2>
-
-            <div
-              style={{
-                backgroundColor: '#fdf3ec',
-                padding: '10px 16px',
-                borderRadius: '8px',
-                fontSize: '18px',
-                fontWeight: '600',
-                color: '#333',
-                marginBottom: '20px',
-                border: '1px solid #e2c8b0',
-                wordBreak: 'break-all',
-              }}
-            >
-              {dominioSeleccionado}
-            </div>
-
-            <div style={{ textAlign: 'left', width: '100%' }}>
-              <label
-                style={{
-                  display: 'block',
-                  marginBottom: '6px',
-                  fontSize: '15px',
-                  fontWeight: '500',
-                  color: '#555',
-                }}
-              >
-                Transferir a:
-              </label>
-
-              <div style={{ position: 'relative' }}>
-                <i
-                  className="fa-solid fa-envelope"
-                  style={{
-                    position: 'absolute',
-                    left: '12px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: '#888',
-                  }}
-                ></i>
+            <h2>Transferir dominio</h2>
+            <div className="dominio-transferencia">{dominioSeleccionado}</div>
+            <div className="grupo-input">
+              <label>Transferir a:</label>
+              <div className="input-con-icono">
+                <i className="fa-solid fa-envelope"></i>
                 <input
                   type="email"
                   placeholder="correo@ejemplo.com"
@@ -191,7 +157,6 @@ function DominiosAdquiridos() {
                   onChange={(e) => {
                     const valor = e.target.value;
                     setCorreoDestino(valor);
-
                     if (!valor) {
                       setErrorTransferencia("Ingresa un correo electrónico.");
                     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
@@ -200,71 +165,30 @@ function DominiosAdquiridos() {
                       setErrorTransferencia("");
                     }
                   }}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px 12px 38px',
-                    border: errorTransferencia ? '1px solid #e57373' : '1px solid #ccc',
-                    borderRadius: '10px',
-                    fontSize: '16px',
-                  }}
+                  className={errorTransferencia ? "input-error" : ""}
                 />
               </div>
-
               {errorTransferencia && (
-                <div
-                  style={{
-                    marginTop: '8px',
-                    color: '#b94a48',
-                    backgroundColor: '#fcebea',
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    fontSize: '14px',
-                  }}
-                >
+                <div className="error-box">
                   <i className="fa-solid fa-circle-exclamation"></i>
                   <span>{errorTransferencia}</span>
                 </div>
               )}
             </div>
-
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', gap: '12px' }}>
+            <div className="grupo-botones">
               <button
                 onClick={manejarTransferencia}
                 disabled={!!errorTransferencia || !correoDestino}
-                style={{
-                  backgroundColor: !!errorTransferencia || !correoDestino ? '#ccc' : '#cba27e',
-                  cursor: !!errorTransferencia || !correoDestino ? 'not-allowed' : 'pointer',
-                  padding: '10px 18px',
-                  fontSize: '16px',
-                  border: 'none',
-                  borderRadius: '10px',
-                  color: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
               >
                 <i className="fa-solid fa-paper-plane"></i>
                 Transferir
               </button>
-
               <button
+                className="cancelar"
                 onClick={() => {
                   setDominioSeleccionado(null);
                   setCorreoDestino("");
                   setErrorTransferencia("");
-                }}
-                style={{
-                  backgroundColor: '#eee',
-                  color: '#333',
-                  padding: '10px 18px',
-                  fontSize: '16px',
-                  border: 'none',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
                 }}
               >
                 Cancelar
