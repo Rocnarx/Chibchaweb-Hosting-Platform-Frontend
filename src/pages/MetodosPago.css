@@ -60,3 +60,39 @@ h2 {
   font-size: 0.85rem;
   color: #777;
 }
+
+/* ===== MODO OSCURO: Métodos de Pago ===== */
+body.dark-mode .metodos-container {
+  color: #ffffff;
+}
+
+body.dark-mode h2 {
+  color: #FFA94D;
+}
+
+body.dark-mode .error {
+  color: #ff7070;
+}
+
+body.dark-mode .tarjeta {
+  background-color: #2c2c2c;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .tarjeta.seleccionada {
+  border-color: #FFA94D;
+  background-color: #3a3a3a;
+}
+
+body.dark-mode .marca {
+  color: #dddddd;
+}
+
+body.dark-mode .numero {
+  color: #ffffff;
+}
+
+body.dark-mode .id-usuario {
+  color: #bbbbbb;
+}

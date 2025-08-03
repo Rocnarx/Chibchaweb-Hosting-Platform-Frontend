@@ -15,12 +15,21 @@ import Cuenta from "./pages/Cuenta";
 import Tarjeta from "./pages/Tarjeta";
 import MetodosPago from "./pages/MetodosPago";
 
+// Componentes para distribuidores y otros
+import FormularioD from "./pages/FormularioRegistroDistribuidor";
+import FormularioE from "./pages/FormularioRegistroEmpleado";
+import Soporte from "./pages/Soporte";
+import Comisiones from "./pages/Comisiones";
+import VistaSoporteEmpleado from "./pages/VistaSoporteEmpleado";
+import DominiosAdquiridos from "./pages/DominiosAdquiridos";
+
 // Componentes para administrador
 import AdminNavbar from "./Components/NavbarAdmin";
 import Extensiones from "./pages/Extensiones";
 import FooterAdmin from "./Components/FooterAdmin";
 import ClientesAdmin from "./pages/ClientesAdmin";
 import ClienteDetalle from "./pages/ClienteDetalle";
+
 function App() {
   const { usuario } = useUser();
   const esAdmin = usuario?.tipocuenta === "ADMIN";
@@ -35,14 +44,20 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<FormularioC />} />
+        <Route path="/registroDistribuidor" element={<FormularioD />} />
+        <Route path="/registroEmpleado" element={<FormularioE />} />
 
-        {/* Rutas exclusivas para clientes */}
+        {/* Rutas exclusivas para clientes (no admin) */}
         {!esAdmin && (
           <>
             <Route path="/dominios" element={<Dominios />} />
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/tarjeta" element={<Tarjeta />} />
             <Route path="/metodos" element={<MetodosPago />} />
+            <Route path="/soporte" element={<Soporte />} />
+            <Route path="/comisiones" element={<Comisiones />} />
+            <Route path="/panel-soporte" element={<VistaSoporteEmpleado />} />
+            <Route path="/DominiosAdquiridos" element={<DominiosAdquiridos />} />
           </>
         )}
 
@@ -53,24 +68,16 @@ function App() {
         />
 
         {/* Rutas exclusivas para administrador */}
-        {esAdmin && (
-          <Route path="/extensiones" element={<Extensiones />} />
-        )}
-        {esAdmin && (
-          <Route path="/ClientesAdmin" element={<ClientesAdmin />} />
-        )}
-        {esAdmin && (
-          <Route path="/clientes/:correo" element={<ClienteDetalle />} />
+        {esAdmin && <Route path="/extensiones" element={<Extensiones />} />}
+        {esAdmin && <Route path="/ClientesAdmin" element={<ClientesAdmin />} />}
+        {esAdmin && <Route path="/clientes/:correo" element={<ClienteDetalle />} />}
 
-        )}
-
-        {/* Ruta por defecto si no se encuentra */}
+        {/* Ruta por defecto */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
-      {/* Footer general (puedes cambiarlo si quieres otro para admin) */}
-      {usuario ? (esAdmin ? <FooterAdmin /> : <Footer />) : (<Footer />)}
-
+      {/* Footer según el tipo de cuenta */}
+      {usuario ? (esAdmin ? <FooterAdmin /> : <Footer />) : <Footer />}
     </>
   );
 }

@@ -1,5 +1,4 @@
-/* Footer.css */
-
+/* Footer base */
 .footer {
   background-color: #2e1b0e;
   color: #fff4e6;
@@ -40,14 +39,44 @@
   color: #ffddbb;
   text-decoration: none;
   font-size: 14px;
+  transition: color 0.3s ease;
 }
 
 .footer-links a:hover {
   text-decoration: underline;
+  color: #ffc58a;
 }
 
 .footer-copy {
   text-align: center;
   font-size: 12px;
   color: #bbb;
+}
+
+
+/* ===== MODO OSCURO ===== */
+
+body.dark-mode .footer {
+  background-color: #141414;
+  color: #eeeeee;
+}
+
+body.dark-mode .footer-brand h3 {
+  color: #FFA94D;
+}
+
+body.dark-mode .footer-brand p {
+  color: #cccccc;
+}
+
+body.dark-mode .footer-links a {
+  color: #f0f0f0;
+}
+
+body.dark-mode .footer-links a:hover {
+  color: #FFA94D;
+}
+
+body.dark-mode .footer-copy {
+  color: #999999;
 }

@@ -38,6 +38,8 @@ npm install
 # 4. Ejecutar el proyecto en desarrollo
 npm run dev
 
+#5 En .env.example añadir los datos correspondientes, y eliminar el .example
+
 
 
 ```

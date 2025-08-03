@@ -1,0 +1,226 @@
+.soporte-container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.soporte-formulario {
+  background: #fff9f3;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.soporte-formulario h2 {
+  margin-bottom: 25px;
+  color: #5c3d1b;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.soporte-formulario label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+.soporte-formulario input,
+.soporte-formulario textarea,
+.soporte-formulario select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-top: 6px;
+  font-size: 15px;
+  background: #fff;
+}
+
+.soporte-formulario button {
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.soporte-formulario button:hover {
+  background: #218838;
+}
+
+.soporte-tickets {
+  width: 100%;
+}
+
+.soporte-tickets h3 {
+  font-size: 1.5rem;
+  color: #5c3d1b;
+  margin-bottom: 15px;
+}
+
+.ticket {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff2e1;
+  border-left: 5px solid #c77a38;
+  padding: 12px 20px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.ticket-id {
+  font-weight: bold;
+  color: #a4531d;
+}
+
+.ticket-desc {
+  flex-grow: 1;
+  margin-left: 15px;
+  color: #333;
+}
+
+.ticket-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ticket-status.en-proceso {
+  background: #ffe6a1;
+  color: #9c7a00;
+}
+
+.ticket-status.resuelto {
+  background: #c1f1ce;
+  color: #247336;
+}
+
+.form-error {
+  color: #d8000c;
+  background: #ffd2d2;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.input-error {
+  border: 2px solid #d8000c !important;
+  background-color: #fff4f4;
+}
+
+/* ===== MODO OSCURO: Soporte ===== */
+body.dark-mode .soporte-container {
+  color: #ffffff;
+}
+
+body.dark-mode .soporte-formulario {
+  background: #2c2c2c;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .soporte-formulario h2 {
+  color: #FFA94D;
+}
+
+body.dark-mode .soporte-formulario label {
+  color: #dddddd;
+}
+
+body.dark-mode .soporte-formulario input,
+body.dark-mode .soporte-formulario textarea,
+body.dark-mode .soporte-formulario select {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #777;
+}
+
+body.dark-mode .soporte-formulario input::placeholder,
+body.dark-mode .soporte-formulario textarea::placeholder {
+  color: #aaaaaa;
+}
+
+body.dark-mode .soporte-formulario button {
+  background: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode .soporte-formulario button:hover {
+  background: #e38b31;
+}
+
+body.dark-mode .soporte-tickets h3 {
+  color: #FFA94D;
+}
+
+body.dark-mode .ticket {
+  background: #3a3a3a;
+  border-left: 5px solid #FFA94D;
+}
+
+body.dark-mode .ticket-id {
+  color: #FFA94D;
+}
+
+body.dark-mode .ticket-desc {
+  color: #dddddd;
+}
+
+body.dark-mode .ticket-status.en-proceso {
+  background: #5a4b1d;
+  color: #ffe97a;
+}
+
+body.dark-mode .ticket-status.resuelto {
+  background: #204c34;
+  color: #b2f3cb;
+}
+
+body.dark-mode .form-error {
+  background: #5a0000;
+  color: #ffaaaa;
+}
+
+body.dark-mode .input-error {
+  border-color: #ff4d4d !important;
+  background-color: #3a1f1f;
+}
+
+/* Forzar color de texto para inputs y selects en modo oscuro */
+body.dark-mode .soporte-formulario input,
+body.dark-mode .soporte-formulario textarea,
+body.dark-mode .soporte-formulario select {
+  background-color: #1e1e1e;
+  color: #ffffff !important;
+  border: 1px solid #777;
+}
+
+/* Placeholder de todos */
+body.dark-mode .soporte-formulario input::placeholder,
+body.dark-mode .soporte-formulario textarea::placeholder {
+  color: #aaaaaa;
+}
+
+/* Valor activo del <select> en algunos navegadores */
+body.dark-mode .soporte-formulario select option {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}

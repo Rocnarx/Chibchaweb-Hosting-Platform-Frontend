@@ -59,7 +59,7 @@ export default function FormularioRegistro() {
     };
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

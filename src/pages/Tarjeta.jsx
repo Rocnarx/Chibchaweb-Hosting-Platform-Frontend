@@ -58,10 +58,15 @@ export default function Tarjeta() {
       }
 
       const tarjetaData = await resTarjeta.json();
-      const idtarjeta = String(tarjetaData.idtarjeta ?? "11"); 
+
+if (!tarjetaData.idtarjeta) {
+  throw new Error("No se recibió el ID de la tarjeta registrada");
+}
+
+const idtarjeta = String(tarjetaData.idtarjeta);  // Usa el ID correcto
+ 
 
       const metodoPagoPayload = {
-        idmetodopagocuenta: "1111111224",
         idtarjeta: idtarjeta,
         idcuenta: String(usuario.idcuenta),
         idtipometodopago: 1,

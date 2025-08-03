@@ -1,0 +1,265 @@
+.mis-dominios {
+  width: 80%;
+  max-width: 1000px;
+  padding: 60px 40px;
+  margin: 0 auto;
+}
+
+.linea-separadora {
+  height: 1px;
+  background-color: #ddd;
+  margin: 10px 0 32px;
+  width: 100%;
+}
+
+/* Encabezado */
+.cabecera-dominios {
+  margin-bottom: 16px;
+}
+
+.titulo-dominios {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #5a2e00;
+  margin: 0;
+}
+
+.icono {
+  font-size: 26px;
+  margin-right: 2px;
+  color: #5a2e00;
+}
+
+.cantidad-items {
+  font-size: 18px;
+  font-weight: 500;
+  color: #777;
+}
+
+.subtexto-dominios {
+  font-size: 15px;
+  color: #666;
+  margin-top: 4px;
+  margin-bottom: 1px;
+}
+
+/* Lista de dominios */
+.lista-dominios {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-height: 500px;
+  padding-top: 1px;
+  padding-left: 8px;
+  padding-right: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.lista-dominios::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lista-dominios::-webkit-scrollbar-thumb {
+  background-color: #cba27e;
+  border-radius: 6px;
+}
+
+.lista-dominios::-webkit-scrollbar-track {
+  background-color: #fdf3ec;
+  border-radius: 6px;
+}
+
+.dominio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fdf3ec;
+  padding: 24px 28px;
+  border-radius: 14px;
+  border: 1px solid #e9d8c8;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  will-change: transform;
+}
+
+.dominio-item:hover {
+  transform: scale(1.015);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.dominio-item .nombre {
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+}
+
+.dominio-item .vence {
+  font-size: 15px;
+  color: #444;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-contenido {
+  background-color: #fff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-contenido h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.modal-contenido input {
+  width: 100%;
+  padding: 12px 16px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.modal-contenido button {
+  padding: 10px 18px;
+  font-size: 16px;
+  margin: 8px 6px 0;
+  background-color: #cba27e;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-contenido button:hover:not(:disabled) {
+  background-color: #b78b68;
+}
+
+.modal-contenido button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.badge-items {
+  background-color: #f1e1d2;
+  color: #5a2e00;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-left: 6px;
+}
+
+
+/* ===== MODO OSCURO ===== */
+body.dark-mode .mis-dominios {
+  color: #ffffff;
+}
+
+body.dark-mode .linea-separadora {
+  background-color: #444;
+}
+
+body.dark-mode .titulo-dominios,
+body.dark-mode .icono {
+  color: #FFA94D;
+}
+
+body.dark-mode .subtexto-dominios {
+  color: #cccccc;
+}
+
+body.dark-mode .cantidad-items {
+  color: #aaaaaa;
+}
+
+body.dark-mode .lista-dominios::-webkit-scrollbar-thumb {
+  background-color: #FFA94D;
+}
+
+body.dark-mode .lista-dominios::-webkit-scrollbar-track {
+  background-color: #2c2c2c;
+}
+
+body.dark-mode .dominio-item {
+  background-color: #2c2c2c;
+  border: 1px solid #555;
+}
+
+body.dark-mode .dominio-item .nombre {
+  color: #ffffff;
+}
+
+body.dark-mode .dominio-item .vence {
+  color: #cccccc;
+}
+body.dark-mode .badge-items {
+  background-color: #FFA94D;
+  color: #1e1e1e;
+}
+
+@media (max-width: 600px) {
+  .titulo-dominios {
+    font-size: 24px;
+    flex-wrap: wrap;
+  }
+
+  .icono {
+    font-size: 22px;
+  }
+
+  .badge-items {
+    font-size: 14px;
+    padding: 3px 8px;
+  }
+
+  .dominio-item {
+    padding: 18px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .dominio-item .vence {
+    font-size: 14px;
+  }
+
+  .modal-contenido {
+    padding: 20px;
+  }
+}

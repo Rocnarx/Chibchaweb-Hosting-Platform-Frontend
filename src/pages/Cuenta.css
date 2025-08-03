@@ -14,7 +14,7 @@
   text-align: center;
   margin-bottom: 2rem;
   font-size: 1.8rem;
-  color: #1e3a8a; 
+  color: #1e3a8a;
   border-bottom: 2px solid #1e3a8a;
   padding-bottom: 0.5rem;
 }
@@ -36,7 +36,6 @@
   font-weight: 600;
 }
 
-/* Botón cerrar sesión alineado a la derecha */
 .contenedor-cerrar-sesion {
   display: flex;
   justify-content: flex-end;
@@ -58,7 +57,6 @@
   background-color: #8a4b00;
 }
 
-/* Botón agregar método alineado a la izquierda */
 .contenedor-boton-metodo {
   display: flex;
   justify-content: flex-start;
@@ -81,8 +79,60 @@
   background-color: #6d779a;
   transform: scale(1.05);
 }
+
 .botones-accion {
   display: flex;
   justify-content: space-between;
+  margin-top: 2rem;
+}
+
+/* ===== MODO OSCURO: Cuenta ===== */
+body.dark-mode {
+  background-color: #1E1E1E;
+}
+
+body.dark-mode .cuenta-container {
+  background-color: #2c2c2c;
+  border: 2px solid #444;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .cuenta-container h2 {
+  color: #FFA94D;
+  border-bottom: 2px solid #FFA94D;
+}
+
+body.dark-mode .cuenta-dato {
+  border-bottom: 1px solid #555;
+}
+
+body.dark-mode .cuenta-dato strong {
+  color: #FFA94D;
+}
+
+body.dark-mode .btn-cerrar-sesion {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode .btn-cerrar-sesion:hover {
+  background-color: #e38b31;
+}
+
+body.dark-mode .btn-metodo-pago {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode .btn-metodo-pago:hover {
+  background-color: #e38b31;
+}
+
+.botones-accion {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-top: 2rem;
 }

@@ -3,26 +3,50 @@ import './Navbar.css';
 import logo from './resources/logo.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from '../Context/UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMoon } from '@fortawesome/free-solid-svg-icons';
+import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const menuRef = useRef();
   const { usuario } = useUser();
   const navigate = useNavigate();
 
-  // Cierra el menú si se hace clic fuera
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedMode);
+
+    if (savedMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem("darkMode", newMode);
+
+    if (newMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Cierra menú al hacer clic en un link
   const handleMenuClick = () => setMenuOpen(false);
 
   const irAlCarrito = () => {
@@ -36,7 +60,6 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      {/* Logo + marca */}
       <NavLink to="/" className="navbar-logo">
         <div className="navbar-left">
           <img src={logo} alt="Logo" className="logo-img" />
@@ -47,12 +70,10 @@ function Navbar() {
         </div>
       </NavLink>
 
-      {/* Icono hamburguesa */}
       <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         ☰
       </div>
 
-      {/* Menú y carrito */}
       <div className={`navbar-right ${menuOpen ? 'open' : ''}`} ref={menuRef}>
         <ul className="navbar-menu">
           <li><NavLink to="/" className="nav-link" onClick={handleMenuClick}>Inicio</NavLink></li>
@@ -60,10 +81,15 @@ function Navbar() {
           <li><NavLink to="/planes" className="nav-link" onClick={handleMenuClick}>Planes</NavLink></li>
           <li><NavLink to="/hosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
           <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
+          <li><NavLink to="/DominiosAdquiridos" className="nav-link" onClick={handleMenuClick}>Mis dominios</NavLink></li>
         </ul>
 
         <button className="cart-button" onClick={irAlCarrito}>
           Carrito
+        </button>
+
+        <button className="mode-toggle-button" onClick={toggleDarkMode}>
+          <FontAwesomeIcon icon={darkMode ? faCircleHalfStroke : faMoon} />
         </button>
       </div>
     </nav>

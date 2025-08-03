@@ -89,3 +89,44 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #45a049;
 }
+
+/* ===== MODO OSCURO: Formulario de Tarjeta ===== */
+body.dark-mode .tarjeta-container {
+  background-color: #2c2c2c;
+  border: 1px solid #555;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .tarjeta-titulo {
+  color: #FFA94D;
+}
+
+body.dark-mode label {
+  color: #dddddd;
+}
+
+body.dark-mode input[type="text"] {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #777;
+}
+
+body.dark-mode .guardar-check {
+  background-color: #1e1e1e;
+  border: 1px solid #FFA94D;
+  color: #ffffff;
+}
+
+body.dark-mode .descripcion {
+  color: #aaaaaa;
+}
+
+body.dark-mode button[type="submit"] {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode button[type="submit"]:hover {
+  background-color: #e38b31;
+}

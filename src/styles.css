@@ -1,12 +1,25 @@
-/* styles.css */
+/* ===== Variables globales ===== */
+:root {
+  --cafe: #924600;
+  --cafe-hover: #6e3200;
+  --cafe-disabled: #c98b51;
+  --texto-boton: white;
+}
 
+body.dark-mode {
+  --cafe: #FFA94D;
+  --cafe-hover: #e38b31;
+  --cafe-disabled: #c88e4a;
+  --texto-boton: #000000;
+}
+
+/* ===== Base layout ===== */
 body {
   margin: 0;
   font-family: sans-serif;
   background-color: #fefefe;
 }
 
-/* Estructura base para layout vertical */
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -18,14 +31,12 @@ html, body, #root {
   flex: 1;
 }
 
-/* El App completo ocupa todo el alto */
 body > div {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-/* El contenido principal crece, el footer se queda abajo */
 main {
   flex: 1;
 }
@@ -40,7 +51,44 @@ button {
   cursor: pointer;
 }
 
-/* Responsive grid para los planes */
+/* ===== Botones con soporte de modo oscuro ===== */
+button,
+.boton-registro,
+.hero-button,
+.plan-button,
+.cart-button {
+  background-color: var(--cafe);
+  color: var(--texto-boton);
+  border: none;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+button:hover,
+.boton-registro:hover,
+.hero-button:hover,
+.plan-button:hover,
+.cart-button:hover {
+  background-color: var(--cafe-hover);
+  filter: brightness(0.95);
+}
+
+button:disabled,
+.boton-registro:disabled,
+.hero-button:disabled,
+.plan-button:disabled,
+.cart-button:disabled {
+  background-color: var(--cafe-disabled);
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+/* ===== Responsive grid ===== */
 .plans-grid {
   display: flex;
   flex-wrap: wrap;
@@ -48,7 +96,7 @@ button {
   gap: 30px;
 }
 
-/* Opcional: diseño responsive para navbar */
+/* ===== Responsive navbar ===== */
 @media (max-width: 600px) {
   nav ul {
     flex-direction: column;
@@ -62,21 +110,7 @@ button {
   }
 }
 
-button,
-.boton-registro,
-.hero-button,
-.plan-button,
-.cart-button {
-  transition: background-color 0.3s ease;
-}
-
-button:hover,
-.boton-registro:hover,
-.hero-button:hover,
-.plan-button:hover,
-.cart-button:hover {
-  filter: brightness(0.9);
-}
+/* ===== Modal global ===== */
 .modal {
   position: fixed;
   top: 0;
@@ -101,7 +135,6 @@ html, body {
 }
 
 /* ===== Loader animado global ===== */
-
 .busqueda-especial {
   display: flex;
   align-items: center;
@@ -133,6 +166,7 @@ html, body {
   text-align: center;
 }
 
+/* ===== Animaciones ===== */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -148,4 +182,30 @@ html, body {
 @keyframes glow {
   from { box-shadow: 0 0 10px #c79e61; }
   to   { box-shadow: 0 0 20px #ad8851; }
+}
+
+/* ===== Modo oscuro general ===== */
+body.dark-mode {
+  background-color: #1E1E1E;
+  color: #FFFFFF;
+}
+
+body,
+body * {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+.cuenta-container,
+.navbar,
+.hero-section,
+.footer,
+button,
+input,
+main,
+section,
+.plan-card,
+.tarjeta,
+.modal,
+.ext-card {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }

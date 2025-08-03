@@ -11,18 +11,28 @@
   --carga-brillo2: #ad8851;
 }
 
-/* ===== Estructura general ===== */
+/* ==== Reset básico para botones ==== */
+button,
+input[type="submit"] {
+  all: unset;
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+  padding: 10px 20px;
+  transition: background 0.3s ease;
+}
 
+/* ==== Contenedor general ==== */
 .dominios {
   width: 80%;
   max-width: 1000px;
+  margin: 0 auto;
   padding: 60px 40px;
   font-family: sans-serif;
-  margin: 0 auto;
 }
 
-/* ===== Buscador de dominio ===== */
-
+/* ==== Buscador ==== */
 .buscador {
   display: flex;
   flex-wrap: wrap;
@@ -40,32 +50,28 @@
 }
 
 .buscador button {
-  padding: 10px 20px;
   background-color: var(--cafe);
   color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
-/* ===== Alerta de error ===== */
-
+/* ==== Alerta de error ==== */
 .alerta-error {
-  background-color: var(--error-fondo);
-  color: var(--error-texto);
-  border: 1px solid var(--error-borde);
-  padding: 12px 20px;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  font-weight: bold;
+  background: linear-gradient(135deg, #fff1f1, #ffecec);
+  color: #a83232;
+  border: 1px solid #f5b6b6;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
   text-align: center;
   max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.05);
+  animation: slideInDown 0.4s ease;
+  position: relative;
 }
 
-/* ===== Resultado principal (disponible / no disponible) ===== */
-
+/* ==== Resultado principal ==== */
 .resultado {
   display: flex;
   flex-wrap: wrap;
@@ -73,17 +79,22 @@
   margin-bottom: 40px;
 }
 
-.resultado-dominio {
+.resultado-dominio,
+.bloque {
   background: var(--crema);
+  border: 1px solid var(--crema-borde);
+  border-radius: 10px;
+  padding: 20px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.resultado-dominio {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  padding: 20px;
   border-radius: 15px;
-  flex: 1;
-  min-width: 280px;
-  border: 1px solid var(--crema-borde);
 }
 
 .info-dominio {
@@ -97,51 +108,28 @@
   color: #333;
 }
 
-/* ===== Botones ===== */
-
+/* ==== Botones reutilizables ==== */
 .boton-adquirir,
 .bloque.hosting button,
-.alternativa button {
+.alternativa button,
+.buscador button {
   background-color: var(--cafe);
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.bloque.hosting button {
-  display: block;
-  margin: 0 auto;
 }
 
 .boton-deshabilitado {
   background-color: #ddd;
   color: #777;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
   cursor: not-allowed;
 }
 
-/* ===== Hosting sugerido ===== */
-
-.bloque {
-  flex: 1;
-  min-width: 280px;
-  background: var(--crema);
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid var(--crema-borde);
+/* Centrado del botón de hosting */
+.bloque.hosting button {
+  display: block;
+  margin: 0 auto;
 }
 
-.bloque p {
-  margin: 10px 0;
-}
-
-/* ===== Alternativas con scroll ===== */
-
+/* ==== Alternativas con scroll ==== */
 .alternativas {
   flex: 2;
   display: flex;
@@ -149,22 +137,18 @@
   gap: 24px;
   max-height: 400px;
   overflow-y: auto;
-  padding-right: 8px; /* margen para el scroll */
-
-  /* estética suave */
+  padding-right: 8px;
   scrollbar-width: thin;
-  scrollbar-color: #cba27e #fdf3ec; /* thumb y track */
+  scrollbar-color: #cba27e #fdf3ec;
 }
 
 .alternativas::-webkit-scrollbar {
   width: 8px;
 }
-
 .alternativas::-webkit-scrollbar-thumb {
   background-color: #cba27e;
   border-radius: 6px;
 }
-
 .alternativas::-webkit-scrollbar-track {
   background-color: #fdf3ec;
   border-radius: 6px;
@@ -180,8 +164,6 @@
   background-color: #fff;
 }
 
-/* ===== Precio + botón en una fila ===== */
-
 .precio-y-boton {
   display: flex;
   align-items: center;
@@ -189,26 +171,19 @@
 }
 
 .precio {
-  margin: 0px 10px;
+  margin: 0 10px;
 }
 
-.alerta-error {
-  background: linear-gradient(135deg, #fff1f1, #ffecec);
-  color: #a83232;
-  border: 1px solid #f5b6b6;
-  padding: 15px 25px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 16px;
-  text-align: center;
-  max-width: 1000px;
-  margin: 20px auto;
-  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.05);
-  position: relative;
-  animation: slideInDown 0.4s ease;
+/* ==== Hover botones ==== */
+.boton-adquirir:hover,
+.buscador button:hover,
+.bloque.hosting button:hover,
+.alternativa button:hover {
+  background-color: #7a3600;
+  color: white;
 }
 
-/* Animación de entrada suave */
+/* ==== Animación ==== */
 @keyframes slideInDown {
   from {
     opacity: 0;
@@ -218,4 +193,50 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ==== Modo Oscuro ==== */
+body.dark-mode {
+  --cafe: #FFA94D;
+  --crema: #2c2c2c;
+  --crema-borde: #444;
+  --error-fondo: #4e0000;
+  --error-borde: #b94a48;
+  --error-texto: #ffaaaa;
+  --carga-fondo: #2c2c2c;
+  --carga-borde: #FFA94D;
+  --carga-brillo1: #e38b31;
+  --carga-brillo2: #ffb155;
+}
+
+body.dark-mode .precio-dominio,
+body.dark-mode .alternativa .precio,
+body.dark-mode .bloque p {
+  color: #ffffff;
+}
+
+body.dark-mode .alternativa {
+  background-color: var(--crema);
+  border: 1px solid var(--crema-borde);
+}
+
+body.dark-mode .buscador input {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+body.dark-mode .boton-adquirir,
+body.dark-mode .bloque.hosting button,
+body.dark-mode .alternativa button,
+body.dark-mode .buscador button {
+  background-color: #FFA94D !important;
+  color: black !important;
+}
+
+body.dark-mode .boton-adquirir:hover,
+body.dark-mode .bloque.hosting button:hover,
+body.dark-mode .alternativa button:hover,
+body.dark-mode .buscador button:hover {
+  background-color: #e38b31 !important;
 }

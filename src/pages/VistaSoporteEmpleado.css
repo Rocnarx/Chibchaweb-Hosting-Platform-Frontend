@@ -1,0 +1,185 @@
+.panel-soporte {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.panel-soporte h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #5c3d1b;
+  transition: color 0.3s;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff9f3;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5ded4;
+  transition: background 0.3s, color 0.3s, border 0.3s;
+}
+
+th {
+  background: #f4e9dd;
+  color: #5a3922;
+  font-weight: 600;
+}
+
+.estado-tag {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Estado por tipo */
+.estado-tag.nuevo {
+  background: #ffe7a1;
+  color: #8b6b00;
+}
+
+.estado-tag.en-proceso {
+  background: #ffe0ad;
+  color: #9c5f00;
+}
+
+.estado-tag.resuelto {
+  background: #c8f1d5;
+  color: #257445;
+}
+
+/* Botones */
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #1e7e34;
+}
+
+/* Feedback textarea */
+.feedback-row td {
+  background-color: #fff5ea;
+  padding: 20px;
+  border-bottom: 1px solid #e5ded4;
+}
+
+.feedback-row textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
+  font-family: inherit;
+  font-size: 15px;
+  resize: vertical;
+  margin-bottom: 12px;
+  transition: border 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.feedback-row textarea:focus {
+  outline: none;
+  border-color: #c77a38;
+  box-shadow: 0 0 5px rgba(199, 122, 56, 0.4);
+}
+
+.feedback-row button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.feedback-row button:hover {
+  background-color: #1e7e34;
+}
+
+/* ===== MODO OSCURO ===== */
+body.dark-mode .panel-soporte {
+  color: #ffffff;
+}
+
+body.dark-mode .panel-soporte h2 {
+  color: #FFA94D;
+}
+
+body.dark-mode table {
+  background: #2c2c2c;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode th,
+body.dark-mode td {
+  border-bottom: 1px solid #444;
+  color: #ffffff;
+}
+
+body.dark-mode th {
+  background: #3a3a3a;
+  color: #FFA94D;
+}
+
+body.dark-mode .estado-tag.nuevo {
+  background: #5a4b1d;
+  color: #ffe97a;
+}
+
+body.dark-mode .estado-tag.en-proceso {
+  background: #6e5326;
+  color: #ffe0ad;
+}
+
+body.dark-mode .estado-tag.resuelto {
+  background: #204c34;
+  color: #b2f3cb;
+}
+
+body.dark-mode button,
+body.dark-mode .feedback-row button {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode button:hover,
+body.dark-mode .feedback-row button:hover {
+  background-color: #e38b31;
+}
+
+body.dark-mode .feedback-row td {
+  background-color: #3a3a3a;
+  border-bottom: 1px solid #444;
+}
+
+body.dark-mode .feedback-row textarea {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1.5px solid #777;
+}
+
+body.dark-mode .feedback-row textarea:focus {
+  border-color: #FFA94D;
+  box-shadow: 0 0 5px rgba(255, 169, 77, 0.4);
+}
