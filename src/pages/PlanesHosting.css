@@ -1,3 +1,5 @@
+/* ===== ESTILO GENERAL ===== */
+
 .planes-hosting {
   width: 90%;
   max-width: 1200px;
@@ -9,7 +11,10 @@
 .planes-hosting h1 {
   font-size: 36px;
   margin-bottom: 24px;
+  font-weight: bold;
 }
+
+/* ===== BOTONES DE FILTRO ===== */
 
 .planes-toggle {
   display: flex;
@@ -20,7 +25,7 @@
 
 .planes-toggle button {
   background: #eee;
-  border: none;
+  border: 1px solid #ccc;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -28,68 +33,167 @@
   transition: background 0.3s;
 }
 
-.planes-toggle button.activo,
-.planes-toggle button:hover {
-  background: #d9cfc4;
+.planes-toggle button.activo {
+  background-color: #924600;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px #92460044;
+  outline: 2px solid #92460088;
 }
+
+.planes-toggle button:hover {
+  background-color: #cba27e;
+  color: black;
+}
+
+/* ===== LISTADO DE PLANES ===== */
 
 .planes-listado {
   display: flex;
   justify-content: center;
   gap: 32px;
   flex-wrap: wrap;
+  opacity: 1;
+  transition: opacity 0.4s ease;
 }
+
+.planes-listado.oculto {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===== TARJETAS DE PLAN ===== */
 
 .plan-card {
   background: #fdf8f5;
   border: 1px solid #ddd0c2;
-  border-radius: 10px;
-  padding: 32px 24px;
+  border-top: 6px solid #a96012;
+  border-radius: 12px;
+  padding: 28px 22px 32px;
   width: 280px;
   text-align: left;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 .plan-card h2 {
-  font-size: 20px;
-  margin-bottom: 12px;
+  font-size: 22px;
   font-weight: 700;
   text-align: center;
+  margin-bottom: 10px;
+}
+
+.plan-card .nombre-plan {
+  color: #924600;
 }
 
 .plan-card .precio {
   font-size: 28px;
-  font-weight: 700;
+  font-weight: bold;
   color: #000;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .plan-card ul {
-  list-style-type: disc;
-  padding-left: 20px;
-  margin-bottom: 20px;
-  color: #333;
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 24px;
   font-size: 15px;
+  color: #333;
 }
 
 .plan-card li {
-  margin-bottom: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+
+/* ===== BOTÓN ADQUIRIR ===== */
 
 .btn-adquirir {
   display: block;
   background-color: #924600;
   color: white;
   border: none;
-  padding: 10px 18px;
+  padding: 12px 20px;
   border-radius: 6px;
   font-weight: bold;
+  font-size: 15px;
   cursor: pointer;
   margin: 0 auto;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 .btn-adquirir:hover {
   background-color: #7a3900;
+}
+
+/* ===== MODO OSCURO ===== */
+
+body.dark-mode .planes-hosting {
+  color: #ffffff;
+}
+
+body.dark-mode .planes-hosting h1 {
+  color: #FFA94D;
+}
+
+body.dark-mode .planes-toggle button {
+  background: #444;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark-mode .planes-toggle button.activo {
+  background-color: #FFA94D;
+  color: #000;
+  box-shadow: 0 0 0 2px #ffa94d44;
+  outline: 2px solid #ffa94d88;
+}
+
+body.dark-mode .planes-toggle button:hover {
+  background-color: #e38b31;
+  color: #000;
+}
+
+body.dark-mode .plan-card {
+  background-color: #2c2c2c;
+  border: 1px solid #444;
+  color: #ffffff;
+}
+
+body.dark-mode .plan-card h2,
+body.dark-mode .plan-card ul,
+body.dark-mode .plan-card li,
+body.dark-mode .plan-card .precio {
+  color: #ffffff;
+}
+
+body.dark-mode .plan-card .nombre-plan {
+  color: #FFA94D;
+}
+
+body.dark-mode .btn-adquirir {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode .btn-adquirir:hover {
+  background-color: #e38b31;
+}
+
+/* Scrollbar (si aplica) */
+body.dark-mode .planes-listado::-webkit-scrollbar-thumb {
+  background-color: #FFA94D;
+}
+
+body.dark-mode .planes-listado::-webkit-scrollbar-track {
+  background-color: #2c2c2c;
 }
