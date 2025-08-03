@@ -10,25 +10,15 @@ export default function FormularioRegistroDistribuidor() {
     correo: "",
     telefono: "",
     direccion: "",
-<<<<<<< HEAD
     idCredencialCuenta: "",
     contrasenaCuenta: "",
     contrasenaRepetida: "",
-    idpais: "170"
-  });
-
-  const [mensaje, setMensaje] = useState("");
-=======
-    password: "",
     idpais: "170",
-    idtipocuenta: "2",
-    idplan: "0",
   });
 
   const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
->>>>>>> e780ed8 (validación)
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -59,25 +49,19 @@ export default function FormularioRegistroDistribuidor() {
       return;
     }
 
+    setCargando(true);
+
     const datos = {
       razonsocial: form.razonSocial,
       nit: form.nit,
       correo: form.correo,
-<<<<<<< HEAD
-      telefono: form.telefono ? parseInt(form.telefono) : undefined,
-      direccion: form.direccion,
-      idcredencialcuenta: form.idCredencialCuenta,
-      password: form.contrasenaCuenta,
-      idtipocuenta: 3, // Tipo distribuidor
-      idpais: parseInt(form.idpais)
-=======
       telefono: form.telefono || "0",
       direccion: form.direccion || "N/A",
-      password: form.password,
+      idcredencialcuenta: form.idCredencialCuenta,
+      password: form.contrasenaCuenta,
+      idtipocuenta: "2",
       idpais: form.idpais,
-      idtipocuenta: form.idtipocuenta,
       idplan: "0",
->>>>>>> e780ed8 (validación)
     };
 
     try {
@@ -85,30 +69,16 @@ export default function FormularioRegistroDistribuidor() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
         },
-        body: JSON.stringify(datos)
+        body: JSON.stringify(datos),
       });
 
-      if (res.ok) {
-        setMensaje("¡Distribuidor registrado exitosamente!");
-        setForm({
-          razonSocial: "",
-          nit: "",
-          correo: "",
-          telefono: "",
-          direccion: "",
-          idCredencialCuenta: "",
-          contrasenaCuenta: "",
-          contrasenaRepetida: "",
-          idpais: "170"
-        });
-      } else {
+      if (!res.ok) {
         const texto = await res.text();
         setMensaje(`Error: ${texto}`);
+        return;
       }
-<<<<<<< HEAD
-=======
 
       const respuesta = await res.json();
       const idcuenta = respuesta.idcuenta;
@@ -116,28 +86,30 @@ export default function FormularioRegistroDistribuidor() {
       // Guardar en localStorage para ConfirmarCuenta.jsx
       localStorage.setItem("idCuenta", idcuenta);
       localStorage.setItem("loginTemp", JSON.stringify({
-        identificacion: datos.identificacion,
-        password: datos.password,
+        identificacion: form.nit,
+        password: form.contrasenaCuenta,
       }));
 
-      setMensaje("✅ Cuenta registrada. Redirigiendo a verificación...");
+      setMensaje("✅ Distribuidor registrado. Redirigiendo a verificación...");
 
       setForm({
-        nombrecuenta: "",
-        identificacion: "",
+        razonSocial: "",
+        nit: "",
         correo: "",
         telefono: "",
         direccion: "",
-        password: "",
+        idCredencialCuenta: "",
+        contrasenaCuenta: "",
+        contrasenaRepetida: "",
         idpais: "170",
-        idtipocuenta: "2",
-        idplan: "0",
       });
 
       setTimeout(() => navigate("/verificar"), 1500);
->>>>>>> e780ed8 (validación)
     } catch (err) {
+      console.error("Error de red:", err);
       setMensaje("Error de red al registrar distribuidor.");
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -232,7 +204,9 @@ export default function FormularioRegistroDistribuidor() {
                 <option value="862">Venezuela</option>
               </select>
 
-              <button type="submit">Registrarse</button>
+              <button type="submit" disabled={cargando}>
+                {cargando ? "Registrando..." : "Registrarse"}
+              </button>
             </div>
           </form>
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"; 
 import { Navigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext";
 
@@ -11,7 +11,7 @@ export default function RutaProtegida({ children }) {
 
   if (!usuario.verificado) {
     return <Navigate to="/verificar" replace />;
-  }gf
+  }
 
   // Usuario válido y verificado
   return children;

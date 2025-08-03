@@ -57,15 +57,9 @@ export default function FormularioRegistro() {
       correo: form.correo,
       telefono: form.telefono || "0",
       direccion: form.direccion,
-<<<<<<< HEAD
-      idtipocuenta: 1,
-      idpais: parseInt(form.idpais),
-      idplan: form.idplan,
-=======
       idtipocuenta: "1",
       idpais: form.idpais,
-      idplan: "0",
->>>>>>> e780ed8 (validación)
+      idplan: form.idplan,
       password: form.contrasenaCuenta,
     };
 
