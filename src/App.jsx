@@ -47,7 +47,7 @@ function App() {
         <Route path="/registro" element={<FormularioC />} />
         <Route path="/registroDistribuidor" element={<FormularioD />} />
         <Route path="/registroEmpleado" element={<FormularioE />} />
-        <Route path="/planes-hosting" element={<PlanesHosting />} />
+        <Route path="/planesHosting" element={<PlanesHosting />} />
 
         {/* Rutas exclusivas para clientes (no admin) */}
         {!esAdmin && (
