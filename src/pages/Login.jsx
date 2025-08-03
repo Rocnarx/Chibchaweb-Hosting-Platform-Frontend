@@ -34,17 +34,40 @@ export default function Login() {
         }),
       });
 
-      if (res.ok) {
-        const datos = await res.json();
-        console.log("✅ Datos del backend:", datos);
-        setUsuario(datos);
-        setMensaje("✅ ¡Bienvenido!");
-        navigate("/perfil");
-      } else {
+      if (!res.ok) {
         const texto = await res.text();
         console.error("❌ Error del backend:", texto);
         setMensaje("❌ Usuario o contraseña incorrectos");
+        return;
       }
+
+      const datos = await res.json();
+      console.log("✅ Datos del backend:", datos);
+
+      // Verifica si está confirmado
+      const verificacionRes = await fetch(
+        `${import.meta.env.VITE_API_URL}/estoy-verificado?idcuenta=${datos.idcuenta}`,
+        {
+          method: "GET",
+          headers: {
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          },
+        }
+      );
+
+      const verificacionJson = await verificacionRes.json();
+      const verificado = verificacionJson.verificado === true;
+
+      setUsuario({ ...datos, verificado });
+
+      if (verificado) {
+        setMensaje("✅ ¡Bienvenido!");
+        navigate("/perfil");
+      } else {
+        setMensaje("⚠️ Tu cuenta aún no ha sido verificada. Revisa tu correo.");
+        navigate("/validar");
+      }
+
     } catch (err) {
       console.error("❌ Error de red:", err);
       setMensaje("❌ Error de red al intentar iniciar sesión");
@@ -77,7 +100,6 @@ export default function Login() {
             onChange={manejarCambio}
             required
           />
-          {/* botón sin clases externas */}
           <button type="submit" disabled={cargando}>
             {cargando ? "Entrando..." : "Entrar"}
           </button>
