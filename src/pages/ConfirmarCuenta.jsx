@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./ConfirmarCuenta.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,27 +7,29 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useUser } from "../Context/UserContext";
 
 export default function ConfirmarCuenta() {
   const [codigo, setCodigo] = useState("");
   const [mensaje, setMensaje] = useState("");
-  const [estado, setEstado] = useState(null);
+  const [estado, setEstado] = useState(null); // "success" | "error" | "warning"
   const [cargando, setCargando] = useState(false);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setUsuario } = useUser();
+  const yaConfirmado = useRef(false); // 🛑 para evitar verificación múltiple
 
+  // Verifica automáticamente si hay token e idcuenta en la URL
   useEffect(() => {
     const tokenURL = searchParams.get("token");
     const idcuentaURL = searchParams.get("idcuenta");
 
-    if (tokenURL && idcuentaURL) {
+    if (tokenURL && idcuentaURL && !yaConfirmado.current) {
+      yaConfirmado.current = true; // ✅ se asegura que solo se ejecute una vez
       confirmarCuenta(tokenURL, idcuentaURL);
     }
   }, [searchParams]);
 
+  // Acción principal para confirmar la cuenta
   const confirmarCuenta = async (token, idcuenta) => {
     setCargando(true);
     setMensaje("");
@@ -45,74 +47,19 @@ export default function ConfirmarCuenta() {
       const data = await res.text();
 
       if (res.ok) {
-        setMensaje("✅ Cuenta confirmada. Iniciando sesión...");
+        setMensaje("✅ Cuenta confirmada exitosamente. Serás redirigido al inicio de sesión...");
         setEstado("success");
-
-        const stored = localStorage.getItem("usuario");
-        if (stored) {
-          const usuarioActual = JSON.parse(stored);
-          usuarioActual.verificado = true;
-          localStorage.setItem("usuario", JSON.stringify(usuarioActual));
-          setUsuario(usuarioActual);
-        }
-
-
-        setTimeout(() => {
-          loginAutomatico();
-        }, 1500);
+        setTimeout(() => navigate("/login"), 2500);
       } else {
-        setMensaje(` Error: ${data}`);
+        setMensaje(`❌ Error: ${data}`);
         setEstado("error");
       }
     } catch (err) {
       console.error(err);
-      setMensaje(" Error al conectar con el servidor.");
+      setMensaje("❌ Error al conectar con el servidor.");
       setEstado("error");
     } finally {
       setCargando(false);
-    }
-  };
-
-  const loginAutomatico = async () => {
-    const credenciales = JSON.parse(localStorage.getItem("loginTemp") || "{}");
-
-    if (!credenciales.identificacion || !credenciales.password) {
-      setMensaje("Cuenta verificada. Inicia sesión manualmente.");
-      setEstado("warning");
-      navigate("/login");
-      return;
-    }
-
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-        body: JSON.stringify({
-          identificacion: credenciales.identificacion,
-          password: credenciales.password,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem("usuario", JSON.stringify(data));
-        setUsuario(data);
-        localStorage.removeItem("loginTemp");
-        navigate("/perfil");
-      } else {
-        setMensaje("Cuenta verificada. Inicia sesión manualmente.");
-        setEstado("warning");
-        navigate("/login");
-      }
-    } catch (err) {
-      console.error("Login automático falló:", err);
-      setMensaje("Error al intentar iniciar sesión. Hazlo manualmente.");
-      setEstado("error");
-      navigate("/login");
     }
   };
 
@@ -121,7 +68,7 @@ export default function ConfirmarCuenta() {
     const idcuenta = localStorage.getItem("idCuenta")?.trim();
 
     if (!idcuenta || idcuenta.includes("{")) {
-      setMensaje(" ID de cuenta inválido. Intenta registrarte de nuevo.");
+      setMensaje("⚠️ ID de cuenta inválido. Intenta registrarte de nuevo.");
       setEstado("warning");
       return;
     }

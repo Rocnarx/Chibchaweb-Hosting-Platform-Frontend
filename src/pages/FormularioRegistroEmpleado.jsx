@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import "./FormularioRegistroCliente.css";
 import logo from "../Components/resources/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function FormularioRegistroEmpleado() {
   const [form, setForm] = useState({
-      nombreCuenta: "",
-      identificacion: "",
-      direccion: "",
-      correo: "",
-      telefono: "",
-      idCredencialCuenta: "",
-      contrasenaCuenta: "",
-      idpais: "170", // Colombia por defecto
-    });
+    nombreCuenta: "",
+    identificacion: "",
+    direccion: "",
+    correo: "",
+    telefono: "",
+    idCredencialCuenta: "",
+    contrasenaCuenta: "",
+    idpais: "170",
+  });
 
   const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
+  const navigate = useNavigate();
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -46,10 +48,10 @@ export default function FormularioRegistroEmpleado() {
       identificacion: form.identificacion,
       nombrecuenta: form.nombreCuenta,
       correo: form.correo,
-      telefono: form.telefono ? parseInt(form.telefono, 10) : undefined,
-      direccion: form.direccion,
-      idtipocuenta: 4,
-      idpais: parseInt(form.idpais, 10),
+      telefono: form.telefono || "0",
+      direccion: form.direccion || "N/A",
+      idtipocuenta: "4", // Tipo empleado
+      idpais: form.idpais,
       idplan: "0",
       password: form.contrasenaCuenta,
     };
@@ -70,7 +72,18 @@ export default function FormularioRegistroEmpleado() {
         return;
       }
 
-      setMensaje("✅ Empleado registrado con éxito.");
+      const respuesta = await res.json();
+      const idcuenta = respuesta.idcuenta;
+
+      // Guardar en localStorage
+      localStorage.setItem("idCuenta", idcuenta);
+      localStorage.setItem("loginTemp", JSON.stringify({
+        identificacion: datos.identificacion,
+        password: datos.password,
+      }));
+
+      setMensaje("✅ Empleado registrado. Redirigiendo a verificación...");
+
       setForm({
         nombreCuenta: "",
         identificacion: "",
@@ -81,6 +94,10 @@ export default function FormularioRegistroEmpleado() {
         contrasenaCuenta: "",
         idpais: "170",
       });
+
+      setTimeout(() => {
+        navigate("/verificar");
+      }, 1500);
     } catch (err) {
       console.error("Error de red:", err);
       setMensaje("❌ Error de red al registrar el empleado.");

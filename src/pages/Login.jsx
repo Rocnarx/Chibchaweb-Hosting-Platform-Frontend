@@ -65,7 +65,7 @@ export default function Login() {
         navigate("/perfil");
       } else {
         setMensaje("⚠️ Tu cuenta aún no ha sido verificada. Revisa tu correo.");
-        navigate("/validar");
+        navigate("/verificar");
       }
 
     } catch (err) {

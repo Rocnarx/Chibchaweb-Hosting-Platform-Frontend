@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./FormularioRegistroDistribuidor.css";
 import logo from "../Components/resources/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function FormularioRegistroDistribuidor() {
   const [form, setForm] = useState({
@@ -9,6 +10,7 @@ export default function FormularioRegistroDistribuidor() {
     correo: "",
     telefono: "",
     direccion: "",
+<<<<<<< HEAD
     idCredencialCuenta: "",
     contrasenaCuenta: "",
     contrasenaRepetida: "",
@@ -16,6 +18,17 @@ export default function FormularioRegistroDistribuidor() {
   });
 
   const [mensaje, setMensaje] = useState("");
+=======
+    password: "",
+    idpais: "170",
+    idtipocuenta: "2",
+    idplan: "0",
+  });
+
+  const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(false);
+  const navigate = useNavigate();
+>>>>>>> e780ed8 (validación)
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -50,12 +63,21 @@ export default function FormularioRegistroDistribuidor() {
       razonsocial: form.razonSocial,
       nit: form.nit,
       correo: form.correo,
+<<<<<<< HEAD
       telefono: form.telefono ? parseInt(form.telefono) : undefined,
       direccion: form.direccion,
       idcredencialcuenta: form.idCredencialCuenta,
       password: form.contrasenaCuenta,
       idtipocuenta: 3, // Tipo distribuidor
       idpais: parseInt(form.idpais)
+=======
+      telefono: form.telefono || "0",
+      direccion: form.direccion || "N/A",
+      password: form.password,
+      idpais: form.idpais,
+      idtipocuenta: form.idtipocuenta,
+      idplan: "0",
+>>>>>>> e780ed8 (validación)
     };
 
     try {
@@ -85,6 +107,35 @@ export default function FormularioRegistroDistribuidor() {
         const texto = await res.text();
         setMensaje(`Error: ${texto}`);
       }
+<<<<<<< HEAD
+=======
+
+      const respuesta = await res.json();
+      const idcuenta = respuesta.idcuenta;
+
+      // Guardar en localStorage para ConfirmarCuenta.jsx
+      localStorage.setItem("idCuenta", idcuenta);
+      localStorage.setItem("loginTemp", JSON.stringify({
+        identificacion: datos.identificacion,
+        password: datos.password,
+      }));
+
+      setMensaje("✅ Cuenta registrada. Redirigiendo a verificación...");
+
+      setForm({
+        nombrecuenta: "",
+        identificacion: "",
+        correo: "",
+        telefono: "",
+        direccion: "",
+        password: "",
+        idpais: "170",
+        idtipocuenta: "2",
+        idplan: "0",
+      });
+
+      setTimeout(() => navigate("/verificar"), 1500);
+>>>>>>> e780ed8 (validación)
     } catch (err) {
       setMensaje("Error de red al registrar distribuidor.");
     }
