@@ -29,6 +29,7 @@ import Extensiones from "./pages/Extensiones";
 import FooterAdmin from "./Components/FooterAdmin";
 import ClientesAdmin from "./pages/ClientesAdmin";
 import ClienteDetalle from "./pages/ClienteDetalle";
+import PlanesHosting from './pages/PlanesHosting';
 
 function App() {
   const { usuario } = useUser();
@@ -46,6 +47,7 @@ function App() {
         <Route path="/registro" element={<FormularioC />} />
         <Route path="/registroDistribuidor" element={<FormularioD />} />
         <Route path="/registroEmpleado" element={<FormularioE />} />
+        <Route path="/planes-hosting" element={<PlanesHosting />} />
 
         {/* Rutas exclusivas para clientes (no admin) */}
         {!esAdmin && (
