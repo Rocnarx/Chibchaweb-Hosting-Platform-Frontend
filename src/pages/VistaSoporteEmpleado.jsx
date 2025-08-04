@@ -9,7 +9,6 @@ function VistaSoporteEmpleado() {
   const [ticketActivo, setTicketActivo] = useState(null);
   const [respuestaTexto, setRespuestaTexto] = useState('');
   const [enviandoRespuesta, setEnviandoRespuesta] = useState(false);
-  const [respuestaEnviada, setRespuestaEnviada] = useState(false);
 
   useEffect(() => {
     const cargarTicketsDesdeBackend = async () => {
@@ -44,9 +43,8 @@ function VistaSoporteEmpleado() {
           .filter(r => r.status === "fulfilled")
           .flatMap(r => r.value);
 
-        const formateados = todos.map((t, i) => ({
-          id: t.idticket ? String(t.idticket) : `tmp-${i}`,
-          codigo: t.codigo ?? `TK-TMP-${i}`,
+        const formateados = todos.map((t) => ({
+          id: String(t.id_ticket),
           cliente: t.cliente?.nombre || 'Sin nombre',
           correo: t.cliente?.correo || '',
           descripcion: t.descripcion ?? '',
@@ -55,7 +53,7 @@ function VistaSoporteEmpleado() {
             ? t.descripcion.slice(0, 60) + (t.descripcion.length > 60 ? '…' : '')
             : 'Sin descripción',
           nivel: typeof t.nivel === 'number' ? `Soporte ${t.nivel}` : 'Sin nivel',
-          estado: t.estado_ticket === 2 ? 'Resuelto' : 'En proceso',
+          estado: t.estado === 2 ? 'Resuelto' : 'En proceso',
         }));
 
         setTickets(formateados);
@@ -67,12 +65,12 @@ function VistaSoporteEmpleado() {
     cargarTicketsDesdeBackend();
   }, [estadoFiltro]);
 
-  const subirNivel = async (codigo, nivelActual) => {
+  const subirNivel = async (id, nivelActual) => {
     const nuevoNivel = nivelActual + 1;
-    if (nuevoNivel > 3 || !codigo || !codigo.startsWith("TK")) return;
+    if (nuevoNivel > 3 || !id) return;
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/CambiarNivelTicket/${codigo}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/CambiarNivelTicket/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +83,7 @@ function VistaSoporteEmpleado() {
 
       setTickets(prev =>
         prev.map(ticket =>
-          ticket.codigo === codigo
+          ticket.id === id
             ? { ...ticket, nivel: `Soporte ${nuevoNivel}` }
             : ticket
         )
@@ -97,30 +95,51 @@ function VistaSoporteEmpleado() {
   };
 
   const enviarRespuestaTicket = async () => {
-    if (!respuestaTexto.trim() || !ticketActivo?.codigo) return;
+    if (!respuestaTexto.trim() || !ticketActivo?.id) return;
 
     try {
       setEnviandoRespuesta(true);
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/ticket/${ticketActivo.codigo}/respuesta`, {
+      // 1. Enviar respuesta
+      const resRespuesta = await fetch(`${import.meta.env.VITE_API_URL}/ticket/${ticketActivo.id}/respuesta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Chibcha-api-key': import.meta.env.VITE_API_KEY
         },
         body: JSON.stringify({
-          mensaje: respuestaTexto.trim(),
-          autor: 'empleado'
+          mensaje: respuestaTexto.trim()
         })
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.detail || 'Error al enviar respuesta');
+      if (!resRespuesta.ok) throw new Error('Error al enviar respuesta');
 
-      setRespuestaEnviada(true);
+      // 2. Cambiar estado a 2 (resuelto)
+      const resEstado = await fetch(`${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketActivo.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Chibcha-api-key': import.meta.env.VITE_API_KEY
+        },
+        body: JSON.stringify({ estado: 2 })
+      });
+
+      if (!resEstado.ok) throw new Error('Error al cambiar estado');
+
+      // 3. Actualizar UI y cerrar
+      setTickets(prev =>
+        prev.map(ticket =>
+          ticket.id === ticketActivo.id
+            ? { ...ticket, estado: 'Resuelto' }
+            : ticket
+        )
+      );
+
+      alert("✅ Respuesta enviada con éxito");
+      setTicketActivo(null);
       setRespuestaTexto('');
     } catch (err) {
-      alert("❌ No se pudo enviar la respuesta.");
+      alert("❌ No se pudo enviar la respuesta o actualizar el estado.");
       console.error("Error:", err);
     } finally {
       setEnviandoRespuesta(false);
@@ -165,7 +184,7 @@ function VistaSoporteEmpleado() {
                         const confirmar = window.confirm('¿Deseas escalar este ticket al siguiente nivel?');
                         if (confirmar) {
                           const nivelActual = Number(ticket.nivel?.match(/\d+/)?.[0] || 1);
-                          subirNivel(ticket.codigo, nivelActual);
+                          subirNivel(ticket.id, nivelActual);
                         }
                       }}
                     >
@@ -184,13 +203,12 @@ function VistaSoporteEmpleado() {
         </tbody>
       </table>
 
-      {/* Modal detallado del ticket */}
       {ticketActivo && (
         <div className="modal-overlay" onClick={() => setTicketActivo(null)}>
           <div className="modal-ticket" onClick={(e) => e.stopPropagation()}>
             <button className="cerrar-modal" onClick={() => setTicketActivo(null)}>✖</button>
             <h2>🎫 Detalles del Ticket</h2>
-            <p><strong>Código:</strong> {ticketActivo.codigo}</p>
+            <p><strong>ID:</strong> {ticketActivo.id}</p>
             <p><strong>Cliente:</strong> {ticketActivo.cliente}</p>
             <p><strong>Correo:</strong> {ticketActivo.correo}</p>
             <p><strong>Nivel:</strong> {ticketActivo.nivel}</p>
@@ -215,10 +233,6 @@ function VistaSoporteEmpleado() {
               >
                 {enviandoRespuesta ? "Enviando..." : "Enviar respuesta"}
               </button>
-
-              {respuestaEnviada && (
-                <p className="mensaje-exito">✅ Respuesta enviada con éxito</p>
-              )}
             </div>
           </div>
         </div>
