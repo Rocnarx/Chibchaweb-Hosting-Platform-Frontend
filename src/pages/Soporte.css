@@ -1,27 +1,32 @@
 .soporte-container {
-  max-width: 600px;
+  max-width: 1100px;
   margin: 60px auto;
   padding: 20px;
-  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: space-between;
+}
+.soporte-formulario{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.soporte-formulario {
+.soporte-formulario, .soporte-tickets {
+  flex: 1 1 480px;
   background: #fff9f3;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 40px;
-  width: 100%;
 }
 
-.soporte-formulario h2 {
+.soporte-formulario h2,
+.soporte-tickets h3 {
   margin-bottom: 25px;
   color: #5c3d1b;
-  text-align: center;
   font-size: 1.8rem;
+  text-align: center;
 }
 
 .soporte-formulario label {
@@ -32,8 +37,7 @@
 }
 
 .soporte-formulario input,
-.soporte-formulario textarea,
-.soporte-formulario select {
+.soporte-formulario textarea {
   width: 100%;
   padding: 12px;
   border-radius: 10px;
@@ -55,42 +59,39 @@
   font-size: 16px;
   transition: background 0.2s;
   cursor: pointer;
+  text-align: center;
 }
 
 .soporte-formulario button:hover {
   background: #218838;
 }
 
-.soporte-tickets {
-  width: 100%;
-}
-
-.soporte-tickets h3 {
-  font-size: 1.5rem;
-  color: #5c3d1b;
-  margin-bottom: 15px;
-}
-
 .ticket {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   background: #fff2e1;
   border-left: 5px solid #c77a38;
-  padding: 12px 20px;
-  margin-bottom: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
   border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ticket:hover {
+  background: #ffedd5;
 }
 
 .ticket-id {
   font-weight: bold;
   color: #a4531d;
+  font-size: 0.95rem;
 }
 
 .ticket-desc {
-  flex-grow: 1;
-  margin-left: 15px;
+  margin: 8px 0;
   color: #333;
+  font-size: 1rem;
 }
 
 .ticket-status {
@@ -99,7 +100,7 @@
   padding: 4px 12px;
   border-radius: 20px;
   text-transform: uppercase;
-  white-space: nowrap;
+  align-self: flex-start;
 }
 
 .ticket-status.en-proceso {
@@ -110,6 +111,30 @@
 .ticket-status.resuelto {
   background: #c1f1ce;
   color: #247336;
+}
+
+.ticket-detalle {
+  margin-top: 14px;
+  background: #fff7ed;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.ticket-detalle p {
+  margin: 6px 0;
+}
+
+.ticket-respuesta {
+  background: #f4f4f4;
+  border-radius: 6px;
+  padding: 10px;
+  white-space: pre-wrap;
+  margin-top: 6px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.88rem;
+  color: #333;
 }
 
 .form-error {
@@ -127,18 +152,94 @@
   background-color: #fff4f4;
 }
 
+
+.ticket {
+  cursor: pointer;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ticket-detalle {
+  margin-top: 12px;
+  background: #fff7ed;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.ticket-respuesta {
+  background: #f4f4f4;
+  border-radius: 6px;
+  padding: 10px;
+  white-space: pre-wrap;
+  margin-top: 6px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.88rem;
+  color: #333;
+}
+
+.soporte-tickets {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  overflow: hidden;
+  position: relative;
+}
+
+.soporte-tickets h3 {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: #5c3d1b;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0cfc2;
+  background: #fff9f3;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  text-align: center;
+}
+
+.lista-tickets {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  padding-top: 15px;
+  scrollbar-width: auto; 
+  scrollbar-color: #c77a38 transparent; 
+}
+
+/* WebKit scrollbars (Chrome, Edge, Safari) */
+.lista-tickets::-webkit-scrollbar {
+  width: 12px; /* <- ¡más visible! */
+}
+
+.lista-tickets::-webkit-scrollbar-thumb {
+  background-color: #c77a38;
+  border-radius: 6px;
+}
+
+.lista-tickets::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
 /* ===== MODO OSCURO: Soporte ===== */
 body.dark-mode .soporte-container {
   color: #ffffff;
 }
 
-body.dark-mode .soporte-formulario {
+body.dark-mode .soporte-formulario,
+body.dark-mode .soporte-tickets {
   background: #2c2c2c;
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
 }
 
-body.dark-mode .soporte-formulario h2 {
+body.dark-mode .soporte-formulario h2,
+body.dark-mode .soporte-tickets h3 {
   color: #FFA94D;
+  background: #2c2c2c;
 }
 
 body.dark-mode .soporte-formulario label {
@@ -146,10 +247,9 @@ body.dark-mode .soporte-formulario label {
 }
 
 body.dark-mode .soporte-formulario input,
-body.dark-mode .soporte-formulario textarea,
-body.dark-mode .soporte-formulario select {
+body.dark-mode .soporte-formulario textarea {
   background-color: #1e1e1e;
-  color: #ffffff;
+  color: #ffffff !important;
   border: 1px solid #777;
 }
 
@@ -165,10 +265,6 @@ body.dark-mode .soporte-formulario button {
 
 body.dark-mode .soporte-formulario button:hover {
   background: #e38b31;
-}
-
-body.dark-mode .soporte-tickets h3 {
-  color: #FFA94D;
 }
 
 body.dark-mode .ticket {
@@ -194,33 +290,28 @@ body.dark-mode .ticket-status.resuelto {
   color: #b2f3cb;
 }
 
-body.dark-mode .form-error {
-  background: #5a0000;
-  color: #ffaaaa;
+body.dark-mode .ticket-detalle {
+  background: #2e2e2e;
+  color: #ffffff;
 }
+
+body.dark-mode .ticket-respuesta {
+  background-color: #1e1e1e;
+  color: #dddddd;
+}
+
+
+
 
 body.dark-mode .input-error {
   border-color: #ff4d4d !important;
   background-color: #3a1f1f;
 }
 
-/* Forzar color de texto para inputs y selects en modo oscuro */
-body.dark-mode .soporte-formulario input,
-body.dark-mode .soporte-formulario textarea,
-body.dark-mode .soporte-formulario select {
-  background-color: #1e1e1e;
-  color: #ffffff !important;
-  border: 1px solid #777;
+body.dark-mode .lista-tickets::-webkit-scrollbar-thumb {
+  background-color: #FFA94D;
 }
 
-/* Placeholder de todos */
-body.dark-mode .soporte-formulario input::placeholder,
-body.dark-mode .soporte-formulario textarea::placeholder {
-  color: #aaaaaa;
-}
-
-/* Valor activo del <select> en algunos navegadores */
-body.dark-mode .soporte-formulario select option {
-  background-color: #1e1e1e;
-  color: #ffffff;
+body.dark-mode .lista-tickets::-webkit-scrollbar-track {
+  background: transparent;
 }

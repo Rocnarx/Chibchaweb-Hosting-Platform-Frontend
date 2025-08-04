@@ -220,3 +220,8 @@ section,
 .main-content {
   flex: 1;
 }
+
+body.dark-mode .form-error {
+  background: #5a0000;
+  color: #ffaaaa;
+}
