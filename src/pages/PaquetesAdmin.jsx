@@ -150,7 +150,7 @@ export default function PaquetesAdmin() {
     <div className="paquetesadmin-wrapper">
       <div className="paquetesadmin-contenedor">
         <h1>Editar Paquetes de Hosting</h1>
-        <p>Haz clic en cualquier campo para editar</p>
+        <p>Haz clic en el campo que deseas editar</p>
 
         <div className="planes-toggle">
           {[30, 180, 365].map((p) => (
@@ -176,6 +176,7 @@ export default function PaquetesAdmin() {
                     className="titulo-plan"
                 />
                 </h2>
+                <hr className="linea-separadora-plan" />
 
 
                 {campos.map(({ clave, label }) => {
