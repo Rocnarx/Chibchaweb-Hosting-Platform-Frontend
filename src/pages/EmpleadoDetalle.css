@@ -1,0 +1,44 @@
+.empleado-detalle-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background: #fefefe;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.detalle-box p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.btn-volver {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.btn-despedir {
+  background-color: #e53935;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.mensaje {
+  color: green;
+  margin-top: 15px;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}

@@ -11,14 +11,11 @@ export default function ClientesAdmin() {
   useEffect(() => {
     const obtenerClientes = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/cuentas-por-tipo?idtipo=2`,
-          {
-            headers: {
-              "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-            },
-          }
-        );
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/cuentas-por-tipo?idtipo=2`, {
+          headers: {
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          },
+        });
 
         if (!res.ok) throw new Error("Error al obtener los clientes");
 
@@ -45,23 +42,25 @@ export default function ClientesAdmin() {
 
   return (
     <div className="clientes-admin-container">
-      <h2>Clientes Registrados</h2>
+      <h2>Distribuidores</h2>
 
       {error && <p className="error">❌ {error}</p>}
 
-      <input
-        type="text"
-        className="buscador-clientes"
-        placeholder="🔍 Buscar por nombre o correo..."
-        value={busqueda}
-        onChange={(e) => setBusqueda(e.target.value)}
-      />
+      <div className="buscador-wrapper">
+        <input
+          type="text"
+          className="buscador-clientes"
+          placeholder="🔍 Buscar por nombre o correo..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </div>
 
       <div className="tarjetas-clientes">
         {clientesFiltrados.map((cliente) => (
           <div
             key={cliente.idcuenta}
-            className="tarjeta-cliente"
+            className={`tarjeta-cliente tipo-${cliente.idtipocuenta}`}
             onClick={() => irADetalle(cliente.correo)}
           >
             <h3>{cliente.nombrecuenta}</h3>

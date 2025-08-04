@@ -11,6 +11,16 @@ export default function ClienteDetalle() {
   const [mensaje, setMensaje] = useState("");
   const navigate = useNavigate();
 
+  const tiposCuenta = {
+    1: "CLIENTE",
+    2: "DISTRIBUIDOR",
+    3: "ADMIN",
+    4: "EMPLEADO",
+    5: "POSTULADO",
+    6: "ELIMINADA",
+    7: "INHABILITADO",
+  };
+
   useEffect(() => {
     const obtenerCliente = async () => {
       try {
@@ -97,11 +107,43 @@ export default function ClienteDetalle() {
     }
   };
 
+  const handleRestaurar = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${cliente.IDCUENTA}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          },
+          body: JSON.stringify({ ...formData, IDTIPOCUENTA: 1 }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Error al restaurar la cuenta");
+
+      setMensaje("Cuenta restaurada exitosamente.");
+      setFormData({ ...formData, IDTIPOCUENTA: 1 });
+    } catch (err) {
+      console.error(err);
+      setError("No se pudo restaurar la cuenta.");
+    }
+  };
+
   if (error) return <p className="error">{error}</p>;
   if (!cliente) return <p className="cargando">Cargando información...</p>;
 
   return (
-    <div className="cliente-detalle-container">
+    <div className={`cliente-detalle-container tipo-${formData.IDTIPOCUENTA}`}>
+      <button
+        className="btn-volver-arriba"
+        onClick={() => navigate(-1)}
+        title="Volver"
+      >
+        ←
+      </button>
+
       <h2>Detalle del Cliente</h2>
 
       <div className="cliente-form">
@@ -136,7 +178,7 @@ export default function ClienteDetalle() {
         </label>
 
         <label>Tipo de cuenta:
-          <input type="number" name="IDTIPOCUENTA" value={formData.IDTIPOCUENTA} disabled />
+          <input type="text" value={tiposCuenta[formData.IDTIPOCUENTA] || "DESCONOCIDO"} disabled />
         </label>
 
         <label>ID del plan:
@@ -159,12 +201,16 @@ export default function ClienteDetalle() {
             </button>
           </>
         )}
-        <button className="btn btn-volver" onClick={() => navigate(-1)}>
-          ← Volver
-        </button>
-        <button className="btn btn-eliminar" onClick={handleEliminar}>
-          🗑 Eliminar cuenta
-        </button>
+
+        {formData.IDTIPOCUENTA === 6 ? (
+          <button className="btn btn-guardar" onClick={handleRestaurar}>
+            ♻ Restaurar cuenta
+          </button>
+        ) : (
+          <button className="btn btn-eliminar" onClick={handleEliminar}>
+            🗑 Eliminar cuenta
+          </button>
+        )}
       </div>
 
       {mensaje && <p className="mensaje">{mensaje}</p>}

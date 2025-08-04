@@ -1,0 +1,91 @@
+.postulado-detalle-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  color: #1a1a1a;
+  position: relative;
+}
+
+.postulado-detalle-container h2 {
+  font-size: 26px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.postulado-detalle-container p {
+  font-size: 16px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 6px;
+}
+
+.postulado-detalle-container strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.botones-detalle {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.btn-aceptar,
+.btn-rechazar {
+  padding: 10px 25px;
+  font-size: 15px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-aceptar {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-aceptar:hover {
+  background-color: #43a047;
+}
+
+.btn-rechazar {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-rechazar:hover {
+  background-color: #e53935;
+}
+
+button.btn-volver-arriba {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+button.btn-volver-arriba:hover {
+  color: #000;
+}
+
+.error {
+  color: #d32f2f;
+  font-weight: bold;
+  text-align: center;
+}
+
+.cargando {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+}
