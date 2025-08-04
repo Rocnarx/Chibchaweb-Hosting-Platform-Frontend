@@ -31,10 +31,14 @@ import FooterAdmin from "./Components/FooterAdmin";
 import ClientesAdmin from "./pages/ClientesAdmin";
 import ClienteDetalle from "./pages/ClienteDetalle";
 import DistribuidoresAdmin from "./pages/DistribuidorAdmin";
-import PlanesHosting from './pages/PlanesHosting';
-import PaquetesAdmin from './pages/PaquetesAdmin';
+import PlanesHosting from "./pages/PlanesHosting";
+import PaquetesAdmin from "./pages/PaquetesAdmin";
+import PostuladoDetalle from "./pages/PostuladoDetalle";
+import PostuladosAdmin from "./pages/PostuladosAdmin";
+import EmpleadosAdmin from "./pages/EmpleadosAdmin";
+import EmpleadoDetalle from "./pages/EmpleadoDetalle";
 
-import RutaProtegida from './Components/RutaProtegida';
+import RutaProtegida from "./Components/RutaProtegida";
 
 function App() {
   const { usuario } = useUser();
@@ -76,6 +80,10 @@ function App() {
           {esAdmin && <Route path="/ClientesAdmin" element={<ClientesAdmin />} />}
           {esAdmin && <Route path="/DistribuidoresAdmin" element={<DistribuidoresAdmin />} />}
           {esAdmin && <Route path="/clientes/:correo" element={<ClienteDetalle />} />}
+          {esAdmin && <Route path="/PostuladosAdmin" element={<PostuladosAdmin />} />}
+          {esAdmin && <Route path="/EmpleadosAdmin" element={<EmpleadosAdmin />} />}
+          {esAdmin && <Route path="/postulado/:correo" element={<PostuladoDetalle />} />}
+          {esAdmin && <Route path="/empleados/:correo" element={<EmpleadoDetalle />} />}
 
         {/* Rutas exclusivas para clientes */}
         {!esAdmin && <Route path="/dominios" element={<Dominios />} />}

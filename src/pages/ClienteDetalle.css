@@ -1,12 +1,13 @@
 .cliente-detalle-container {
   max-width: 1000px;
   margin: 40px auto;
-  background-color: #fef3e2; /* beige suave */
+  background-color: #fef3e2;
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', sans-serif;
   color: #3b240b;
+  position: relative;
 }
 
 h2 {
@@ -41,7 +42,8 @@ h2 {
   font-size: 0.95rem;
 }
 
-.cliente-form input {
+.cliente-form input,
+.cliente-form select {
   margin-top: 8px;
   padding: 10px 14px;
   font-size: 1rem;
@@ -51,9 +53,15 @@ h2 {
   transition: border-color 0.3s ease;
 }
 
-.cliente-form input:focus {
+.cliente-form input:focus,
+.cliente-form select:focus {
   border-color: #a85a00;
   outline: none;
+}
+
+.cliente-form select:disabled {
+  background-color: #f0f0f0;
+  color: #777;
 }
 
 .botones {
@@ -64,6 +72,7 @@ h2 {
   margin-top: 30px;
 }
 
+/* === Botones === */
 .btn {
   padding: 12px 24px;
   font-size: 1rem;
@@ -75,64 +84,140 @@ h2 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Colores de botones */
+/* Editar */
 .btn-editar {
   background-color: #e49b28;
   color: #fff;
 }
-
 .btn-editar:hover {
   background-color: #c8800e;
 }
 
+/* Guardar */
 .btn-guardar {
   background-color: #3a7c1b;
   color: white;
 }
-
 .btn-guardar:hover {
   background-color: #2e6115;
 }
 
+/* Cancelar / Volver */
 .btn-volver {
   background-color: #aaa;
   color: #fff;
 }
-
 .btn-volver:hover {
   background-color: #888;
 }
 
+/* Eliminar */
+.btn-eliminar {
+  background-color: #d9534f;
+  color: white;
+}
+.btn-eliminar:hover {
+  background-color: #c9302c;
+}
+
+/* Botón volver arriba (←) */
+.btn-volver-arriba {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #333;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.btn-volver-arriba:hover {
+  transform: scale(1.2);
+  color: #924600;
+}
+
+/* Mensajes */
 .error {
   color: #d9534f;
   text-align: center;
   font-weight: bold;
   margin-top: 20px;
 }
-
 .mensaje {
   color: #28a745;
   text-align: center;
   font-weight: bold;
   margin-top: 20px;
 }
-
 .cargando {
   text-align: center;
   font-style: italic;
 }
-.cliente-form select {
-  margin-top: 8px;
-  padding: 10px 14px;
+/* Fuerza los estilos específicos de ClienteDetalle */
+.cliente-detalle-container .btn,
+.cliente-detalle-container .btn-editar,
+.cliente-detalle-container .btn-guardar,
+.cliente-detalle-container .btn-volver,
+.cliente-detalle-container .btn-eliminar,
+.cliente-detalle-container .btn-volver-arriba {
+  all: unset; /* Elimina estilos heredados (como el verde del global) */
+  display: inline-block;
+  padding: 12px 24px;
   font-size: 1rem;
-  border: 2px solid #c7a17a;
-  border-radius: 10px;
-  background-color: #fff8f1;
-  transition: border-color 0.3s ease;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
 }
 
-.cliente-form select:disabled {
-  background-color: #f0f0f0;
-  color: #777;
+/* Reasignación de colores y estilos */
+.cliente-detalle-container .btn-editar {
+  background-color: #e49b28;
+  color: white;
 }
-  
+.cliente-detalle-container .btn-editar:hover {
+  background-color: #c8800e;
+}
+
+.cliente-detalle-container .btn-guardar {
+  background-color: #3a7c1b;
+  color: white;
+}
+.cliente-detalle-container .btn-guardar:hover {
+  background-color: #2e6115;
+}
+
+.cliente-detalle-container .btn-volver {
+  background-color: #aaa;
+  color: white;
+}
+.cliente-detalle-container .btn-volver:hover {
+  background-color: #888;
+}
+
+.cliente-detalle-container .btn-eliminar {
+  background-color: #d9534f;
+  color: white;
+}
+.cliente-detalle-container .btn-eliminar:hover {
+  background-color: #c9302c;
+}
+
+.cliente-detalle-container .btn-volver-arriba {
+  all: unset;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 26px;
+  cursor: pointer;
+  color: #333;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.cliente-detalle-container .btn-volver-arriba:hover {
+  transform: scale(1.2);
+  color: #924600;
+}

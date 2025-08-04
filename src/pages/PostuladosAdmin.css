@@ -1,0 +1,77 @@
+.admin-container {
+  background: #fff8f3;
+  padding: 40px 20px 100px;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+h2 {
+  text-align: center;
+  font-size: 32px;
+  color: #6d3200;
+  margin-bottom: 30px;
+}
+
+.error {
+  color: #d9534f;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tarjetas-postulados,
+.tarjetas-empleados {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.tarjeta-postulado,
+.tarjeta-empleado {
+  background: #fcf7f4;
+  border: 1px solid #e0cfc2;
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  text-align: center;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.tarjeta-postulado:hover,
+.tarjeta-empleado:hover {
+  transform: scale(1.03);
+  background-color: #fdefc3;
+}
+
+.tarjeta-postulado h3,
+.tarjeta-empleado h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.tarjeta-postulado p,
+.tarjeta-empleado p {
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.btn-aceptar {
+  background-color: #3a7c1b;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-aceptar:hover {
+  background-color: #2e6115;
+}

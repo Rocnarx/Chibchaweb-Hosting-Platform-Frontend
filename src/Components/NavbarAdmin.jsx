@@ -40,11 +40,41 @@ function NavbarAdmin() {
 
       <div className={`navbar-right-admin ${menuOpen ? 'open' : ''}`} ref={menuRef}>
         <ul className="navbar-menu-admin">
-          <li><NavLink to="/extensiones" className="nav-link-admin" onClick={handleMenuClick}>Precios</NavLink></li>
-          <li><NavLink to="/ClientesAdmin" className="nav-link-admin" onClick={handleMenuClick}>Usuarios</NavLink></li>
-          <li><NavLink to="/DistribuidoresAdmin" className="nav-link-admin" onClick={handleMenuClick}>Distribuidores</NavLink></li>
-          <li><NavLink to="/estadisticas" className="nav-link-admin" onClick={handleMenuClick}>Estadísticas</NavLink></li>
-          <li><NavLink to="/perfil" className="nav-link-admin" onClick={handleMenuClick}>Perfil</NavLink></li>
+          <li>
+            <NavLink to="/extensiones" className="nav-link-admin" onClick={handleMenuClick}>
+              Precios
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/ClientesAdmin" className="nav-link-admin" onClick={handleMenuClick}>
+              Usuarios
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/PostuladosAdmin" className="nav-link-admin" onClick={handleMenuClick}>
+              Postulados
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/EmpleadosAdmin" className="nav-link-admin" onClick={handleMenuClick}>
+              Empleados
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/DistribuidoresAdmin" className="nav-link-admin" onClick={handleMenuClick}>
+              Distribuidores
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/estadisticas" className="nav-link-admin" onClick={handleMenuClick}>
+              Estadísticas
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/perfil" className="nav-link-admin" onClick={handleMenuClick}>
+              Perfil
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>
