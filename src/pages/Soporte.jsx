@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
 import './Soporte.css';
+import { useState, useEffect } from 'react';
+import { useUser } from '../Context/UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeadset } from '@fortawesome/free-solid-svg-icons';
 
 function Soporte() {
+  const { usuario } = useUser();
+
   const [asunto, setAsunto] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [nivel, setNivel] = useState('Bajo');
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState('');
   const [asuntoInvalido, setAsuntoInvalido] = useState(false);
   const [descripcionInvalida, setDescripcionInvalida] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [tickets, setTickets] = useState([]);
+  const [cargandoTickets, setCargandoTickets] = useState(true);
+  const [errorTickets, setErrorTickets] = useState('');
+  const [ticketActivo, setTicketActivo] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const asuntoValido = asunto.trim() !== '';
@@ -24,25 +33,77 @@ function Soporte() {
       return;
     }
 
+    if (!usuario || !usuario.idcuenta) {
+      setError('No se pudo obtener tu cuenta. Intenta iniciar sesión nuevamente.');
+      return;
+    }
+
     setError('');
     setEnviando(true);
 
-    // Simulación de envío
-    setTimeout(() => {
-      alert('Ticket enviado correctamente ✅');
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/CrearTicket`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Chibcha-api-key': import.meta.env.VITE_API_KEY
+        },
+        body: JSON.stringify({
+          IDCLIENTE: usuario.idcuenta,
+          DESCRICTICKET: `${asunto}: ${descripcion}`
+        })
+      });
+
+      if (!response.ok) throw new Error('Error al enviar el ticket');
+
+      alert('✅ Ticket enviado correctamente.');
       setAsunto('');
       setDescripcion('');
-      setNivel('Bajo');
-      setEnviando(false);
       setAsuntoInvalido(false);
       setDescripcionInvalida(false);
-    }, 1500);
+      await cargarTickets(); // Recargar tickets después de crear uno nuevo
+    } catch (err) {
+      console.error('❌ Error al enviar ticket:', err);
+      setError('Hubo un problema al enviar el ticket.');
+    } finally {
+      setEnviando(false);
+    }
   };
 
+  const cargarTickets = async () => {
+    if (!usuario || !usuario.idcuenta) return;
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/consultarTicketporIDCUENTA?idcuenta=${usuario.idcuenta}`, {
+        headers: {
+          'Chibcha-api-key': import.meta.env.VITE_API_KEY
+        }
+      });
+
+      const datos = await res.json();
+
+      if (!res.ok || !datos.tickets) throw new Error("No se pudieron obtener los tickets");
+
+      setTickets(datos.tickets);
+      setErrorTickets('');
+    } catch (err) {
+      console.error("❌ Error al obtener tickets:", err);
+      setErrorTickets('No se pudieron cargar tus tickets.');
+    } finally {
+      setCargandoTickets(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarTickets();
+  }, [usuario]);
+
   return (
-    <div className="soporte-container">
+    <main className="soporte-container">
       <div className="soporte-formulario">
-        <h2><i className="fa-solid fa-headset"></i> Centro de Soporte Técnico</h2>
+        <h2>
+          <FontAwesomeIcon icon={faHeadset} /> Centro de Soporte Técnico
+        </h2>
         <form onSubmit={handleSubmit}>
           {error && <p className="form-error">{error}</p>}
 
@@ -66,17 +127,6 @@ function Soporte() {
             className={descripcionInvalida ? 'input-error' : ''}
           />
 
-          <label htmlFor="nivel">Nivel de servicio</label>
-          <select
-            id="nivel"
-            value={nivel}
-            onChange={(e) => setNivel(e.target.value)}
-          >
-            <option>Bajo</option>
-            <option>Medio</option>
-            <option>Alto</option>
-          </select>
-
           <button type="submit" disabled={enviando}>
             {enviando ? 'Enviando...' : 'Enviar Ticket'}
           </button>
@@ -85,18 +135,47 @@ function Soporte() {
 
       <div className="soporte-tickets">
         <h3>📋 Mis Tickets</h3>
-        <div className="ticket">
-          <span className="ticket-id">#1234</span>
-          <span className="ticket-desc">Dominio no se activa</span>
-          <span className="ticket-status en-proceso">En proceso</span>
-        </div>
-        <div className="ticket">
-          <span className="ticket-id">#1229</span>
-          <span className="ticket-desc">Error al pagar con tarjeta</span>
-          <span className="ticket-status resuelto">Resuelto</span>
+
+        <div className="lista-tickets">
+          {cargandoTickets ? (
+            <p>Cargando tickets...</p>
+          ) : errorTickets ? (
+            <p className="form-error">{errorTickets}</p>
+          ) : tickets.length === 0 ? (
+            <p>No has enviado ningún ticket aún.</p>
+          ) : (
+            tickets.map((t) => {
+              const estaAbierto = ticketActivo === t.id_ticket;
+              return (
+                <div
+                  key={t.id_ticket}
+                  className="ticket"
+                  onClick={() => setTicketActivo(estaAbierto ? null : t.id_ticket)}
+                >
+                  <span className="ticket-id">#{t.codigo}</span>
+                  <span className="ticket-desc">{t.descripcion}</span>
+                  <span className={`ticket-status ${t.estado === 2 ? 'resuelto' : 'en-proceso'}`}>
+                    {t.estado === 2 ? 'Resuelto' : 'En proceso'}
+                  </span>
+
+                  {estaAbierto && (
+                    <div className="ticket-detalle">
+                      <p><strong>Fecha:</strong> {t.fecha_creacion}</p>
+                      <p><strong>Descripción:</strong> {t.descripcion}</p>
+                      <p><strong>Respuesta:</strong></p>
+                      <pre className="ticket-respuesta">{t.respuesta || 'Sin respuesta aún.'}</pre>
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
-    </div>
+
+
+
+    </main>
   );
 }
 

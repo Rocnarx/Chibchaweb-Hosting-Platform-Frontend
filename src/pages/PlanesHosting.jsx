@@ -33,7 +33,7 @@ function PlanesHosting() {
       const planes = datos.map((p) => ({
         id: p.idpaquetehosting,
         precio: p.preciopaquete,
-        periodicidad: Number(p.periodicidad),
+        periodicidad: Number(p.periodicidad.match(/\d+/)?.[0] || 30),
         nombre: p.info?.nombrepaquetehosting || "Sin nombre",
         sitios: p.info?.cantidadsitios || 0,
         bases: p.info?.bd || 0,
@@ -42,7 +42,6 @@ function PlanesHosting() {
         ssl: p.info?.certificadosslhttps || 0,
       }));
 
-      setTodosLosPlanes(planes);
       return planes;
     } catch (err) {
       console.error("❌ Error al obtener paquetes:", err);
@@ -63,9 +62,10 @@ function PlanesHosting() {
       if (!res.ok) return null;
 
       const data = await res.json();
+
       setPaqueteActual(data);
-      const periodicidad = Number(data.periodicidad);
-      setPeriodoSeleccionado(periodicidad);
+
+      const periodicidad = parseInt(data.periodicidad.match(/\d+/)?.[0] || "30");
       return periodicidad;
     } catch (err) {
       console.error("❌ Error al obtener MiPaquete:", err);
@@ -83,9 +83,36 @@ function PlanesHosting() {
     }, 200);
   };
 
+const verificarMetodoPago = async () => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/metodosPagoUsuario?identificacion=${usuario.identificacion}`, {
+      headers: {
+        'Chibcha-api-key': import.meta.env.VITE_API_KEY,
+      },
+    });
+
+    if (!res.ok) {
+      console.error("Error al obtener métodos de pago:", res.status);
+      return false;
+    }
+
+    const data = await res.json();
+    return Array.isArray(data.metodos_pago) && data.metodos_pago.length > 0;
+  } catch (error) {
+    console.error("❌ Error al verificar métodos de pago:", error);
+    return false;
+  }
+};
+
   const adquirirPaquete = async (idpaquetehosting) => {
-    if (!usuario || !usuario.idcuenta) {
+    if (!usuario || !usuario.idcuenta || !usuario.identificacion) {
       alert("Debes iniciar sesión para adquirir un plan.");
+      return;
+    }
+
+    const tieneMetodoPago = await verificarMetodoPago();
+    if (!tieneMetodoPago) {
+      alert("Debes agregar un método de pago antes de poder adquirir un plan.");
       return;
     }
 
@@ -110,7 +137,8 @@ function PlanesHosting() {
       if (!res.ok) throw new Error(data?.mensaje || 'Error al adquirir el paquete');
 
       alert(`✅ ${data.mensaje || "Paquete adquirido exitosamente."}`);
-      await cargarMiPaquete();
+      const nuevaPeriodicidad = await cargarMiPaquete();
+      filtrarPlanes(todosLosPlanes, nuevaPeriodicidad || 30);
     } catch (err) {
       console.error("❌ Error al adquirir paquete:", err);
       alert("❌ No se pudo completar la compra del paquete.");
@@ -123,6 +151,7 @@ function PlanesHosting() {
     const iniciar = async () => {
       const planes = await cargarPlanes();
       const periodicidad = await cargarMiPaquete();
+      setTodosLosPlanes(planes);
       filtrarPlanes(planes, periodicidad || 30);
       setCargando(false);
     };
@@ -162,25 +191,35 @@ function PlanesHosting() {
       ) : (
         <div className={`planes-listado ${animando ? 'oculto' : ''}`}>
           {planesFiltrados.map((plan) => {
-            const planActual = paqueteActual?.info?.nombrepaquetehosting;
-            const mismoPlan = planActual === plan.nombre;
-            const fechaVencimiento = new Date(paqueteActual?.fchvencimiento);
+            const mismoPlan = plan.id === paqueteActual?.idpaquetehosting;
+
+            const fechaVencimiento = paqueteActual?.fchvencimiento
+              ? new Date(paqueteActual.fchvencimiento)
+              : null;
+
             const hoy = new Date();
-            const planVigente = hoy <= fechaVencimiento;
-            const tienePlanActivo = paqueteActual?.idfacturapaquete && planVigente;
-            const desactivado = tienePlanActivo && !mismoPlan;
+            const planVigente = fechaVencimiento && hoy <= fechaVencimiento;
+            const tienePlanActivo = paqueteActual?.idfacturapaquete && planVigente && Number(paqueteActual?.estado) === 1;
+
+            const desactivado = Boolean(
+              tienePlanActivo &&
+              paqueteActual?.idpaquetehosting !== plan.id
+            );
 
             return (
-              <div key={plan.id} className={`plan-card ${desactivado ? 'desactivado' : ''}`}>
+              <div
+                key={plan.id}
+                className={`plan-card ${desactivado ? 'desactivado' : ''} ${mismoPlan && tienePlanActivo ? 'activo' : ''}`}
+              >
                 <h2><span className="nombre-plan">{plan.nombre}</span></h2>
 
-                {mismoPlan && planVigente && (
+                {mismoPlan && tienePlanActivo && fechaVencimiento && (
                   <p className="plan-activo">
                     Suscrito hasta el {fechaVencimiento.toLocaleDateString()}
                   </p>
                 )}
 
-                <p className="precio">${plan.precio.toLocaleString()} COP</p>
+                <p className="precio">${plan.precio.toLocaleString()} USD</p>
                 <ul>
                   <li><FontAwesomeIcon icon={faServer} /> Sitios: {plan.sitios}</li>
                   <li><FontAwesomeIcon icon={faDatabase} /> Bases de datos: {plan.bases}</li>
@@ -191,10 +230,14 @@ function PlanesHosting() {
 
                 <button
                   className="btn-adquirir"
-                  disabled={desactivado || comprando === plan.id}
+                  disabled={desactivado || comprando === plan.id || (mismoPlan && tienePlanActivo)}
                   onClick={() => adquirirPaquete(plan.id)}
                 >
-                  {comprando === plan.id ? "Procesando..." : "Adquirir"}
+                  {mismoPlan && tienePlanActivo
+                    ? "Adquirido"
+                    : comprando === plan.id
+                    ? "Procesando..."
+                    : "Adquirir"}
                 </button>
               </div>
             );

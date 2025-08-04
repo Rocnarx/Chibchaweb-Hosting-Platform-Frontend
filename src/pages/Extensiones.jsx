@@ -68,7 +68,7 @@ export default function Extensiones() {
                   </button>
                 </div>
               ) : (
-                <strong>${precio.toLocaleString()} COP</strong>
+                <strong>${precio.toLocaleString()} USD</strong>
               )}
             </div>
           ))}

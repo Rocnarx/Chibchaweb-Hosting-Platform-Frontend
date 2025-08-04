@@ -219,7 +219,7 @@ function Dominios() {
                     {principalDisponible
                       ? `$${(
                           precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ?? 10000
-                        ).toLocaleString()} COP`
+                        ).toLocaleString()} USD`
                       : '$'}
                   </div>
                   <p>
@@ -252,7 +252,9 @@ function Dominios() {
               <div className="bloque hosting">
                 <strong>¿Ya cuenta con servicio de Hosting para su sitio web?</strong>
                 <p>ChibchaWeb ofrece este servicio a precios justos</p>
-                <button className="btn-agregar">Adquirir Hosting</button>
+                <button className="btn-agregar" onClick={() => window.location.href = "/planesHosting"}>
+                  Adquirir Hosting
+                </button>
               </div>
             </div>
           )}
@@ -270,7 +272,7 @@ function Dominios() {
                 <div key={i} className="alternativa">
                   <span>{r.nombre}</span>
                   <div className="precio-y-boton">
-                    <span className="precio">${r.precio.toLocaleString()} COP</span>
+                    <span className="precio">${r.precio.toLocaleString()} USD</span>
                     <button
                       className="boton-adquirir"
                       onClick={() => agregarAlCarrito(r)}

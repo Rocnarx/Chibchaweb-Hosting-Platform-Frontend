@@ -77,7 +77,7 @@ function Navbar() {
       <div className={`navbar-right ${menuOpen ? 'open' : ''}`} ref={menuRef}>
         <ul className="navbar-menu">
           <li><NavLink to="/" className="nav-link" onClick={handleMenuClick}>Inicio</NavLink></li>
-          <li><NavLink to="/dominios" className="nav-link" onClick={handleMenuClick}>Dominios</NavLink></li>
+          {/* <li><NavLink to="/dominios" className="nav-link" onClick={handleMenuClick}>Dominios</NavLink></li> */}
           <li><NavLink to="/planesHosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
           <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
           <li><NavLink to="/DominiosAdquiridos" className="nav-link" onClick={handleMenuClick}>Mis dominios</NavLink></li>

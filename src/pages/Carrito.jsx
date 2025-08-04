@@ -188,7 +188,7 @@ function Carrito() {
               <div key={i} className="item-dominio">
                 <span className="check">✔</span>
                 <span className="nombre">{item.nombre}</span>
-                <span className="precio">${item.precio.toLocaleString()} COP</span>
+                <span className="precio">${item.precio.toLocaleString()} USD</span>
                 <button className="btn-eliminar" onClick={() => eliminarDominio(item.nombre)}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
@@ -200,17 +200,17 @@ function Carrito() {
             <h2>Resumen de orden</h2>
             <div className="linea">
               <span>Subtotal</span>
-              <span>${subtotal.toLocaleString()} COP</span>
+              <span>${subtotal.toLocaleString()} USD</span>
             </div>
             <div className="linea">
               <span>Impuestos</span>
-              <span>${impuestos.toLocaleString()} COP</span>
+              <span>${impuestos.toLocaleString()} USD</span>
             </div>
 
             {comision > 0 && (
               <div className="linea">
                 <span>Descuento ({comision}%)</span>
-                <span>– ${descuento.toLocaleString()} COP</span>
+                <span>– ${descuento.toLocaleString()} USD</span>
               </div>
             )}
 
@@ -218,7 +218,7 @@ function Carrito() {
 
             <div className="linea total">
               <span>Total</span>
-              <span>${totalConDescuento.toLocaleString()} COP</span>
+              <span>${totalConDescuento.toLocaleString()} USD</span>
             </div >
 
             <button

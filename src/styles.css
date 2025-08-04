@@ -210,3 +210,18 @@ section,
 .ext-card {
   transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}
+
+body.dark-mode .form-error {
+  background: #5a0000;
+  color: #ffaaaa;
+}
