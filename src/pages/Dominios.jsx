@@ -252,7 +252,9 @@ function Dominios() {
               <div className="bloque hosting">
                 <strong>¿Ya cuenta con servicio de Hosting para su sitio web?</strong>
                 <p>ChibchaWeb ofrece este servicio a precios justos</p>
-                <button className="btn-agregar">Adquirir Hosting</button>
+                <button className="btn-agregar" onClick={() => window.location.href = "/planesHosting"}>
+                  Adquirir Hosting
+                </button>
               </div>
             </div>
           )}
