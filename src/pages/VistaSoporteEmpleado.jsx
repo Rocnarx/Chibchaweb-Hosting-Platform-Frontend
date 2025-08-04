@@ -5,9 +5,11 @@ import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 function VistaSoporteEmpleado() {
   const [tickets, setTickets] = useState([]);
-  const [resolviendo, setResolviendo] = useState(null);
-  const [feedbackTexto, setFeedbackTexto] = useState('');
   const [estadoFiltro, setEstadoFiltro] = useState("todos");
+  const [ticketActivo, setTicketActivo] = useState(null);
+  const [respuestaTexto, setRespuestaTexto] = useState('');
+  const [enviandoRespuesta, setEnviandoRespuesta] = useState(false);
+  const [respuestaEnviada, setRespuestaEnviada] = useState(false);
 
   useEffect(() => {
     const cargarTicketsDesdeBackend = async () => {
@@ -42,57 +44,32 @@ function VistaSoporteEmpleado() {
           .filter(r => r.status === "fulfilled")
           .flatMap(r => r.value);
 
-        const formateados = todos.map((t, i) => {
-          console.log("✔ Ticket recibido:", t);
-          return {
-            id: t.idticket ? String(t.idticket) : `tmp-${i}`,
-            codigo: t.codigo ?? `TK-TMP-${i}`,
-            cliente: t.cliente?.nombre || 'Sin nombre',
-            asunto: typeof t.descripcion === 'string' && t.descripcion.trim()
-              ? t.descripcion.slice(0, 60) + (t.descripcion.length > 60 ? '…' : '')
-              : 'Sin descripción',
-            nivel: typeof t.nivel === 'number' ? `Soporte ${t.nivel}` : 'Sin nivel',
-            estado: t.estado_ticket === 2 ? 'Resuelto' : 'En proceso',
-            feedback: '',
-          };
-        });
+        const formateados = todos.map((t, i) => ({
+          id: t.idticket ? String(t.idticket) : `tmp-${i}`,
+          codigo: t.codigo ?? `TK-TMP-${i}`,
+          cliente: t.cliente?.nombre || 'Sin nombre',
+          correo: t.cliente?.correo || '',
+          descripcion: t.descripcion ?? '',
+          fecha_creacion: t.fecha_creacion ?? '',
+          asunto: typeof t.descripcion === 'string' && t.descripcion.trim()
+            ? t.descripcion.slice(0, 60) + (t.descripcion.length > 60 ? '…' : '')
+            : 'Sin descripción',
+          nivel: typeof t.nivel === 'number' ? `Soporte ${t.nivel}` : 'Sin nivel',
+          estado: t.estado_ticket === 2 ? 'Resuelto' : 'En proceso',
+        }));
 
-        console.log("📥 Tickets cargados:", formateados);
         setTickets(formateados);
       } catch (err) {
-        console.error('❌ Error inesperado al cargar tickets:', err);
+        console.error('❌ Error al cargar tickets:', err);
       }
     };
 
     cargarTicketsDesdeBackend();
   }, [estadoFiltro]);
 
-  const enviarFeedback = (id) => {
-    if (!feedbackTexto.trim()) return;
-
-    setTickets((prev) =>
-      prev.map((ticket) =>
-        ticket.id === id
-          ? {
-              ...ticket,
-              estado: 'Resuelto',
-              feedback: feedbackTexto.trim(),
-            }
-          : ticket
-      )
-    );
-    setResolviendo(null);
-    setFeedbackTexto('');
-  };
-
   const subirNivel = async (codigo, nivelActual) => {
     const nuevoNivel = nivelActual + 1;
-    if (nuevoNivel > 3 || !codigo || !codigo.startsWith("TK")) {
-      console.warn("⛔ Código inválido o sin escalar:", codigo);
-      return;
-    }
-
-    console.log(`⬆ Escalando ticket ${codigo} de nivel ${nivelActual} → ${nuevoNivel}`);
+    if (nuevoNivel > 3 || !codigo || !codigo.startsWith("TK")) return;
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/CambiarNivelTicket/${codigo}`, {
@@ -104,10 +81,7 @@ function VistaSoporteEmpleado() {
         body: JSON.stringify({ nivel: nuevoNivel })
       });
 
-      const respuestaTexto = await res.text();
-      console.log(`🛰 PATCH response (${res.status}):`, respuestaTexto);
-
-      if (!res.ok) throw new Error(`No se pudo escalar el ticket (${res.status}): ${respuestaTexto}`);
+      if (!res.ok) throw new Error("No se pudo escalar el ticket");
 
       setTickets(prev =>
         prev.map(ticket =>
@@ -118,7 +92,38 @@ function VistaSoporteEmpleado() {
       );
     } catch (err) {
       console.error("❌ Error al escalar ticket:", err);
-      alert("No se pudo escalar el ticket. Inténtalo más tarde.");
+      alert("No se pudo escalar el ticket.");
+    }
+  };
+
+  const enviarRespuestaTicket = async () => {
+    if (!respuestaTexto.trim() || !ticketActivo?.codigo) return;
+
+    try {
+      setEnviandoRespuesta(true);
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/ticket/${ticketActivo.codigo}/respuesta`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Chibcha-api-key': import.meta.env.VITE_API_KEY
+        },
+        body: JSON.stringify({
+          mensaje: respuestaTexto.trim(),
+          autor: 'empleado'
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.detail || 'Error al enviar respuesta');
+
+      setRespuestaEnviada(true);
+      setRespuestaTexto('');
+    } catch (err) {
+      alert("❌ No se pudo enviar la respuesta.");
+      console.error("Error:", err);
+    } finally {
+      setEnviandoRespuesta(false);
     }
   };
 
@@ -127,24 +132,9 @@ function VistaSoporteEmpleado() {
       <h2>📋 Panel de Soporte Técnico</h2>
 
       <div className="filtro-estados">
-        <button
-          className={estadoFiltro === "todos" ? "activo" : ""}
-          onClick={() => setEstadoFiltro("todos")}
-        >
-          Todos
-        </button>
-        <button
-          className={estadoFiltro === "proceso" ? "activo" : ""}
-          onClick={() => setEstadoFiltro("proceso")}
-        >
-          En proceso
-        </button>
-        <button
-          className={estadoFiltro === "resuelto" ? "activo" : ""}
-          onClick={() => setEstadoFiltro("resuelto")}
-        >
-          Resueltos
-        </button>
+        <button className={estadoFiltro === "todos" ? "activo" : ""} onClick={() => setEstadoFiltro("todos")}>Todos</button>
+        <button className={estadoFiltro === "proceso" ? "activo" : ""} onClick={() => setEstadoFiltro("proceso")}>En proceso</button>
+        <button className={estadoFiltro === "resuelto" ? "activo" : ""} onClick={() => setEstadoFiltro("resuelto")}>Resueltos</button>
       </div>
 
       <table>
@@ -155,83 +145,84 @@ function VistaSoporteEmpleado() {
             <th>Asunto</th>
             <th>Nivel</th>
             <th>Estado</th>
-            <th>Acción</th>
           </tr>
         </thead>
         <tbody>
           {tickets.map((ticket) => (
-            <React.Fragment key={ticket.id}>
-              <tr>
-                <td>#{ticket.id}</td>
-                <td>{ticket.cliente}</td>
-                <td>{ticket.asunto}</td>
-                <td>
-                  <span className="nivel-wrapper">
-                    {ticket.nivel}
-                    {ticket.estado !== 'Resuelto' && ticket.nivel !== 'Soporte 3' && (
-                      <span
-                        className="icono-escalar"
-                        title="Escalar ticket"
-                        onClick={(e) => {
-                          const confirmar = window.confirm('¿Deseas escalar este ticket al siguiente nivel?');
-                          if (confirmar) {
-                            const target = e.currentTarget;
-                            target.classList.add('animado');
-                            setTimeout(() => {
-                              if (target) target.classList.remove('animado');
-                            }, 500);
-                            const nivelActual = Number(ticket.nivel?.match(/\d+/)?.[0] || 1);
-                            subirNivel(ticket.codigo, nivelActual);
-                          }
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faArrowUp} />
-                      </span>
-                    )}
-                  </span>
-                </td>
-                <td>
-                  <span className={`estado-tag ${ticket.estado.toLowerCase().replace(" ", "-")}`}>
-                    {ticket.estado}
-                  </span>
-                </td>
-                <td>
-                  {ticket.estado !== 'Resuelto' ? (
-                    <button onClick={() => setResolviendo(ticket.id)}>
-                      ✔ Resolver
-                    </button>
-                  ) : (
-                    '✔'
+            <tr key={ticket.id} onClick={() => setTicketActivo(ticket)}>
+              <td>#{ticket.id}</td>
+              <td>{ticket.cliente}</td>
+              <td>{ticket.asunto}</td>
+              <td>
+                <span className="nivel-wrapper">
+                  {ticket.nivel}
+                  {ticket.estado !== 'Resuelto' && ticket.nivel !== 'Soporte 3' && (
+                    <span
+                      className="icono-escalar"
+                      title="Escalar ticket"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const confirmar = window.confirm('¿Deseas escalar este ticket al siguiente nivel?');
+                        if (confirmar) {
+                          const nivelActual = Number(ticket.nivel?.match(/\d+/)?.[0] || 1);
+                          subirNivel(ticket.codigo, nivelActual);
+                        }
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faArrowUp} />
+                    </span>
                   )}
-                </td>
-              </tr>
-
-              {resolviendo === ticket.id && (
-                <tr className="feedback-row">
-                  <td colSpan="6">
-                    <textarea
-                      placeholder="Escribe el feedback para este ticket..."
-                      value={feedbackTexto}
-                      onChange={(e) => setFeedbackTexto(e.target.value)}
-                    />
-                    <button onClick={() => enviarFeedback(ticket.id)}>
-                      Enviar feedback y marcar como resuelto
-                    </button>
-                  </td>
-                </tr>
-              )}
-
-              {ticket.feedback && (
-                <tr className="feedback-row">
-                  <td colSpan="6">
-                    <strong>📝 Feedback enviado:</strong> {ticket.feedback}
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
+                </span>
+              </td>
+              <td>
+                <span className={`estado-tag ${ticket.estado.toLowerCase().replace(" ", "-")}`}>
+                  {ticket.estado}
+                </span>
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Modal detallado del ticket */}
+      {ticketActivo && (
+        <div className="modal-overlay" onClick={() => setTicketActivo(null)}>
+          <div className="modal-ticket" onClick={(e) => e.stopPropagation()}>
+            <button className="cerrar-modal" onClick={() => setTicketActivo(null)}>✖</button>
+            <h2>🎫 Detalles del Ticket</h2>
+            <p><strong>Código:</strong> {ticketActivo.codigo}</p>
+            <p><strong>Cliente:</strong> {ticketActivo.cliente}</p>
+            <p><strong>Correo:</strong> {ticketActivo.correo}</p>
+            <p><strong>Nivel:</strong> {ticketActivo.nivel}</p>
+            <p><strong>Estado:</strong> {ticketActivo.estado}</p>
+            <p><strong>Fecha de creación:</strong> {ticketActivo.fecha_creacion}</p>
+            <p><strong>Descripción completa:</strong></p>
+            <div className="descripcion-completa">{ticketActivo.descripcion}</div>
+
+            <div className="area-respuesta">
+              <label htmlFor="respuesta">✉ Escribir respuesta:</label>
+              <textarea
+                id="respuesta"
+                value={respuestaTexto}
+                onChange={(e) => setRespuestaTexto(e.target.value)}
+                placeholder="Escribe aquí tu respuesta al cliente..."
+                rows="4"
+              />
+              <button
+                className="btn-responder"
+                onClick={enviarRespuestaTicket}
+                disabled={enviandoRespuesta}
+              >
+                {enviandoRespuesta ? "Enviando..." : "Enviar respuesta"}
+              </button>
+
+              {respuestaEnviada && (
+                <p className="mensaje-exito">✅ Respuesta enviada con éxito</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
