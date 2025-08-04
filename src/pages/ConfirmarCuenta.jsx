@@ -7,6 +7,7 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { useUser } from "../Context/UserContext"; // ✅ Importar el contexto
 
 export default function ConfirmarCuenta() {
   const [codigo, setCodigo] = useState("");
@@ -18,18 +19,18 @@ export default function ConfirmarCuenta() {
   const navigate = useNavigate();
   const yaConfirmado = useRef(false); // 🛑 para evitar verificación múltiple
 
-  // Verifica automáticamente si hay token e idcuenta en la URL
+  const { actualizarUsuario } = useUser(); // ✅ Acceder a la función del contexto
+
   useEffect(() => {
     const tokenURL = searchParams.get("token");
     const idcuentaURL = searchParams.get("idcuenta");
 
     if (tokenURL && idcuentaURL && !yaConfirmado.current) {
-      yaConfirmado.current = true; // ✅ se asegura que solo se ejecute una vez
+      yaConfirmado.current = true;
       confirmarCuenta(tokenURL, idcuentaURL);
     }
   }, [searchParams]);
 
-  // Acción principal para confirmar la cuenta
   const confirmarCuenta = async (token, idcuenta) => {
     setCargando(true);
     setMensaje("");
@@ -47,6 +48,9 @@ export default function ConfirmarCuenta() {
       const data = await res.text();
 
       if (res.ok) {
+        // ✅ Actualizar usuario como verificado en el contexto
+        actualizarUsuario && actualizarUsuario({ verificado: true });
+
         setMensaje("✅ Cuenta confirmada exitosamente. Serás redirigido al inicio de sesión...");
         setEstado("success");
         setTimeout(() => navigate("/login"), 2500);

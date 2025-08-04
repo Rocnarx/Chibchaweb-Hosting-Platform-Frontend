@@ -57,15 +57,19 @@ function App() {
           <Route path="/planesHosting" element={<PlanesHosting />} />
           <Route path="/paquetes" element={<PaquetesAdmin />} />
 
-          {/* Rutas protegidas comunes */}
-          <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
-          <Route path="/carrito" element={<RutaProtegida><Carrito /></RutaProtegida>} />
-          <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
-          <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
-          <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
-          <Route path="/soporte" element={<RutaProtegida><Soporte /></RutaProtegida>} />
-          <Route path="/panel-soporte" element={<RutaProtegida><VistaSoporteEmpleado /></RutaProtegida>} />
-          <Route path="/comisiones" element={<RutaProtegida><Comisiones /></RutaProtegida>} />
+        {/* Rutas protegidas comunes */}
+        <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
+        <Route path="/carrito" element={
+          <RutaProtegida requiereVerificacion={true}>
+            <Carrito />
+          </RutaProtegida>
+        } />
+        <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
+        <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
+        <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
+        <Route path="/soporte" element={<RutaProtegida><Soporte /></RutaProtegida>} />
+        <Route path="/panel-soporte" element={<RutaProtegida><VistaSoporteEmpleado /></RutaProtegida>} />
+        <Route path="/comisiones" element={<RutaProtegida><Comisiones /></RutaProtegida>} />
 
           {/* Rutas solo para administrador */}
           {esAdmin && <Route path="/extensiones" element={<Extensiones />} />}
@@ -73,8 +77,8 @@ function App() {
           {esAdmin && <Route path="/DistribuidoresAdmin" element={<DistribuidoresAdmin />} />}
           {esAdmin && <Route path="/clientes/:correo" element={<ClienteDetalle />} />}
 
-          {/* Rutas exclusivas para clientes */}
-          {!esAdmin && <Route path="/dominios" element={<Dominios />} />}
+        {/* Rutas exclusivas para clientes */}
+        {!esAdmin && <Route path="/dominios" element={<Dominios />} />}
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />
