@@ -62,7 +62,6 @@ function PlanesHosting() {
       if (!res.ok) return null;
 
       const data = await res.json();
-      console.log("🧪 Respuesta de MiPaquete:", data);
 
       setPaqueteActual(data);
 
@@ -84,9 +83,36 @@ function PlanesHosting() {
     }, 200);
   };
 
+const verificarMetodoPago = async () => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/metodosPagoUsuario?identificacion=${usuario.identificacion}`, {
+      headers: {
+        'Chibcha-api-key': import.meta.env.VITE_API_KEY,
+      },
+    });
+
+    if (!res.ok) {
+      console.error("Error al obtener métodos de pago:", res.status);
+      return false;
+    }
+
+    const data = await res.json();
+    return Array.isArray(data.metodos_pago) && data.metodos_pago.length > 0;
+  } catch (error) {
+    console.error("❌ Error al verificar métodos de pago:", error);
+    return false;
+  }
+};
+
   const adquirirPaquete = async (idpaquetehosting) => {
-    if (!usuario || !usuario.idcuenta) {
+    if (!usuario || !usuario.idcuenta || !usuario.identificacion) {
       alert("Debes iniciar sesión para adquirir un plan.");
+      return;
+    }
+
+    const tieneMetodoPago = await verificarMetodoPago();
+    if (!tieneMetodoPago) {
+      alert("Debes agregar un método de pago antes de poder adquirir un plan.");
       return;
     }
 
