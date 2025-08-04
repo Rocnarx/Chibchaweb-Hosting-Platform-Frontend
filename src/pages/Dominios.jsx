@@ -219,7 +219,7 @@ function Dominios() {
                     {principalDisponible
                       ? `$${(
                           precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ?? 10000
-                        ).toLocaleString()} COP`
+                        ).toLocaleString()} USD`
                       : '$'}
                   </div>
                   <p>
@@ -270,7 +270,7 @@ function Dominios() {
                 <div key={i} className="alternativa">
                   <span>{r.nombre}</span>
                   <div className="precio-y-boton">
-                    <span className="precio">${r.precio.toLocaleString()} COP</span>
+                    <span className="precio">${r.precio.toLocaleString()} USD</span>
                     <button
                       className="boton-adquirir"
                       onClick={() => agregarAlCarrito(r)}

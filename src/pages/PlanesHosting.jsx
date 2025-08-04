@@ -179,7 +179,7 @@ function PlanesHosting() {
                   </p>
                 )}
 
-                <p className="precio">${plan.precio.toLocaleString()} COP</p>
+                <p className="precio">${plan.precio.toLocaleString()} USD</p>
                 <ul>
                   <li><FontAwesomeIcon icon={faServer} /> Sitios: {plan.sitios}</li>
                   <li><FontAwesomeIcon icon={faDatabase} /> Bases de datos: {plan.bases}</li>

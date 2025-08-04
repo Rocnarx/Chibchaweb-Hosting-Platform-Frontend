@@ -26,7 +26,7 @@ export default function PaquetesAdmin() {
   });
 
   const campos = [
-    { clave: "precio", label: "Precio (COP)" },
+    { clave: "precio", label: "Precio (USD)" },
     { clave: "sitios", label: "Sitios" },
     { clave: "bases", label: "Bases de datos" },
     { clave: "ssd", label: "SSD (GB)" },
@@ -128,7 +128,7 @@ const cargarPlanes = async () => {
         if (!res.ok) throw new Error(`Error al guardar en plan con ID ${p.id}`);
       }
 
-      alert(`✅ Cambios guardados para "${planEditado.nombre}" en todas las periodicidades`);
+      alert(`✅ Cambios guardados para "${planEditado.nombre}" para la periodicidad ${periodoSeleccionado === 30 ? "mensual" : periodoSeleccionado === 180 ? "semestral" : "anual"}`);
       cargarPlanes();
     } catch (error) {
       alert("❌ Error al guardar cambios");
