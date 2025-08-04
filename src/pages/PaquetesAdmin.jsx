@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "./PaquetesAdmin.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function PaquetesAdmin() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -120,6 +122,26 @@ export default function PaquetesAdmin() {
     }
   };
 
+  const eliminarPaquete = async (idinfo) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este paquete?")) return;
+    if (!window.confirm("⚠️ Esta acción eliminará todas las periodicidades de este paquete. ¿Deseas continuar?")) return;
+
+    try {
+      const res = await fetch(`${API_URL}/EliminarPaquete?idinfopaquete=${idinfo}`, {
+        method: "DELETE",
+        headers: { "Chibcha-api-key": API_KEY },
+      });
+
+      if (!res.ok) throw new Error("No se pudo eliminar el paquete");
+
+      alert("✅ Paquete eliminado correctamente");
+      cargarPlanes();
+    } catch (error) {
+      alert("❌ Error al eliminar el paquete");
+      console.error(error);
+    }
+  };
+
   const planesFiltrados = planes.filter((p) => Number(p.periodicidad) === periodoSeleccionado);
   const camposCompletos = nuevoPaquete.nombre.trim() !== "" &&
     campos.every(({ clave }) => String(nuevoPaquete[clave]).trim() !== "");
@@ -147,13 +169,14 @@ export default function PaquetesAdmin() {
             planesFiltrados.map((plan) => (
               <div key={plan.id} className="plan-edit-card">
                 <h2>
-                  <input
+                <input
                     type="text"
                     value={plan.nombre}
                     onChange={(e) => editarCampo(plan.id, "nombre", e.target.value)}
                     className="titulo-plan"
-                  />
+                />
                 </h2>
+
 
                 {campos.map(({ clave, label }) => {
                   const campoId = `${plan.id}-${clave}`;
@@ -187,15 +210,24 @@ export default function PaquetesAdmin() {
                   );
                 })}
 
-                <div className="boton-guardar-wrapper">
-                  <button
+                <div className="boton-guardar-wrapper boton-acciones">
+                <button
                     className="boton-guardar"
                     onClick={() => guardarCambios(plan)}
                     disabled={guardando === plan.id}
-                  >
+                >
                     {guardando === plan.id ? "Guardando..." : "Guardar cambios"}
-                  </button>
+                </button>
+
+                <button
+                    className="btn-eliminar"
+                    title="Eliminar paquete"
+                    onClick={() => eliminarPaquete(plan.idinfo)}
+                >
+                    <FontAwesomeIcon icon={faTrash} />
+                </button>
                 </div>
+
               </div>
             ))}
         </div>

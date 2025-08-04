@@ -375,6 +375,12 @@ body.dark-mode .grupo-input input {
   opacity: 0.6;
 }
 
+.boton-acciones {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
 
 @media (max-width: 600px) {
   .modal-contenido.alternativas {
@@ -404,3 +410,4 @@ body.dark-mode .grupo-input input {
     right: 12px;
   }
 }
+
