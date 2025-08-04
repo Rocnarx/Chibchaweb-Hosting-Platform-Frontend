@@ -55,7 +55,11 @@ function App() {
 
         {/* Rutas protegidas comunes */}
         <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
-        <Route path="/carrito" element={<RutaProtegida><Carrito /></RutaProtegida>} />
+        <Route path="/carrito" element={
+          <RutaProtegida requiereVerificacion={true}>
+            <Carrito />
+          </RutaProtegida>
+        } />
         <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
         <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
         <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
@@ -68,7 +72,7 @@ function App() {
         {esAdmin && <Route path="/ClientesAdmin" element={<ClientesAdmin />} />}
         {esAdmin && <Route path="/clientes/:correo" element={<ClienteDetalle />} />}
 
-        {/* Rutas exclusivas para clientes (si quieres condicionar otras) */}
+        {/* Rutas exclusivas para clientes */}
         {!esAdmin && <Route path="/dominios" element={<Dominios />} />}
 
         {/* Fallback */}
