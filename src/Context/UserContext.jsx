@@ -6,7 +6,12 @@ const UserContext = createContext();
 export function UserProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
 
-  // Cargar usuario desde localStorage al montar la app
+  // ✅ Función para actualizar parcialmente el usuario (solo lo necesario)
+  const actualizarUsuario = (nuevosDatos) => {
+    setUsuario((prev) => ({ ...prev, ...nuevosDatos }));
+  };
+
+  // Cargar usuario desde localStorage al iniciar la app
   useEffect(() => {
     const datosGuardados = localStorage.getItem("usuario");
     if (datosGuardados) {
@@ -14,7 +19,7 @@ export function UserProvider({ children }) {
     }
   }, []);
 
-  // Guardar usuario en localStorage cuando se actualice
+  // Guardar usuario actualizado en localStorage
   useEffect(() => {
     if (usuario) {
       localStorage.setItem("usuario", JSON.stringify(usuario));
@@ -24,7 +29,7 @@ export function UserProvider({ children }) {
   }, [usuario]);
 
   return (
-    <UserContext.Provider value={{ usuario, setUsuario }}>
+    <UserContext.Provider value={{ usuario, setUsuario, actualizarUsuario }}>
       {children}
     </UserContext.Provider>
   );
