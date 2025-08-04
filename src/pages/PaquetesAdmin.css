@@ -73,6 +73,12 @@
   text-align: left;
 }
 
+.plan-edit-card h2 {
+  text-align: center;
+  margin-bottom: 6px; /* antes podía estar en 16px o más */
+}
+
+
 .plan-edit-card h2 input {
   font-size: 18px;
   font-weight: bold;

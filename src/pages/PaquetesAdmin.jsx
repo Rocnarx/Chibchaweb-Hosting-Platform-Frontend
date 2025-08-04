@@ -11,6 +11,7 @@ export default function PaquetesAdmin() {
   const [tempValor, setTempValor] = useState("");
   const [guardando, setGuardando] = useState(null);
   const [cargando, setCargando] = useState(true);
+  const [planActivoId, setPlanActivoId] = useState("2");
 
   const campos = [
     { clave: "precio", label: "Precio (COP)" },
@@ -30,7 +31,8 @@ export default function PaquetesAdmin() {
 
       const planos = datos.map((p) => ({
         id: p.idpaquetehosting,
-        periodicidad: Number(p.periodicidad),
+        idinfo: p.info?.idinfopaquetehosting,
+        periodicidad: p.periodicidad,
         nombre: p.info?.nombrepaquetehosting || "",
         precio: p.preciopaquete,
         sitios: p.info?.cantidadsitios || 0,
@@ -63,8 +65,33 @@ export default function PaquetesAdmin() {
   const guardarCambios = async (plan) => {
     setGuardando(plan.id);
     try {
-      console.log("💾 Guardando:", plan);
-      await new Promise((res) => setTimeout(res, 1000));
+      const body = {
+        idpaquetehosting: Number(plan.id),
+        idinfopaquetehosting: Number(plan.idinfo),
+        preciopaquete: Number(plan.precio),
+        periodicidad: String(plan.periodicidad),
+        cantidadsitios: Number(plan.sitios),
+        nombrepaquetehosting: plan.nombre,
+        bd: Number(plan.bases),
+        gbenssd: Number(plan.ssd),
+        correos: Number(plan.correos),
+        certificadosslhttps: Number(plan.ssl),
+      };
+
+
+      console.log("📦 Enviando body a ModificarPaquete:", body);
+
+      const res = await fetch(`${API_URL}/ModificarPaquete`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": API_KEY,
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) throw new Error("Error al guardar en el servidor");
+
       alert(`✅ Cambios guardados para "${plan.nombre}"`);
     } catch (error) {
       alert("❌ Error al guardar");
@@ -73,7 +100,7 @@ export default function PaquetesAdmin() {
     }
   };
 
-  const planesFiltrados = planes.filter((p) => p.periodicidad === periodoSeleccionado);
+  const planesFiltrados = planes.filter((p) => Number(p.periodicidad) === periodoSeleccionado);
 
   return (
     <div className="paquetesadmin-wrapper">
