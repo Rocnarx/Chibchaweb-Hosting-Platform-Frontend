@@ -162,12 +162,11 @@ function PlanesHosting() {
       ) : (
         <div className={`planes-listado ${animando ? 'oculto' : ''}`}>
           {planesFiltrados.map((plan) => {
-            const planActual = paqueteActual?.info?.nombrepaquetehosting;
-            const mismoPlan = planActual === plan.nombre;
+            const mismoPlan = plan.id === paqueteActual?.idpaquetehosting;
             const fechaVencimiento = new Date(paqueteActual?.fchvencimiento);
             const hoy = new Date();
             const planVigente = hoy <= fechaVencimiento;
-            const tienePlanActivo = paqueteActual?.idfacturapaquete && planVigente;
+            const tienePlanActivo = paqueteActual?.idfacturapaquete && planVigente && paqueteActual?.estado === "1";
             const desactivado = tienePlanActivo && !mismoPlan;
 
             return (

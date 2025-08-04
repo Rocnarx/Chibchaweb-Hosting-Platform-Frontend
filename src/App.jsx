@@ -31,6 +31,7 @@ import FooterAdmin from "./Components/FooterAdmin";
 import ClientesAdmin from "./pages/ClientesAdmin";
 import ClienteDetalle from "./pages/ClienteDetalle";
 import PlanesHosting from './pages/PlanesHosting';
+import PaquetesAdmin from './pages/PaquetesAdmin';
 
 import RutaProtegida from './Components/RutaProtegida';
 
@@ -52,6 +53,8 @@ function App() {
         <Route path="/registroEmpleado" element={<FormularioE />} />
         <Route path="/verificar" element={<ConfirmarCuenta />} />
         <Route path="/planesHosting" element={<PlanesHosting />} />
+        <Route path="/paquetes" element={<PaquetesAdmin />} />
+
 
         {/* Rutas protegidas comunes */}
         <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />

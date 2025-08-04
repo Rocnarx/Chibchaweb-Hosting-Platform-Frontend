@@ -1,0 +1,226 @@
+.paquetesadmin-wrapper {
+  background: #fff8f3;
+  padding: 30px 20px 160px;
+  min-height: 100vh;
+}
+
+.paquetesadmin-contenedor {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.paquetesadmin-contenedor h1 {
+  font-size: 34px;
+  color: #6d3200;
+  margin-bottom: 12px;
+}
+
+.paquetesadmin-contenedor p {
+  margin-bottom: 32px;
+  color: #444;
+}
+
+/* Filtro */
+.planes-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.planes-toggle button {
+  background: #eee;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.planes-toggle button.activo {
+  background-color: #924600;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px #92460044;
+  outline: 2px solid #92460088;
+}
+
+.planes-toggle button:hover {
+  background-color: #cba27e;
+  color: black;
+}
+
+/* Cards */
+.planes-grid {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.plan-edit-card {
+  background: #fcf7f4;
+  border-radius: 10px;
+  padding: 20px;
+  width: 260px;
+  box-shadow: 0 0 0 1px #e0cfc2;
+  text-align: left;
+}
+
+.plan-edit-card h2 input {
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  width: 100%;
+  color: #4b2e1e;
+  padding: 4px 0;
+}
+
+.plan-edit-card h2 input.titulo-plan {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  width: 100%;
+  color: #4b2e1e;
+}
+
+.plan-edit-card p {
+  margin: 10px 0;
+  color: #333;
+}
+
+/* Editor */
+.clickeable {
+  cursor: pointer;
+  color: #924600;
+}
+
+.editor-campo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editor-campo input {
+  width: 70px;
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.editor-campo input:focus {
+  border-color: #b97144;
+  outline: none;
+}
+
+.editor-campo button {
+  background: #924600;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Guardar */
+.boton-guardar-wrapper {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.boton-guardar {
+  background-color: #b97144;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-guardar:hover {
+  background-color: #924600;
+  transform: scale(1.02);
+}
+
+.mensaje-guardado {
+  margin-top: 12px;
+  color: green;
+  font-weight: bold;
+}
+
+/* Dark Mode */
+body.dark-mode .paquetesadmin-wrapper {
+  background-color: #1E1E1E;
+  color: #ffffff;
+}
+
+body.dark-mode .paquetesadmin-contenedor {
+  background-color: #2c2c2c;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .paquetesadmin-contenedor h1 {
+  color: #FFA94D;
+}
+
+body.dark-mode .paquetesadmin-contenedor p {
+  color: #dddddd;
+}
+
+body.dark-mode .plan-edit-card {
+  background-color: #3a3a3a;
+  box-shadow: 0 0 0 1px #555;
+}
+
+body.dark-mode .plan-edit-card h2 input {
+  color: #FFA94D;
+}
+
+body.dark-mode .plan-edit-card p {
+  color: #cccccc;
+}
+
+body.dark-mode .clickeable {
+  color: #FFA94D;
+}
+
+body.dark-mode .editor-campo input {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #777;
+}
+
+body.dark-mode .editor-campo input:focus {
+  border-color: #FFA94D;
+}
+
+body.dark-mode .editor-campo button {
+  background-color: #FFA94D;
+  color: #000;
+}
+
+body.dark-mode .boton-guardar {
+  background-color: #FFA94D;
+  color: #000000;
+}
+
+body.dark-mode .boton-guardar:hover {
+  background-color: #e38b31;
+}
+
+body.dark-mode .mensaje-guardado {
+  color: #90ee90;
+}
