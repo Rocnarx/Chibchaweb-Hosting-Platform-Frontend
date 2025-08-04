@@ -17,7 +17,7 @@
 .paquetesadmin-contenedor h1 {
   font-size: 34px;
   color: #6d3200;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .paquetesadmin-contenedor p {
@@ -108,6 +108,11 @@
 .clickeable {
   cursor: pointer;
   color: #924600;
+  font-weight: bold;
+}
+
+.clickeable:hover {
+  text-decoration: underline;
 }
 
 .editor-campo {
@@ -144,6 +149,17 @@
   margin-top: 24px;
   text-align: center;
 }
+
+.boton-nuevo {
+  margin-top: 30px;
+  background-color: #b97144;
+}
+
+.boton-nuevo:hover {
+  background-color: #924600;
+  transform: scale(1.02);
+}
+
 
 .boton-guardar {
   background-color: #b97144;
@@ -257,7 +273,7 @@ body.dark-mode .mensaje-guardado {
 
 .modal-contenido.alternativas h2 {
   font-size: 20px;
-  margin-bottom: 12px;
+  margin-bottom: 1px;
   color: #6d3200;
   text-align: center;
 }
@@ -280,7 +296,7 @@ body.dark-mode .mensaje-guardado {
 }
 
 .grupo-input {
-  margin-bottom: 12px;
+  margin-bottom: 1px;
 }
 
 .grupo-input label {
@@ -288,7 +304,7 @@ body.dark-mode .mensaje-guardado {
   font-size: 14px;
   font-weight: 500;
   color: #444;
-  margin-bottom: 4px;
+  margin-bottom: 1px;
 }
 
 .grupo-input input {
@@ -352,6 +368,14 @@ body.dark-mode .grupo-input input {
   border: 1px solid #555;
   color: #fff;
 }
+
+.btn-confirmar:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+
 @media (max-width: 600px) {
   .modal-contenido.alternativas {
     width: 90%;
