@@ -16,6 +16,7 @@
 .soporte-formulario, .soporte-tickets {
   flex: 1 1 480px;
   background: #fff9f3;
+  border: 1px solid #e0cfc2;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -79,7 +80,11 @@
 }
 
 .ticket:hover {
-  background: #ffedd5;
+  background: #e5a87335;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  
+
 }
 
 .ticket-id {
