@@ -180,7 +180,7 @@ const eliminarPaquete = async (idinfo, periodicidad) => {
     <div className="paquetesadmin-wrapper">
       <div className="paquetesadmin-contenedor">
         <h1>Editar Paquetes de Hosting</h1>
-        <p>Haz clic en el campo que deseas editar</p>
+        <p>Haz clic en el valor que deseas editar</p>
 
         <div className="planes-toggle">
           {[30, 180, 365].map((p) => (
