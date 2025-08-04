@@ -10,7 +10,7 @@ function VistaSoporteEmpleado() {
   const [ticketActivo, setTicketActivo] = useState(null);
   const [respuestaTexto, setRespuestaTexto] = useState('');
   const [enviandoRespuesta, setEnviandoRespuesta] = useState(false);
-  const [ultimaRespuesta, setUltimaRespuesta] = useState(null);
+  const [respuestas, setRespuestas] = useState([]);
 
   useEffect(() => {
     const cargarTicketsDesdeBackend = async () => {
@@ -150,7 +150,7 @@ function VistaSoporteEmpleado() {
   const abrirTicket = async (ticket) => {
     setTicketActivo(ticket);
     setRespuestaTexto('');
-    setUltimaRespuesta(null);
+    setRespuestas([]);
 
     if (ticket.estado === 'Resuelto') {
       try {
@@ -160,9 +160,7 @@ function VistaSoporteEmpleado() {
           }
         });
         const data = await res.json();
-        if (data.respuestas?.length > 0) {
-          setUltimaRespuesta(data.respuestas[data.respuestas.length - 1]);
-        }
+        setRespuestas(data.respuestas || []);
       } catch (err) {
         console.error('❌ Error al obtener detalle del ticket:', err);
       }
@@ -249,14 +247,16 @@ function VistaSoporteEmpleado() {
 
             {ticketActivo.estado === 'Resuelto' ? (
               <div className="respuesta-mostrada">
-                <p><strong>✉ Última respuesta:</strong></p>
-                {ultimaRespuesta ? (
-                  <div className="respuesta-box">
-                    <p>{ultimaRespuesta.contenido}</p>
-                    <small><em>📅 {ultimaRespuesta.fecha}</em></small>
-                  </div>
+                <p><strong>✉ Respuestas del empleado:</strong></p>
+                {respuestas.length > 0 ? (
+                  respuestas.map((r) => (
+                    <div className="respuesta-box" key={r.id_respuesta}>
+                      <p>{r.contenido}</p>
+                      <small><em>📅 {r.fecha}</em></small>
+                    </div>
+                  ))
                 ) : (
-                  <p><em>No hay respuesta registrada.</em></p>
+                  <p><em>No hay respuestas registradas.</em></p>
                 )}
               </div>
             ) : (
