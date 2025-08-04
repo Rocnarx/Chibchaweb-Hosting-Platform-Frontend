@@ -415,3 +415,51 @@ body.dark-mode .area-respuesta textarea {
   font-weight: 500;
   margin-top: 10px;
 }
+.filtro-niveles {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 10px 0 30px;
+  flex-wrap: wrap;
+}
+
+.filtro-niveles button {
+  background: #eee;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.filtro-niveles button.activo {
+  background-color: #924600;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px #92460044;
+  outline: 2px solid #92460088;
+}
+
+.filtro-niveles button:hover {
+  background-color: #e1c3a5;
+}
+
+/* Modo oscuro */
+body.dark-mode .filtro-niveles button {
+  background: #444;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark-mode .filtro-niveles button.activo {
+  background-color: #FFA94D;
+  color: #000;
+  box-shadow: 0 0 0 2px #ffa94d44;
+  outline: 2px solid #ffa94d88;
+}
+
+body.dark-mode .filtro-niveles button:hover {
+  background-color: #e38b31;
+  color: #000;
+}

@@ -6,6 +6,7 @@ import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 function VistaSoporteEmpleado() {
   const [tickets, setTickets] = useState([]);
   const [estadoFiltro, setEstadoFiltro] = useState("todos");
+  const [nivelFiltro, setNivelFiltro] = useState("todos");
   const [ticketActivo, setTicketActivo] = useState(null);
   const [respuestaTexto, setRespuestaTexto] = useState('');
   const [enviandoRespuesta, setEnviandoRespuesta] = useState(false);
@@ -18,9 +19,13 @@ function VistaSoporteEmpleado() {
                       : estadoFiltro === "proceso" ? [1]
                       : [2];
 
+        const nivelesFiltrados = nivelFiltro === "todos"
+          ? niveles
+          : [parseInt(nivelFiltro)];
+
         const peticiones = [];
 
-        for (const nivel of niveles) {
+        for (const nivel of nivelesFiltrados) {
           for (const estado of estados) {
             peticiones.push(
               fetch(`${import.meta.env.VITE_API_URL}/ver-tickets-niveles?estado_ticket=${estado}&nivel_ticket=${nivel}`, {
@@ -63,7 +68,7 @@ function VistaSoporteEmpleado() {
     };
 
     cargarTicketsDesdeBackend();
-  }, [estadoFiltro]);
+  }, [estadoFiltro, nivelFiltro]);
 
   const subirNivel = async (id, nivelActual) => {
     const nuevoNivel = nivelActual + 1;
@@ -100,7 +105,6 @@ function VistaSoporteEmpleado() {
     try {
       setEnviandoRespuesta(true);
 
-      // 1. Enviar respuesta
       const resRespuesta = await fetch(`${import.meta.env.VITE_API_URL}/ticket/${ticketActivo.id}/respuesta`, {
         method: 'POST',
         headers: {
@@ -114,7 +118,6 @@ function VistaSoporteEmpleado() {
 
       if (!resRespuesta.ok) throw new Error('Error al enviar respuesta');
 
-      // 2. Cambiar estado a 2 (resuelto)
       const resEstado = await fetch(`${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketActivo.id}`, {
         method: 'PATCH',
         headers: {
@@ -126,7 +129,6 @@ function VistaSoporteEmpleado() {
 
       if (!resEstado.ok) throw new Error('Error al cambiar estado');
 
-      // 3. Actualizar UI y cerrar
       setTickets(prev =>
         prev.map(ticket =>
           ticket.id === ticketActivo.id
@@ -154,6 +156,13 @@ function VistaSoporteEmpleado() {
         <button className={estadoFiltro === "todos" ? "activo" : ""} onClick={() => setEstadoFiltro("todos")}>Todos</button>
         <button className={estadoFiltro === "proceso" ? "activo" : ""} onClick={() => setEstadoFiltro("proceso")}>En proceso</button>
         <button className={estadoFiltro === "resuelto" ? "activo" : ""} onClick={() => setEstadoFiltro("resuelto")}>Resueltos</button>
+      </div>
+
+      <div className="filtro-niveles">
+        <button className={nivelFiltro === "todos" ? "activo" : ""} onClick={() => setNivelFiltro("todos")}>Cualquier nivel</button>
+        <button className={nivelFiltro === "1" ? "activo" : ""} onClick={() => setNivelFiltro("1")}>Soporte 1</button>
+        <button className={nivelFiltro === "2" ? "activo" : ""} onClick={() => setNivelFiltro("2")}>Soporte 2</button>
+        <button className={nivelFiltro === "3" ? "activo" : ""} onClick={() => setNivelFiltro("3")}>Soporte 3</button>
       </div>
 
       <table>
