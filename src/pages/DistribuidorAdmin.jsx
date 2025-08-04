@@ -12,7 +12,7 @@ export default function ClientesAdmin() {
     const obtenerClientes = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/cuentas-por-tipo?idtipo=2`, // ← cambio aquí
+          `${import.meta.env.VITE_API_URL}/cuentas-por-tipo?idtipo=2`,
           {
             headers: {
               "Chibcha-api-key": import.meta.env.VITE_API_KEY,

@@ -27,7 +27,7 @@ export default function ClienteDetalle() {
 
         const data = await res.json();
         setCliente(data);
-        setFormData(data); // copia editable
+        setFormData(data);
       } catch (err) {
         console.error(err);
         setError("No se pudo cargar la información del cliente.");
@@ -74,6 +74,29 @@ export default function ClienteDetalle() {
     setMensaje("");
   };
 
+  const handleEliminar = async () => {
+    const confirmar = window.confirm("¿Estás seguro de que deseas eliminar esta cuenta?");
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${cliente.IDCUENTA}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({ ...formData, IDTIPOCUENTA: 6 }),
+      });
+
+      if (!res.ok) throw new Error("Error al eliminar la cuenta");
+
+      navigate("/ClientesAdmin");
+    } catch (err) {
+      console.error(err);
+      setError("No se pudo eliminar la cuenta.");
+    }
+  };
+
   if (error) return <p className="error">{error}</p>;
   if (!cliente) return <p className="cargando">Cargando información...</p>;
 
@@ -83,87 +106,41 @@ export default function ClienteDetalle() {
 
       <div className="cliente-form">
         <label>ID Usuario:
-          <input
-            type="text"
-            name="IDCUENTA"
-            value={formData.IDCUENTA}
-            disabled
-          />
+          <input type="text" name="IDCUENTA" value={formData.IDCUENTA} disabled />
         </label>
 
         <label>Nombre:
-          <input
-            type="text"
-            name="NOMBRECUENTA"
-            value={formData.NOMBRECUENTA}
-            onChange={handleChange}
-            disabled={!modoEdicion}
-          />
+          <input type="text" name="NOMBRECUENTA" value={formData.NOMBRECUENTA} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>Correo:
-          <input
-            type="email"
-            name="CORREO"
-            value={formData.CORREO}
-            onChange={handleChange}
-            disabled={!modoEdicion}
-          />
+          <input type="email" name="CORREO" value={formData.CORREO} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>Teléfono:
-          <input
-            type="text"
-            name="TELEFONO"
-            value={formData.TELEFONO}
-            onChange={handleChange}
-            disabled={!modoEdicion}
-          />
+          <input type="text" name="TELEFONO" value={formData.TELEFONO} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>Dirección:
-          <input
-            type="text"
-            name="DIRECCION"
-            value={formData.DIRECCION}
-            onChange={handleChange}
-            disabled={!modoEdicion}
-          />
+          <input type="text" name="DIRECCION" value={formData.DIRECCION} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>País:
-  <select
-    name="IDPAIS"
-    value={formData.IDPAIS}
-    onChange={handleChange}
-    disabled={!modoEdicion}
-  >
-    <option value={76}>Brasil</option>
-    <option value={170}>Colombia</option>
-    <option value={218}>Ecuador</option>
-    <option value={604}>Perú</option>
-    <option value={862}>Venezuela</option>
-  </select>
-</label>
-
+          <select name="IDPAIS" value={formData.IDPAIS} onChange={handleChange} disabled={!modoEdicion}>
+            <option value={76}>Brasil</option>
+            <option value={170}>Colombia</option>
+            <option value={218}>Ecuador</option>
+            <option value={604}>Perú</option>
+            <option value={862}>Venezuela</option>
+          </select>
+        </label>
 
         <label>Tipo de cuenta:
-          <input
-            type="number"
-            name="IDTIPOCUENTA"
-            value={formData.IDTIPOCUENTA}
-            disabled
-          />
+          <input type="number" name="IDTIPOCUENTA" value={formData.IDTIPOCUENTA} disabled />
         </label>
 
         <label>ID del plan:
-          <input
-            type="number"
-            name="IDPLAN"
-            value={formData.IDPLAN}
-            onChange={handleChange}
-            disabled={!modoEdicion}
-          />
+          <input type="number" name="IDPLAN" value={formData.IDPLAN} onChange={handleChange} disabled={!modoEdicion} />
         </label>
       </div>
 
@@ -184,6 +161,9 @@ export default function ClienteDetalle() {
         )}
         <button className="btn btn-volver" onClick={() => navigate(-1)}>
           ← Volver
+        </button>
+        <button className="btn btn-eliminar" onClick={handleEliminar}>
+          🗑 Eliminar cuenta
         </button>
       </div>
 

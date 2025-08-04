@@ -65,3 +65,14 @@
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
+
+.btn-eliminar {
+  background-color: #d9534f;
+  color: white;
+  margin-left: 10px;
+}
+
+.btn-eliminar:hover {
+  background-color: #c9302c;
+}
+
