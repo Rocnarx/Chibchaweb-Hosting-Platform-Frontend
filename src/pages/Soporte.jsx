@@ -18,6 +18,7 @@ function Soporte() {
   const [cargandoTickets, setCargandoTickets] = useState(true);
   const [errorTickets, setErrorTickets] = useState('');
   const [ticketActivo, setTicketActivo] = useState(null);
+  const [respuestas, setRespuestas] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +62,7 @@ function Soporte() {
       setDescripcion('');
       setAsuntoInvalido(false);
       setDescripcionInvalida(false);
-      await cargarTickets(); // Recargar tickets después de crear uno nuevo
+      await cargarTickets();
     } catch (err) {
       console.error('❌ Error al enviar ticket:', err);
       setError('Hubo un problema al enviar el ticket.');
@@ -91,6 +92,27 @@ function Soporte() {
       setErrorTickets('No se pudieron cargar tus tickets.');
     } finally {
       setCargandoTickets(false);
+    }
+  };
+
+  const abrirTicket = async (ticket) => {
+    const yaAbierto = ticketActivo?.id_ticket === ticket.id_ticket;
+    setTicketActivo(yaAbierto ? null : ticket);
+    setRespuestas([]);
+
+    if (!yaAbierto) {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/ticket/${ticket.id_ticket}`, {
+          headers: {
+            'Chibcha-api-key': import.meta.env.VITE_API_KEY
+          }
+        });
+
+        const data = await res.json();
+        setRespuestas(data.respuestas || []);
+      } catch (err) {
+        console.error("❌ Error al obtener respuestas del ticket:", err);
+      }
     }
   };
 
@@ -145,12 +167,12 @@ function Soporte() {
             <p>No has enviado ningún ticket aún.</p>
           ) : (
             tickets.map((t) => {
-              const estaAbierto = ticketActivo === t.id_ticket;
+              const abierto = ticketActivo?.id_ticket === t.id_ticket;
               return (
                 <div
                   key={t.id_ticket}
-                  className="ticket"
-                  onClick={() => setTicketActivo(estaAbierto ? null : t.id_ticket)}
+                  className={`ticket ${abierto ? 'abierto' : ''}`}
+                  onClick={() => abrirTicket(t)}
                 >
                   <span className="ticket-id">#{t.codigo}</span>
                   <span className="ticket-desc">{t.descripcion}</span>
@@ -158,12 +180,21 @@ function Soporte() {
                     {t.estado === 2 ? 'Resuelto' : 'En proceso'}
                   </span>
 
-                  {estaAbierto && (
+                  {abierto && (
                     <div className="ticket-detalle">
                       <p><strong>Fecha:</strong> {t.fecha_creacion}</p>
                       <p><strong>Descripción:</strong> {t.descripcion}</p>
-                      <p><strong>Respuesta:</strong></p>
-                      <pre className="ticket-respuesta">{t.respuesta || 'Sin respuesta aún.'}</pre>
+                      <p><strong>Respuestas del equipo:</strong></p>
+                      {respuestas.length > 0 ? (
+                        respuestas.map((r) => (
+                          <div key={r.id_respuesta} className="ticket-respuesta">
+                            <p>{r.contenido}</p>
+                            <small><em>📅 {r.fecha}</em></small>
+                          </div>
+                        ))
+                      ) : (
+                        <p><em>No hay respuestas aún.</em></p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -172,9 +203,6 @@ function Soporte() {
           )}
         </div>
       </div>
-
-
-
     </main>
   );
 }
