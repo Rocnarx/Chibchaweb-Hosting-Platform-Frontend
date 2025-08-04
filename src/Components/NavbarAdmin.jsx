@@ -66,8 +66,8 @@ function NavbarAdmin() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/estadisticas" className="nav-link-admin" onClick={handleMenuClick}>
-              Estadísticas
+            <NavLink to="/paquetes" className="nav-link-admin" onClick={handleMenuClick}>
+              Hosting
             </NavLink>
           </li>
           <li>

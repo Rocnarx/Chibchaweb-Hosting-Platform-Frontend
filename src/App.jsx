@@ -60,6 +60,7 @@ function App() {
           <Route path="/verificar" element={<ConfirmarCuenta />} />
           <Route path="/planesHosting" element={<PlanesHosting />} />
           <Route path="/paquetes" element={<PaquetesAdmin />} />
+          <Route path="/panel-soporte" element={<VistaSoporteEmpleado />} />
 
         {/* Rutas protegidas comunes */}
         <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
@@ -72,7 +73,6 @@ function App() {
         <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
         <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
         <Route path="/soporte" element={<RutaProtegida><Soporte /></RutaProtegida>} />
-        <Route path="/panel-soporte" element={<RutaProtegida><VistaSoporteEmpleado /></RutaProtegida>} />
         <Route path="/comisiones" element={<RutaProtegida><Comisiones /></RutaProtegida>} />
 
           {/* Rutas solo para administrador */}
