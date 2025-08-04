@@ -61,6 +61,8 @@
   transition: background 0.2s;
   cursor: pointer;
   text-align: center;
+  box-sizing: border-box; /* para que el padding no rompa el ancho */
+
 }
 
 .soporte-formulario button:hover {
@@ -80,11 +82,9 @@
 }
 
 .ticket:hover {
-  background: #e5a87335;
+  background: #f5e3ccd8;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
-  
-
 }
 
 .ticket-id {
@@ -239,6 +239,8 @@ body.dark-mode .soporte-formulario,
 body.dark-mode .soporte-tickets {
   background: #2c2c2c;
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+  border: none;
+
 }
 
 body.dark-mode .soporte-formulario h2,

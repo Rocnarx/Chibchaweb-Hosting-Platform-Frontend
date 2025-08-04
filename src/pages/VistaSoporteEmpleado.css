@@ -28,6 +28,7 @@ th, td {
   text-align: left;
   border-bottom: 1px solid #e5ded4;
   transition: background 0.3s, color 0.3s, border 0.3s;
+  vertical-align: middle;
 }
 
 th {
@@ -36,18 +37,13 @@ th {
   font-weight: 600;
 }
 
+/* Etiquetas de estado */
 .estado-tag {
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: bold;
   text-transform: uppercase;
-}
-
-/* Estado por tipo */
-.estado-tag.nuevo {
-  background: #ffe7a1;
-  color: #8b6b00;
 }
 
 .estado-tag.en-proceso {
@@ -76,7 +72,7 @@ button:hover {
   background-color: #1e7e34;
 }
 
-/* Feedback textarea */
+/* Feedback row */
 .feedback-row td {
   background-color: #fff5ea;
   padding: 20px;
@@ -117,6 +113,43 @@ button:hover {
   background-color: #1e7e34;
 }
 
+/* Nivel y flecha */
+.nivel-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+}
+
+.icono-escalar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  width: 18px;
+  height: 18px;
+  color: #c77a38;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: color 0.2s;
+}
+
+.icono-escalar:hover {
+  color: #9c5f00;
+}
+
+/* Animación rebote cuando se escala */
+.icono-escalar.animado {
+  animation: bounce 0.4s ease;
+}
+
+@keyframes bounce {
+  0%   { transform: translateY(0); }
+  40%  { transform: translateY(-4px); }
+  80%  { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
 /* ===== MODO OSCURO ===== */
 body.dark-mode .panel-soporte {
   color: #ffffff;
@@ -140,11 +173,6 @@ body.dark-mode td {
 body.dark-mode th {
   background: #3a3a3a;
   color: #FFA94D;
-}
-
-body.dark-mode .estado-tag.nuevo {
-  background: #5a4b1d;
-  color: #ffe97a;
 }
 
 body.dark-mode .estado-tag.en-proceso {
@@ -182,4 +210,12 @@ body.dark-mode .feedback-row textarea {
 body.dark-mode .feedback-row textarea:focus {
   border-color: #FFA94D;
   box-shadow: 0 0 5px rgba(255, 169, 77, 0.4);
+}
+
+body.dark-mode .icono-escalar {
+  color: #FFA94D;
+}
+
+body.dark-mode .icono-escalar:hover {
+  color: #e38b31;
 }

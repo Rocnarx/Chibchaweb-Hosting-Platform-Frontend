@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './VistaSoporteEmpleado.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { mockTickets } from '../data/mockTickets';
 
 function VistaSoporteEmpleado() {
@@ -29,6 +31,24 @@ function VistaSoporteEmpleado() {
     setFeedbackTexto('');
   };
 
+  const subirNivel = (id) => {
+    setTickets((prev) =>
+      prev.map((ticket) => {
+        if (ticket.id !== id) return ticket;
+
+        const niveles = ['Soporte 1', 'Soporte 2', 'Soporte 3'];
+        const actualIndex = niveles.indexOf(ticket.nivel);
+        if (actualIndex < 2) {
+          return {
+            ...ticket,
+            nivel: niveles[actualIndex + 1],
+          };
+        }
+        return ticket;
+      })
+    );
+  };
+
   return (
     <div className="panel-soporte">
       <h2>📋 Panel de Soporte Técnico</h2>
@@ -50,7 +70,29 @@ function VistaSoporteEmpleado() {
                 <td>#{ticket.id}</td>
                 <td>{ticket.cliente}</td>
                 <td>{ticket.asunto}</td>
-                <td>{ticket.nivel}</td>
+                <td>
+                  <span className="nivel-wrapper">
+                    {ticket.nivel}
+                    {ticket.nivel !== 'Soporte 3' && (
+                      <span
+                        className="icono-escalar"
+                        title="Escalar ticket"
+                        onClick={(e) => {
+                        const confirmar = window.confirm('¿Deseas escalar este ticket al siguiente nivel?');
+                        if (confirmar) {
+                          e.currentTarget.classList.add('animado');
+                          setTimeout(() => e.currentTarget.classList.remove('animado'), 500);
+                          subirNivel(ticket.id);
+                        }
+                      }}
+
+                      >
+                        <FontAwesomeIcon icon={faArrowUp} />
+                      </span>
+                    )}
+                  </span>
+                </td>
+
                 <td>
                   <span className={`estado-tag ${ticket.estado.toLowerCase().replace(" ", "-")}`}>
                     {ticket.estado}
@@ -67,7 +109,6 @@ function VistaSoporteEmpleado() {
                 </td>
               </tr>
 
-              {/* Si se está resolviendo este ticket, mostrar textarea */}
               {resolviendo === ticket.id && (
                 <tr className="feedback-row">
                   <td colSpan="6">
@@ -83,7 +124,6 @@ function VistaSoporteEmpleado() {
                 </tr>
               )}
 
-              {/* Mostrar feedback si ya fue resuelto */}
               {ticket.feedback && (
                 <tr className="feedback-row">
                   <td colSpan="6">
