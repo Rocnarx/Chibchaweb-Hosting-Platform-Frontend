@@ -30,6 +30,7 @@ import Extensiones from "./pages/Extensiones";
 import FooterAdmin from "./Components/FooterAdmin";
 import ClientesAdmin from "./pages/ClientesAdmin";
 import ClienteDetalle from "./pages/ClienteDetalle";
+import DistribuidoresAdmin from "./pages/DistribuidorAdmin"; // ← Nuevo
 import PlanesHosting from './pages/PlanesHosting';
 
 import RutaProtegida from './Components/RutaProtegida';
@@ -66,9 +67,10 @@ function App() {
         {/* Rutas solo para administrador */}
         {esAdmin && <Route path="/extensiones" element={<Extensiones />} />}
         {esAdmin && <Route path="/ClientesAdmin" element={<ClientesAdmin />} />}
+        {esAdmin && <Route path="/DistribuidoresAdmin" element={<DistribuidoresAdmin />} />} {/* Nueva ruta */}
         {esAdmin && <Route path="/clientes/:correo" element={<ClienteDetalle />} />}
 
-        {/* Rutas exclusivas para clientes (si quieres condicionar otras) */}
+        {/* Rutas exclusivas para clientes */}
         {!esAdmin && <Route path="/dominios" element={<Dominios />} />}
 
         {/* Fallback */}

@@ -50,7 +50,7 @@ export default function FormularioRegistroEmpleado() {
       correo: form.correo,
       telefono: form.telefono || "0",
       direccion: form.direccion || "N/A",
-      idtipocuenta: "4", // Tipo empleado
+      idtipocuenta: "5", // Tipo empleado
       idpais: form.idpais,
       idplan: "0",
       password: form.contrasenaCuenta,
