@@ -10,6 +10,7 @@ function VistaSoporteEmpleado() {
   const [ticketActivo, setTicketActivo] = useState(null);
   const [respuestaTexto, setRespuestaTexto] = useState('');
   const [enviandoRespuesta, setEnviandoRespuesta] = useState(false);
+  const [ultimaRespuesta, setUltimaRespuesta] = useState(null);
 
   useEffect(() => {
     const cargarTicketsDesdeBackend = async () => {
@@ -111,9 +112,7 @@ function VistaSoporteEmpleado() {
           'Content-Type': 'application/json',
           'Chibcha-api-key': import.meta.env.VITE_API_KEY
         },
-        body: JSON.stringify({
-          mensaje: respuestaTexto.trim()
-        })
+        body: JSON.stringify({ mensaje: respuestaTexto.trim() })
       });
 
       if (!resRespuesta.ok) throw new Error('Error al enviar respuesta');
@@ -148,6 +147,28 @@ function VistaSoporteEmpleado() {
     }
   };
 
+  const abrirTicket = async (ticket) => {
+    setTicketActivo(ticket);
+    setRespuestaTexto('');
+    setUltimaRespuesta(null);
+
+    if (ticket.estado === 'Resuelto') {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/ticket/${ticket.id}`, {
+          headers: {
+            'Chibcha-api-key': import.meta.env.VITE_API_KEY
+          }
+        });
+        const data = await res.json();
+        if (data.respuestas?.length > 0) {
+          setUltimaRespuesta(data.respuestas[data.respuestas.length - 1]);
+        }
+      } catch (err) {
+        console.error('❌ Error al obtener detalle del ticket:', err);
+      }
+    }
+  };
+
   return (
     <div className="panel-soporte">
       <h2>📋 Panel de Soporte Técnico</h2>
@@ -177,7 +198,7 @@ function VistaSoporteEmpleado() {
         </thead>
         <tbody>
           {tickets.map((ticket) => (
-            <tr key={ticket.id} onClick={() => setTicketActivo(ticket)}>
+            <tr key={ticket.id} onClick={() => abrirTicket(ticket)}>
               <td>#{ticket.id}</td>
               <td>{ticket.cliente}</td>
               <td>{ticket.asunto}</td>
@@ -226,23 +247,37 @@ function VistaSoporteEmpleado() {
             <p><strong>Descripción completa:</strong></p>
             <div className="descripcion-completa">{ticketActivo.descripcion}</div>
 
-            <div className="area-respuesta">
-              <label htmlFor="respuesta">✉ Escribir respuesta:</label>
-              <textarea
-                id="respuesta"
-                value={respuestaTexto}
-                onChange={(e) => setRespuestaTexto(e.target.value)}
-                placeholder="Escribe aquí tu respuesta al cliente..."
-                rows="4"
-              />
-              <button
-                className="btn-responder"
-                onClick={enviarRespuestaTicket}
-                disabled={enviandoRespuesta}
-              >
-                {enviandoRespuesta ? "Enviando..." : "Enviar respuesta"}
-              </button>
-            </div>
+            {ticketActivo.estado === 'Resuelto' ? (
+              <div className="respuesta-mostrada">
+                <p><strong>✉ Última respuesta:</strong></p>
+                {ultimaRespuesta ? (
+                  <div className="respuesta-box">
+                    <p>{ultimaRespuesta.contenido}</p>
+                    <small><em>📅 {ultimaRespuesta.fecha}</em></small>
+                  </div>
+                ) : (
+                  <p><em>No hay respuesta registrada.</em></p>
+                )}
+              </div>
+            ) : (
+              <div className="area-respuesta">
+                <label htmlFor="respuesta">✉ Escribir respuesta:</label>
+                <textarea
+                  id="respuesta"
+                  value={respuestaTexto}
+                  onChange={(e) => setRespuestaTexto(e.target.value)}
+                  placeholder="Escribe aquí tu respuesta al cliente..."
+                  rows="4"
+                />
+                <button
+                  className="btn-responder"
+                  onClick={enviarRespuestaTicket}
+                  disabled={enviandoRespuesta}
+                >
+                  {enviandoRespuesta ? "Enviando..." : "Enviar respuesta"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -58,12 +58,18 @@ th {
 
 /* Etiquetas de estado */
 .estado-tag {
-  padding: 4px 10px;
+  display: inline-block;
+  padding: 6px 12px;
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: bold;
   text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+  min-width: 100px;
+  text-align: center;
 }
+
 
 .estado-tag.en-proceso {
   background: #ffe0ad;
@@ -462,4 +468,28 @@ body.dark-mode .filtro-niveles button.activo {
 body.dark-mode .filtro-niveles button:hover {
   background-color: #e38b31;
   color: #000;
+}
+.respuesta-mostrada {
+  margin-top: 24px;
+  background: #f8f8f8;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.respuesta-box {
+  background: #fff9e6;
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: #333;
+}
+
+body.dark-mode .respuesta-mostrada {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+body.dark-mode .respuesta-box {
+  background: #3c3c3c;
+  color: #ddd;
 }
