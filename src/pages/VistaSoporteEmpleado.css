@@ -219,3 +219,50 @@ body.dark-mode .icono-escalar {
 body.dark-mode .icono-escalar:hover {
   color: #e38b31;
 }
+.filtro-estados {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 30px 0 40px;
+}
+
+.filtro-estados button {
+  background: #eee;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.filtro-estados button.activo {
+  background-color: #924600;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px #92460044;
+  outline: 2px solid #92460088;
+}
+
+.filtro-estados button:hover {
+  background-color: #cba27e;
+  color: black;
+}
+
+body.dark-mode .filtro-estados button {
+  background: #444;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark-mode .filtro-estados button.activo {
+  background-color: #FFA94D;
+  color: #000;
+  box-shadow: 0 0 0 2px #ffa94d44;
+  outline: 2px solid #ffa94d88;
+}
+
+body.dark-mode .filtro-estados button:hover {
+  background-color: #e38b31;
+  color: #000;
+}
