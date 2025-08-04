@@ -4,6 +4,10 @@
   color: #fff4e6;
   padding: 40px 20px 20px;
   font-family: sans-serif;
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  width: 100%;
 }
 
 .footer-content {

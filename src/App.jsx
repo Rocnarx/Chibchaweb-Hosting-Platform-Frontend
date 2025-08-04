@@ -40,47 +40,48 @@ function App() {
   const esAdmin = usuario?.tipocuenta === "ADMIN";
 
   return (
-    <>
+    <div className="app-layout">
       {/* Navbar dinámico */}
       {usuario ? (esAdmin ? <AdminNavbar /> : <Navbar />) : <Navbar />}
 
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/registro" element={<FormularioC />} />
-        <Route path="/registroDistribuidor" element={<FormularioD />} />
-        <Route path="/registroEmpleado" element={<FormularioE />} />
-        <Route path="/verificar" element={<ConfirmarCuenta />} />
-        <Route path="/planesHosting" element={<PlanesHosting />} />
-        <Route path="/paquetes" element={<PaquetesAdmin />} />
+      <main className="main-content">
+        <Routes>
+          {/* Rutas públicas */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<FormularioC />} />
+          <Route path="/registroDistribuidor" element={<FormularioD />} />
+          <Route path="/registroEmpleado" element={<FormularioE />} />
+          <Route path="/verificar" element={<ConfirmarCuenta />} />
+          <Route path="/planesHosting" element={<PlanesHosting />} />
+          <Route path="/paquetes" element={<PaquetesAdmin />} />
 
+          {/* Rutas protegidas comunes */}
+          <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
+          <Route path="/carrito" element={<RutaProtegida><Carrito /></RutaProtegida>} />
+          <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
+          <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
+          <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
+          <Route path="/soporte" element={<RutaProtegida><Soporte /></RutaProtegida>} />
+          <Route path="/panel-soporte" element={<RutaProtegida><VistaSoporteEmpleado /></RutaProtegida>} />
+          <Route path="/comisiones" element={<RutaProtegida><Comisiones /></RutaProtegida>} />
 
-        {/* Rutas protegidas comunes */}
-        <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
-        <Route path="/carrito" element={<RutaProtegida><Carrito /></RutaProtegida>} />
-        <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
-        <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
-        <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
-        <Route path="/soporte" element={<RutaProtegida><Soporte /></RutaProtegida>} />
-        <Route path="/panel-soporte" element={<RutaProtegida><VistaSoporteEmpleado /></RutaProtegida>} />
-        <Route path="/comisiones" element={<RutaProtegida><Comisiones /></RutaProtegida>} />
+          {/* Rutas solo para administrador */}
+          {esAdmin && <Route path="/extensiones" element={<Extensiones />} />}
+          {esAdmin && <Route path="/ClientesAdmin" element={<ClientesAdmin />} />}
+          {esAdmin && <Route path="/clientes/:correo" element={<ClienteDetalle />} />}
 
-        {/* Rutas solo para administrador */}
-        {esAdmin && <Route path="/extensiones" element={<Extensiones />} />}
-        {esAdmin && <Route path="/ClientesAdmin" element={<ClientesAdmin />} />}
-        {esAdmin && <Route path="/clientes/:correo" element={<ClienteDetalle />} />}
+          {/* Rutas exclusivas para clientes */}
+          {!esAdmin && <Route path="/dominios" element={<Dominios />} />}
 
-        {/* Rutas exclusivas para clientes (si quieres condicionar otras) */}
-        {!esAdmin && <Route path="/dominios" element={<Dominios />} />}
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </main>
 
       {/* Footer dinámico */}
       {usuario ? (esAdmin ? <FooterAdmin /> : <Footer />) : <Footer />}
-    </>
+    </div>
   );
 }
 

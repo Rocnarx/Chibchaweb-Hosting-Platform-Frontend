@@ -11,7 +11,16 @@ export default function PaquetesAdmin() {
   const [tempValor, setTempValor] = useState("");
   const [guardando, setGuardando] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [planActivoId, setPlanActivoId] = useState("2");
+  const [nuevo, setNuevo] = useState(false);
+  const [nuevoPaquete, setNuevoPaquete] = useState({
+    nombre: "",
+    precio: 0,
+    sitios: 0,
+    bases: 0,
+    ssd: 0,
+    correos: 0,
+    ssl: 0
+  });
 
   const campos = [
     { clave: "precio", label: "Precio (COP)" },
@@ -78,7 +87,6 @@ export default function PaquetesAdmin() {
         certificadosslhttps: Number(plan.ssl),
       };
 
-
       console.log("📦 Enviando body a ModificarPaquete:", body);
 
       const res = await fetch(`${API_URL}/ModificarPaquete`, {
@@ -108,25 +116,20 @@ export default function PaquetesAdmin() {
         <h1>Editar Paquetes de Hosting</h1>
         <p>Haz clic en cualquier campo para editar</p>
 
+        <button className="boton-nuevo" onClick={() => setNuevo(true)}>
+          + Nuevo paquete
+        </button>
+
         <div className="planes-toggle">
-          <button
-            className={periodoSeleccionado === 30 ? "activo" : ""}
-            onClick={() => setPeriodoSeleccionado(30)}
-          >
-            Mensual
-          </button>
-          <button
-            className={periodoSeleccionado === 180 ? "activo" : ""}
-            onClick={() => setPeriodoSeleccionado(180)}
-          >
-            Semestral
-          </button>
-          <button
-            className={periodoSeleccionado === 365 ? "activo" : ""}
-            onClick={() => setPeriodoSeleccionado(365)}
-          >
-            Anual
-          </button>
+          {[30, 180, 365].map((p) => (
+            <button
+              key={p}
+              className={periodoSeleccionado === p ? "activo" : ""}
+              onClick={() => setPeriodoSeleccionado(p)}
+            >
+              {p === 30 ? "Mensual" : p === 180 ? "Semestral" : "Anual"}
+            </button>
+          ))}
         </div>
 
         <div className="planes-grid">
@@ -156,24 +159,17 @@ export default function PaquetesAdmin() {
                             value={tempValor}
                             onChange={(e) => setTempValor(e.target.value)}
                           />
-                          <button
-                            onClick={() => {
-                              editarCampo(plan.id, clave, tempValor);
-                              setEditando(null);
-                            }}
-                          >
-                            Ok
-                          </button>
+                          <button onClick={() => {
+                            editarCampo(plan.id, clave, tempValor);
+                            setEditando(null);
+                          }}>Ok</button>
                           <button onClick={() => setEditando(null)}>Cancelar</button>
                         </div>
                       ) : (
-                        <span
-                          className="clickeable"
-                          onClick={() => {
-                            setEditando(campoId);
-                            setTempValor(valor);
-                          }}
-                        >
+                        <span className="clickeable" onClick={() => {
+                          setEditando(campoId);
+                          setTempValor(valor);
+                        }}>
                           {clave === "precio" ? `$${valor.toLocaleString()}` : valor}
                         </span>
                       )}
@@ -181,9 +177,7 @@ export default function PaquetesAdmin() {
                   );
                 })}
 
-                <p>
-                  <strong>Periodicidad:</strong> {plan.periodicidad} días
-                </p>
+                <p><strong>Periodicidad:</strong> {plan.periodicidad} días</p>
 
                 <div className="boton-guardar-wrapper">
                   <button
@@ -197,6 +191,37 @@ export default function PaquetesAdmin() {
               </div>
             ))}
         </div>
+
+        {nuevo && (
+          <div className="modal-overlay">
+            <div className="modal-contenido alternativas">
+              <button className="cerrar-modal" onClick={() => setNuevo(false)}>✕</button>
+              <h2>Nuevo paquete</h2>
+              <div className="grupo-input">
+                <label>Nombre del plan</label>
+                <input
+                  type="text"
+                  value={nuevoPaquete.nombre}
+                  onChange={(e) => setNuevoPaquete({ ...nuevoPaquete, nombre: e.target.value })}
+                />
+              </div>
+              {campos.map(({ clave, label }) => (
+                <div className="grupo-input" key={clave}>
+                  <label>{label}</label>
+                  <input
+                    type="number"
+                    value={nuevoPaquete[clave]}
+                    onChange={(e) => setNuevoPaquete({ ...nuevoPaquete, [clave]: Number(e.target.value) })}
+                  />
+                </div>
+              ))}
+              <div className="grupo-botones">
+                <button className="btn-confirmar">Guardar</button>
+                <button className="cancelar" onClick={() => setNuevo(false)}>Cancelar</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
