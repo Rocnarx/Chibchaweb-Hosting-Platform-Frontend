@@ -34,16 +34,29 @@ export default function PaquetesAdmin() {
     { clave: "ssl", label: "Certificados SSL" },
   ];
 
-  const cargarPlanes = async () => {
-    try {
-      const res = await fetch(`${API_URL}/Paquetes`, {
-        headers: { "Chibcha-api-key": API_KEY },
-      });
-      const datos = await res.json();
+const cargarPlanes = async () => {
+  try {
+    const res = await fetch(`${API_URL}/Paquetes`, {
+      headers: { "Chibcha-api-key": API_KEY },
+    });
+    const datos = await res.json();
 
-      const planos = datos.map((p) => ({
+    // Enriquecer cada paquete con su idinfo llamando GET /InfoDePaqueteHosting
+    const planos = await Promise.all(datos.map(async (p) => {
+      let idinfo = null;
+      try {
+        const resInfo = await fetch(`${API_URL}/InfoDePaqueteHosting?idpaquetehosting=${p.idpaquetehosting}`, {
+          headers: { "Chibcha-api-key": API_KEY },
+        });
+        const info = await resInfo.json();
+        idinfo = info?.idinfopaquetehosting;
+      } catch (err) {
+        console.warn("❌ Error obteniendo idinfo para paquete", p.idpaquetehosting);
+      }
+
+      return {
         id: p.idpaquetehosting,
-        idinfo: p.info?.idinfopaquetehosting,
+        idinfo: idinfo,
         periodicidad: p.periodicidad,
         nombre: p.info?.nombrepaquetehosting || "",
         precio: p.preciopaquete,
@@ -52,15 +65,18 @@ export default function PaquetesAdmin() {
         ssd: p.info?.gbenssd || 0,
         correos: p.info?.correos || 0,
         ssl: p.info?.certificadosslhttps || 0,
-      }));
+      };
+    }));
 
-      setPlanes(planos);
-    } catch (error) {
-      console.error("Error cargando paquetes:", error);
-    } finally {
-      setCargando(false);
-    }
-  };
+    console.log("📦 Planes con idinfo:", planos);
+    setPlanes(planos);
+  } catch (error) {
+    console.error("Error cargando paquetes:", error);
+  } finally {
+    setCargando(false);
+  }
+};
+
 
   useEffect(() => {
     cargarPlanes();
@@ -122,25 +138,39 @@ export default function PaquetesAdmin() {
     }
   };
 
-  const eliminarPaquete = async (idinfo) => {
-    if (!window.confirm("¿Estás seguro de que quieres eliminar este paquete?")) return;
-    if (!window.confirm("⚠️ Esta acción eliminará todas las periodicidades de este paquete. ¿Deseas continuar?")) return;
+const eliminarPaquete = async (idinfo, periodicidad) => {
+  const texto = periodicidad === "30" ? "mensual" :
+                periodicidad === "180" ? "semestral" : "anual";
 
-    try {
-      const res = await fetch(`${API_URL}/EliminarPaquete?idinfopaquete=${idinfo}`, {
-        method: "DELETE",
-        headers: { "Chibcha-api-key": API_KEY },
-      });
+  if (!window.confirm(`¿Seguro que deseas eliminar la versión ${texto} de este paquete?`)) return;
 
-      if (!res.ok) throw new Error("No se pudo eliminar el paquete");
+  const body = { idinfopaquetehosting: idinfo };
+  console.log("🗑️ Enviando DELETE con:", body);
 
-      alert("✅ Paquete eliminado correctamente");
-      cargarPlanes();
-    } catch (error) {
-      alert("❌ Error al eliminar el paquete");
-      console.error(error);
+  try {
+    const res = await fetch(`${API_URL}/EliminarPaquete`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Chibcha-api-key": API_KEY,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const msg = await res.text();
+      throw new Error(`Error del servidor: ${res.status} - ${msg}`);
     }
-  };
+
+    alert(`✅ Se eliminó correctamente la versión ${texto}`);
+    cargarPlanes();
+  } catch (error) {
+    alert("❌ Error al eliminar el paquete");
+    console.error(error);
+  }
+};
+
+
 
   const planesFiltrados = planes.filter((p) => Number(p.periodicidad) === periodoSeleccionado);
   const camposCompletos = nuevoPaquete.nombre.trim() !== "" &&
@@ -221,11 +251,11 @@ export default function PaquetesAdmin() {
                 </button>
 
                 <button
-                    className="btn-eliminar"
-                    title="Eliminar paquete"
-                    onClick={() => eliminarPaquete(plan.idinfo)}
+                className="btn-eliminar"
+                title="Eliminar paquete"
+                onClick={() => eliminarPaquete(plan.idinfo, plan.periodicidad)}
                 >
-                    <FontAwesomeIcon icon={faTrash} />
+                <FontAwesomeIcon icon={faTrash} />
                 </button>
                 </div>
 
