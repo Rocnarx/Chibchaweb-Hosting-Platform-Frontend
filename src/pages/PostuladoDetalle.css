@@ -1,91 +1,140 @@
 .postulado-detalle-container {
-  max-width: 700px;
+  max-width: 800px;
   margin: 40px auto;
-  background-color: #ffffff;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  background-color: #fff7f0;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', sans-serif;
-  color: #1a1a1a;
+  color: #4b2e1e;
   position: relative;
 }
 
 .postulado-detalle-container h2 {
-  font-size: 26px;
-  margin-bottom: 25px;
+  font-size: 2rem;
+  font-weight: 700;
   text-align: center;
+  margin-bottom: 30px;
+  color: #3a220f;
 }
 
 .postulado-detalle-container p {
-  font-size: 16px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 6px;
+  font-size: 1rem;
+  margin: 12px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0d1c2;
+  color: #4b2e1e;
 }
 
 .postulado-detalle-container strong {
+  color: #2c1a0e;
   font-weight: 600;
-  color: #333;
 }
 
+/* Botones */
 .botones-detalle {
   display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 35px;
 }
 
-.btn-aceptar,
-.btn-rechazar {
-  padding: 10px 25px;
-  font-size: 15px;
+.btn-asignar {
+  background-color: #6b3b00;
+  color: #fff7f0;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.btn-asignar:hover {
+  background-color: #4b2e1e;
+}
+.btn-asignar:disabled {
+  background-color: #d4c3b2;
+  cursor: not-allowed;
 }
 
-.btn-aceptar {
-  background-color: #4caf50;
-  color: white;
-}
-
-.btn-aceptar:hover {
-  background-color: #43a047;
-}
-
-.btn-rechazar {
-  background-color: #f44336;
-  color: white;
-}
-
-.btn-rechazar:hover {
-  background-color: #e53935;
-}
-
+/* Botón volver (flecha) */
 button.btn-volver-arriba {
   position: absolute;
   top: 20px;
   left: 20px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 26px;
   cursor: pointer;
-  color: #555;
-  transition: color 0.3s ease;
+  color: #6b3b00;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
-
 button.btn-volver-arriba:hover {
-  color: #000;
+  transform: scale(1.2);
+  color: #3a220f;
 }
 
+/* Estados */
 .error {
-  color: #d32f2f;
+  color: #dc2626;
   font-weight: bold;
   text-align: center;
+  margin-top: 20px;
 }
 
 .cargando {
   text-align: center;
-  font-size: 18px;
-  color: #666;
+  font-size: 1rem;
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* Selector de nivel con botones */
+.nivel-soporte-selector {
+  margin: 30px 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center; /* CENTRAR todo el bloque */
+}
+
+.nivel-soporte-label {
+  font-weight: 600;
+  color: #4b2e1e;
+  font-size: 1.1rem;
+}
+
+.botones-nivel {
+  display: flex;
+  gap: 30px; /* MÁS separación entre botones */
+  justify-content: center;
+  flex-wrap: wrap; /* Responsive */
+}
+
+.boton-nivel {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 2px solid #c5a27c;
+  background-color: #fff7f0;
+  color: #4b2e1e;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  min-width: 150px;
+  text-align: center;
+}
+
+.boton-nivel:hover {
+  background-color: #f4e2d3;
+  border-color: #6b3b00;
+}
+
+.boton-nivel.selected {
+  background-color: #6b3b00;
+  color: #fff7f0;
+  border-color: #6b3b00;
+  box-shadow: 0 0 0 2px rgba(107, 59, 0, 0.2);
 }

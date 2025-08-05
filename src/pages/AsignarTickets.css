@@ -1,0 +1,104 @@
+.asignar-tickets-container {
+  background-color: #fff7f0;
+  min-height: 100vh;
+  padding: 40px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.asignar-tickets-container h2 {
+  font-size: 26px;
+  color: #6b3b00;
+  margin-bottom: 20px;
+}
+
+.tabla-asignar {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-asignar th, .tabla-asignar td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabla-asignar th {
+  background-color: #e8d8c3;
+  color: #6b3b00;
+}
+
+.tabla-asignar select {
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.tabla-asignar button {
+  background-color: #6b3b00;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tabla-asignar button:hover {
+  background-color: #4e2c00;
+}
+
+.mensaje {
+  color: #2e7d32;
+  background-color: #eafaf1;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-left: 4px solid #2e7d32;
+}
+
+.error {
+  color: #c62828;
+  background-color: #fdecea;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-left: 4px solid #c62828;
+}
+.modal-asignacion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modal-contenido {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+}
+
+.cerrar-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.lista-empleados li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ccc;
+}

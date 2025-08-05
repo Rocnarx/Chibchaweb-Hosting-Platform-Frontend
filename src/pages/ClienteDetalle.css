@@ -1,25 +1,26 @@
 .cliente-detalle-container {
   max-width: 1000px;
   margin: 40px auto;
-  background-color: #fef3e2;
   padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  background: #fdfaf6;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', sans-serif;
-  color: #3b240b;
+  color: #333;
   position: relative;
 }
 
 h2 {
   text-align: center;
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #3b2f2f;
 }
 
 .cliente-form {
   display: grid;
-  gap: 20px;
+  gap: 24px;
   grid-template-columns: 1fr;
 }
 
@@ -37,187 +38,122 @@ h2 {
 
 .cliente-form label {
   font-weight: 600;
+  font-size: 0.95rem;
+  color: #444;
   display: flex;
   flex-direction: column;
-  font-size: 0.95rem;
 }
 
 .cliente-form input,
 .cliente-form select {
   margin-top: 8px;
-  padding: 10px 14px;
+  padding: 12px 16px;
   font-size: 1rem;
-  border: 2px solid #c7a17a;
+  border: 1.5px solid #cfcfcf;
   border-radius: 10px;
-  background-color: #fff8f1;
-  transition: border-color 0.3s ease;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
 }
 
 .cliente-form input:focus,
 .cliente-form select:focus {
-  border-color: #a85a00;
+  border-color: #8a5a2d;
+  box-shadow: 0 0 0 2px rgba(138, 90, 45, 0.25);
   outline: none;
 }
 
 .cliente-form select:disabled {
   background-color: #f0f0f0;
-  color: #777;
-}
-
-.botones {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 30px;
-}
-
-/* === Botones === */
-.btn {
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-/* Editar */
-.btn-editar {
-  background-color: #e49b28;
-  color: #fff;
-}
-.btn-editar:hover {
-  background-color: #c8800e;
-}
-
-/* Guardar */
-.btn-guardar {
-  background-color: #3a7c1b;
-  color: white;
-}
-.btn-guardar:hover {
-  background-color: #2e6115;
-}
-
-/* Cancelar / Volver */
-.btn-volver {
-  background-color: #aaa;
-  color: #fff;
-}
-.btn-volver:hover {
-  background-color: #888;
-}
-
-/* Eliminar */
-.btn-eliminar {
-  background-color: #d9534f;
-  color: white;
-}
-.btn-eliminar:hover {
-  background-color: #c9302c;
-}
-
-/* Botón volver arriba (←) */
-.btn-volver-arriba {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: none;
-  border: none;
-  font-size: 26px;
-  cursor: pointer;
-  color: #333;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-.btn-volver-arriba:hover {
-  transform: scale(1.2);
-  color: #924600;
+  color: #888;
 }
 
 /* Mensajes */
-.error {
-  color: #d9534f;
-  text-align: center;
-  font-weight: bold;
-  margin-top: 20px;
-}
-.mensaje {
-  color: #28a745;
-  text-align: center;
-  font-weight: bold;
-  margin-top: 20px;
-}
+.error,
+.mensaje,
 .cargando {
   text-align: center;
-  font-style: italic;
-}
-/* Fuerza los estilos específicos de ClienteDetalle */
-.cliente-detalle-container .btn,
-.cliente-detalle-container .btn-editar,
-.cliente-detalle-container .btn-guardar,
-.cliente-detalle-container .btn-volver,
-.cliente-detalle-container .btn-eliminar,
-.cliente-detalle-container .btn-volver-arriba {
-  all: unset; /* Elimina estilos heredados (como el verde del global) */
-  display: inline-block;
-  padding: 12px 24px;
-  font-size: 1rem;
+  margin-top: 25px;
   font-weight: 600;
-  border-radius: 12px;
+  font-size: 1rem;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.mensaje {
+  color: #207245;
+}
+
+.cargando {
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* Botones */
+.botones {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  text-align: center;
-  border: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
-/* Reasignación de colores y estilos */
-.cliente-detalle-container .btn-editar {
-  background-color: #e49b28;
-  color: white;
-}
-.cliente-detalle-container .btn-editar:hover {
-  background-color: #c8800e;
+.btn svg {
+  font-size: 1.1rem;
 }
 
-.cliente-detalle-container .btn-guardar {
-  background-color: #3a7c1b;
-  color: white;
+/* Botón neutro base */
+.btn-neutral {
+  background-color: #ede7df;
+  color: #3b2f2f;
+  border: 1px solid #d8c9b5;
 }
-.cliente-detalle-container .btn-guardar:hover {
-  background-color: #2e6115;
-}
-
-.cliente-detalle-container .btn-volver {
-  background-color: #aaa;
-  color: white;
-}
-.cliente-detalle-container .btn-volver:hover {
-  background-color: #888;
+.btn-neutral:hover {
+  background-color: #e3d9cd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.cliente-detalle-container .btn-eliminar {
-  background-color: #d9534f;
-  color: white;
-}
-.cliente-detalle-container .btn-eliminar:hover {
-  background-color: #c9302c;
-}
-
-.cliente-detalle-container .btn-volver-arriba {
-  all: unset;
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 26px;
-  cursor: pointer;
+/* Botón de volver */
+.btn-volver {
+  background-color: #dadada;
   color: #333;
+}
+.btn-volver:hover {
+  background-color: #c5c5c5;
+}
+
+/* Botón flotante de volver arriba */
+.btn-volver-arriba {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  background-color: transparent;
+  border: none;
+  font-size: 28px;
+  color: #6b6b6b;
+  cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
 }
-.cliente-detalle-container .btn-volver-arriba:hover {
-  transform: scale(1.2);
-  color: #924600;
+.btn-volver-arriba:hover {
+  transform: scale(1.15);
+  color: #8a5a2d;
+}
+
+.cancelar-derecha {
+  margin-left: 80%;
 }

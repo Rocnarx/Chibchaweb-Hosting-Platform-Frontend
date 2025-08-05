@@ -1,0 +1,101 @@
+.empleados-admin-container {
+  background-color: #fff7f0;
+  padding: 40px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #3b2e2a;
+  min-height: 100vh;
+}
+
+h2 {
+  color: #6b3b00;
+  margin-bottom: 20px;
+}
+
+.tabla-empleados {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tabla-empleados thead {
+  background-color: #6b3b00;
+  color: #fff7f0;
+}
+
+.tabla-empleados th,
+.tabla-empleados td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0d6ce;
+}
+
+.tabla-empleados tbody tr:hover {
+  background-color: #f9f1e8;
+}
+
+button {
+  background-color: #a05a2c;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #884920;
+}
+
+.btn-guardar,
+.btn-reasignar {
+  background-color: #6b3b00; /* Marrón oscuro */
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-guardar:hover,
+.btn-reasignar:hover {
+  background-color: #4e2c00; /* Marrón más oscuro */
+}
+
+select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff7f0;
+  color: #333;
+  font-size: 0.95rem;
+  margin-right: 10px;
+}
+
+select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff7f0;
+  color: #3b2e2a;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.mensaje {
+  color: green;
+  margin-bottom: 10px;
+}
+
+.error {
+  color: #b30000;
+  margin-bottom: 10px;
+}

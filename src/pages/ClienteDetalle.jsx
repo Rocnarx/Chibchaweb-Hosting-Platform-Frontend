@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {
+  FiArrowLeft,
+  FiEdit,
+  FiSave,
+  FiX,
+  FiTrash2,
+  FiRefreshCcw,
+} from "react-icons/fi";
 import "./ClienteDetalle.css";
 
 export default function ClienteDetalle() {
@@ -48,12 +56,9 @@ export default function ClienteDetalle() {
   }, [correo]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
     if (!modoEdicion) return;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleGuardar = async () => {
@@ -109,17 +114,14 @@ export default function ClienteDetalle() {
 
   const handleRestaurar = async () => {
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${cliente.IDCUENTA}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-          },
-          body: JSON.stringify({ ...formData, IDTIPOCUENTA: 1 }),
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${cliente.IDCUENTA}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({ ...formData, IDTIPOCUENTA: 1 }),
+      });
 
       if (!res.ok) throw new Error("Error al restaurar la cuenta");
 
@@ -135,40 +137,40 @@ export default function ClienteDetalle() {
   if (!cliente) return <p className="cargando">Cargando información...</p>;
 
   return (
-    <div className={`cliente-detalle-container tipo-${formData.IDTIPOCUENTA}`}>
+    <div className="cliente-detalle-container">
       <button
         className="btn-volver-arriba"
         onClick={() => navigate(-1)}
         title="Volver"
       >
-        ←
+        <FiArrowLeft />
       </button>
 
       <h2>Detalle del Cliente</h2>
 
       <div className="cliente-form">
         <label>ID Usuario:
-          <input type="text" name="IDCUENTA" value={formData.IDCUENTA} disabled />
+          <input type="text" name="IDCUENTA" value={formData.IDCUENTA || ""} disabled />
         </label>
 
         <label>Nombre:
-          <input type="text" name="NOMBRECUENTA" value={formData.NOMBRECUENTA} onChange={handleChange} disabled={!modoEdicion} />
+          <input type="text" name="NOMBRECUENTA" value={formData.NOMBRECUENTA || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>Correo:
-          <input type="email" name="CORREO" value={formData.CORREO} onChange={handleChange} disabled={!modoEdicion} />
+          <input type="email" name="CORREO" value={formData.CORREO || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>Teléfono:
-          <input type="text" name="TELEFONO" value={formData.TELEFONO} onChange={handleChange} disabled={!modoEdicion} />
+          <input type="text" name="TELEFONO" value={formData.TELEFONO || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>Dirección:
-          <input type="text" name="DIRECCION" value={formData.DIRECCION} onChange={handleChange} disabled={!modoEdicion} />
+          <input type="text" name="DIRECCION" value={formData.DIRECCION || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>País:
-          <select name="IDPAIS" value={formData.IDPAIS} onChange={handleChange} disabled={!modoEdicion}>
+          <select name="IDPAIS" value={formData.IDPAIS || ""} onChange={handleChange} disabled={!modoEdicion}>
             <option value={76}>Brasil</option>
             <option value={170}>Colombia</option>
             <option value={218}>Ecuador</option>
@@ -182,38 +184,42 @@ export default function ClienteDetalle() {
         </label>
 
         <label>ID del plan:
-          <input type="number" name="IDPLAN" value={formData.IDPLAN} onChange={handleChange} disabled={!modoEdicion} />
+          <input type="number" name="IDPLAN" value={formData.IDPLAN || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
       </div>
 
       <div className="botones">
-        {!modoEdicion ? (
-          <button className="btn btn-editar" onClick={() => setModoEdicion(true)}>
-            ✎ Editar
-          </button>
-        ) : (
-          <>
-            <button className="btn btn-guardar" onClick={handleGuardar}>
-              💾 Guardar
-            </button>
-            <button className="btn btn-volver" onClick={handleCancelar}>
-              ✖ Cancelar
-            </button>
-          </>
-        )}
-
-        {formData.IDTIPOCUENTA === 6 ? (
-          <button className="btn btn-guardar" onClick={handleRestaurar}>
-            ♻ Restaurar cuenta
-          </button>
-        ) : (
-          <button className="btn btn-eliminar" onClick={handleEliminar}>
-            🗑 Eliminar cuenta
-          </button>
-        )}
+  {!modoEdicion ? (
+    <button className="btn btn-editar" onClick={() => setModoEdicion(true)}>
+      <FiEdit /> Editar
+    </button>
+  ) : (
+    <>
+      <div className="grupo-edicion">
+        <button className="btn btn-guardar" onClick={handleGuardar}>
+          <FiSave /> Guardar
+        </button>
+        <button className="btn btn-volver cancelar-derecha" onClick={handleCancelar}>
+          <FiX /> Cancelar
+        </button>
       </div>
+    </>
+  )}
+
+  {formData.IDTIPOCUENTA === 6 ? (
+    <button className="btn btn-guardar" onClick={handleRestaurar}>
+      <FiRefreshCcw /> Restaurar cuenta
+    </button>
+  ) : (
+    <button className="btn btn-eliminar" onClick={handleEliminar}>
+      <FiTrash2 /> Eliminar cuenta
+    </button>
+  )}
+</div>
+
 
       {mensaje && <p className="mensaje">{mensaje}</p>}
     </div>
   );
 }
+  

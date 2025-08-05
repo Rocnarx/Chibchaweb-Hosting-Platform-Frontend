@@ -1,84 +1,105 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import './NavbarAdmin.css';
 import logo from './resources/logo.png';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useUser } from '../Context/UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBars,
+  faAngleLeft,
+  faMoneyBill,
+  faUsers,
+  faUserCheck,
+  faUserTie,
+  faGlobe,
+  faServer,
+  faUser,
+  faUserGroup
+} from '@fortawesome/free-solid-svg-icons';
 
-function NavbarAdmin() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef();
+export default function NavbarAdmin() {
+  const [sidebarAbierta, setSidebarAbierta] = useState(false);
   const { usuario } = useUser();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleMenuClick = () => setMenuOpen(false);
+  const toggleSidebar = () => {
+    setSidebarAbierta(!sidebarAbierta);
+  };
 
   return (
-    <nav className="navbar-admin">
-      <NavLink to="/" className="navbar-logo-admin">
-        <div className="navbar-left-admin">
-          <img src={logo} alt="Logo" className="logo-img-admin" />
-          <div className="brand-text-admin">
-            <strong>ChibchaWeb</strong>
-            <span className="subtitle-admin">Panel Administrador</span>
+    <>
+      <aside className={`sidebar-admin ${sidebarAbierta ? '' : 'collapsed'}`}>
+        <div className="sidebar-header">
+          <div className="logo-container">
+            <img src={logo} alt="Logo" className="logo-img-admin" />
+            {sidebarAbierta && (
+              <div className="brand-text-admin">
+                <strong>ChibchaWeb</strong>
+                <span className="subtitle-admin">Admin</span>
+              </div>
+            )}
+          </div>
+
+          <div className="toggle-container">
+            <button className="toggle-button" onClick={toggleSidebar}>
+              <FontAwesomeIcon icon={sidebarAbierta ? faAngleLeft : faBars} />
+            </button>
           </div>
         </div>
-      </NavLink>
 
-      <div className="hamburger-admin" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
-      </div>
+        <ul className="sidebar-menu-admin">
+          <li>
+            <NavLink to="/extensiones" className="nav-link-admin">
+              <FontAwesomeIcon icon={faMoneyBill} />
+              {sidebarAbierta && <span>Precios</span>}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/ClientesAdmin" className="nav-link-admin">
+              <FontAwesomeIcon icon={faUsers} />
+              {sidebarAbierta && <span>Usuarios</span>}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/PostuladosAdmin" className="nav-link-admin">
+              <FontAwesomeIcon icon={faUserCheck} />
+              {sidebarAbierta && <span>Postulados</span>}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/EmpleadosAdmin" className="nav-link-admin">
+              <FontAwesomeIcon icon={faUserTie} />
+              {sidebarAbierta && <span>Empleados</span>}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/CoordinadoresAdmin" className="nav-link-admin">
 
-      <div className={`navbar-right-admin ${menuOpen ? 'open' : ''}`} ref={menuRef}>
-        <ul className="navbar-menu-admin">
-          <li>
-            <NavLink to="/extensiones" className="nav-link-admin" onClick={handleMenuClick}>
-              Precios
+              <FontAwesomeIcon icon={faUserGroup} />
+              {sidebarAbierta && <span>Coordinadores</span>}
             </NavLink>
           </li>
           <li>
-            <NavLink to="/ClientesAdmin" className="nav-link-admin" onClick={handleMenuClick}>
-              Usuarios
+            <NavLink to="/DistribuidoresAdmin" className="nav-link-admin">
+              <FontAwesomeIcon icon={faGlobe} />
+              {sidebarAbierta && <span>Distribuidores</span>}
             </NavLink>
           </li>
           <li>
-            <NavLink to="/PostuladosAdmin" className="nav-link-admin" onClick={handleMenuClick}>
-              Postulados
+            <NavLink to="/paquetes" className="nav-link-admin">
+              <FontAwesomeIcon icon={faServer} />
+              {sidebarAbierta && <span>Hosting</span>}
             </NavLink>
           </li>
           <li>
-            <NavLink to="/EmpleadosAdmin" className="nav-link-admin" onClick={handleMenuClick}>
-              Empleados
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/DistribuidoresAdmin" className="nav-link-admin" onClick={handleMenuClick}>
-              Distribuidores
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/paquetes" className="nav-link-admin" onClick={handleMenuClick}>
-              Hosting
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/perfil" className="nav-link-admin" onClick={handleMenuClick}>
-              Perfil
+            <NavLink to="/perfil" className="nav-link-admin">
+              <FontAwesomeIcon icon={faUser} />
+              {sidebarAbierta && <span>Perfil</span>}
             </NavLink>
           </li>
         </ul>
-      </div>
-    </nav>
+      </aside>
+
+      {sidebarAbierta && <div className="overlay" onClick={toggleSidebar}></div>}
+    </>
   );
 }
-
-export default NavbarAdmin;

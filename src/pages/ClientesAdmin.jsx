@@ -1,6 +1,7 @@
   import React, { useEffect, useState } from "react";
   import { useNavigate } from "react-router-dom";
   import "./ClientesAdmin.css";
+  import { FiSearch } from "react-icons/fi";
 
   export default function ClientesAdmin() {
     const [clientes, setClientes] = useState([]);
@@ -58,15 +59,21 @@
 
         {error && <p className="error">❌ {error}</p>}
 
-        <div className="buscador-wrapper">
-  <input
-    type="text"
-    className="buscador-clientes"
-    placeholder="🔍 Buscar por nombre o correo..."
-    value={busqueda}
-    onChange={(e) => setBusqueda(e.target.value)}
-  />
+        <div className="busqueda-container">
+  <div className="input-icono">
+    <input
+      type="text"
+      className="busqueda-input"
+      placeholder="Buscar cliente por nombre o correo..."
+      value={busqueda}
+      onChange={(e) => setBusqueda(e.target.value)}
+    />
+    <span className="icono-lupa">
+      <FiSearch />
+    </span>
+  </div>
 </div>
+
 
 
         <div className="tarjetas-clientes">

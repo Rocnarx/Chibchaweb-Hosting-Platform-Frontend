@@ -9,6 +9,14 @@ export default function EmpleadoDetalle() {
   const [mensaje, setMensaje] = useState("");
   const navigate = useNavigate();
 
+  const paises = {
+    76: "BRASIL",
+    170: "COLOMBIA",
+    218: "ECUADOR",
+    604: "PERÚ",
+    862: "VENEZUELA",
+  };
+
   useEffect(() => {
     const obtenerEmpleado = async () => {
       try {
@@ -75,7 +83,7 @@ export default function EmpleadoDetalle() {
         <p><strong>Correo:</strong> {empleado.CORREO}</p>
         <p><strong>Teléfono:</strong> {empleado.TELEFONO}</p>
         <p><strong>Dirección:</strong> {empleado.DIRECCION}</p>
-        <p><strong>País:</strong> {empleado.IDPAIS}</p>
+        <p><strong>País:</strong> {paises[empleado.IDPAIS] || `Código ${empleado.IDPAIS}`}</p>
       </div>
 
       <button className="btn-despedir" onClick={despedirEmpleado}>

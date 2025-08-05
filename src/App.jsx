@@ -37,17 +37,33 @@ import PostuladoDetalle from "./pages/PostuladoDetalle";
 import PostuladosAdmin from "./pages/PostuladosAdmin";
 import EmpleadosAdmin from "./pages/EmpleadosAdmin";
 import EmpleadoDetalle from "./pages/EmpleadoDetalle";
+import CoordinadoresAdmin from "./pages/CoordinadoresAdmin";
+
+// Componentes para coordinadores (nuevos)
+import NavbarCoordinador from "./Components/NavbarCoordinador";
+import FooterCoordinador from "./Components/FooterCoordinador";
+import TicketsCoordinador from "./pages/TicketsCoordinador";
+import AsignarTickets from "./pages/AsignarTickets";
 
 import RutaProtegida from "./Components/RutaProtegida";
+import './styles.css';
 
 function App() {
   const { usuario } = useUser();
   const esAdmin = usuario?.tipocuenta === "ADMIN";
+const esCoordinador =
+  usuario?.tipocuenta === "COORDINADOR NIVEL 1" ||
+  usuario?.tipocuenta === "COORDINADOR NIVEL 2" ||
+  usuario?.tipocuenta === "COORDINADOR NIVEL 3";
 
   return (
-    <div className="app-layout">
-      {/* Navbar dinámico */}
-      {usuario ? (esAdmin ? <AdminNavbar /> : <Navbar />) : <Navbar />}
+    <div className={`app-layout ${esAdmin ? 'admin-layout' : ''}`}>
+      {/* Navbar dinámica */}
+      {usuario ? (
+        esAdmin ? <AdminNavbar /> :
+        esCoordinador ? <NavbarCoordinador /> :
+        <Navbar />
+      ) : <Navbar />}
 
       <main className="main-content">
         <Routes>
@@ -62,18 +78,18 @@ function App() {
           <Route path="/paquetes" element={<PaquetesAdmin />} />
           <Route path="/panel-soporte" element={<VistaSoporteEmpleado />} />
 
-        {/* Rutas protegidas comunes */}
-        <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
-        <Route path="/carrito" element={
-          <RutaProtegida requiereVerificacion={true}>
-            <Carrito />
-          </RutaProtegida>
-        } />
-        <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
-        <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
-        <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
-        <Route path="/soporte" element={<RutaProtegida><Soporte /></RutaProtegida>} />
-        <Route path="/comisiones" element={<RutaProtegida><Comisiones /></RutaProtegida>} />
+          {/* Rutas protegidas comunes */}
+          <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
+          <Route path="/carrito" element={
+            <RutaProtegida requiereVerificacion={true}>
+              <Carrito />
+            </RutaProtegida>
+          } />
+          <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
+          <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
+          <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
+          <Route path="/soporte" element={<RutaProtegida><Soporte /></RutaProtegida>} />
+          <Route path="/comisiones" element={<RutaProtegida><Comisiones /></RutaProtegida>} />
 
           {/* Rutas solo para administrador */}
           {esAdmin && <Route path="/extensiones" element={<Extensiones />} />}
@@ -82,11 +98,16 @@ function App() {
           {esAdmin && <Route path="/clientes/:correo" element={<ClienteDetalle />} />}
           {esAdmin && <Route path="/PostuladosAdmin" element={<PostuladosAdmin />} />}
           {esAdmin && <Route path="/EmpleadosAdmin" element={<EmpleadosAdmin />} />}
+          {esAdmin && <Route path="/CoordinadoresAdmin" element={<CoordinadoresAdmin />} />}
           {esAdmin && <Route path="/postulado/:correo" element={<PostuladoDetalle />} />}
           {esAdmin && <Route path="/empleados/:correo" element={<EmpleadoDetalle />} />}
 
-        {/* Rutas exclusivas para clientes */}
-        {!esAdmin && <Route path="/dominios" element={<Dominios />} />}
+          {/* Rutas exclusivas para coordinadores */}
+          {esCoordinador && <Route path="/tickets" element={<TicketsCoordinador />} />}
+          {esCoordinador && <Route path="/asignar-tickets" element={<AsignarTickets />} />}
+
+          {/* Rutas exclusivas para clientes */}
+          {!esAdmin && !esCoordinador && <Route path="/dominios" element={<Dominios />} />}
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />
@@ -94,7 +115,11 @@ function App() {
       </main>
 
       {/* Footer dinámico */}
-      {usuario ? (esAdmin ? <FooterAdmin /> : <Footer />) : <Footer />}
+      {usuario ? (
+        esAdmin ? <FooterAdmin /> :
+        esCoordinador ? <FooterCoordinador /> :
+        <Footer />
+      ) : <Footer />}
     </div>
   );
 }

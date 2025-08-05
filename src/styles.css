@@ -225,3 +225,9 @@ body.dark-mode .form-error {
   background: #5a0000;
   color: #ffaaaa;
 }
+.layout-admin .main-content,
+.layout-admin.collapsed .main-content,
+.admin-layout .main-content {
+  margin-left: 60px;  /* ✅ Nada de espacio para sidebar */
+  padding: 20px;
+}

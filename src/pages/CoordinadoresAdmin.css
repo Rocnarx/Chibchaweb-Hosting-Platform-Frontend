@@ -1,0 +1,98 @@
+/* Renombrado para evitar conflicto */
+.coordinadores-page-container {
+  background-color: #fefcf9;
+  color: #1f1f1f;
+  padding: 50px 40px;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+
+.coordinadores-page-container h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #533016;
+  border-bottom: 2px solid #e3cdb7;
+  padding-bottom: 8px;
+}
+
+.tabla-coordinadores-admin {
+  width: 100%;
+  border: 1px solid #e0d3c3;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tabla-coordinadores-admin th,
+.tabla-coordinadores-admin td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid #f1e8df;
+  font-size: 15px;
+}
+
+.tabla-coordinadores-admin th {
+  background-color: #f4ede6;
+  color: #4a2a10;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.tabla-coordinadores-admin tr:hover {
+  background-color: #fbf7f2;
+  transition: background-color 0.25s ease-in-out;
+}
+
+.btn-coordinador-guardar,
+.btn-coordinador-reasignar {
+  background-color: transparent;
+  color: #5a2d00;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #5a2d00;
+  border-radius: 5px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.btn-coordinador-guardar:hover,
+.btn-coordinador-reasignar:hover {
+  background-color: #5a2d00;
+  color: white;
+  box-shadow: 0 2px 6px rgba(90, 45, 0, 0.2);
+}
+
+.coordinador-select {
+  padding: 7px 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 14px;
+}
+
+.mensaje-coordinador {
+  color: #2e7d32;
+  background-color: #eafaf1;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  border-left: 6px solid #2e7d32;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.error-coordinador {
+  color: #c62828;
+  background-color: #fdecea;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  border-left: 6px solid #c62828;
+  border-radius: 4px;
+  font-size: 14px;
+}
