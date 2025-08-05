@@ -3,7 +3,7 @@ import "./Login.css";
 import logo from "../Components/resources/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext";
-
+import { BiArrowBack } from "react-icons/bi"; 
 export default function Login() {
   const [form, setForm] = useState({ usuario: "", password: "" });
   const [mensaje, setMensaje] = useState("");
@@ -78,7 +78,10 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <button className="btn-back" onClick={() => navigate(-1)}>←</button>
+      <button className="btn-back" onClick={() => navigate(-1)}>
+  <BiArrowBack size={20} />
+  Volver
+</button>
       <div className="login-box">
         <img src={logo} alt="ChibchaWeb" className="logo-login" />
         <h2 className="titulo-login">Iniciar sesión</h2>

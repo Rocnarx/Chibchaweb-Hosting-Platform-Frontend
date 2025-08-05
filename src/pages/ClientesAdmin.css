@@ -32,7 +32,7 @@
 
 .busqueda-input {
   width: 100%;
-   padding: 14px 48px 14px 20px;
+  padding: 14px 48px 14px 20px;
   border: 2px solid #e0e0e0;
   border-radius: 30px;
   font-size: 1rem;
@@ -142,4 +142,53 @@
   .tarjeta-cliente p {
     font-size: 13px;
   }
+}
+
+/* === MODO OSCURO === */
+body.dark-mode .clientes-admin-container {
+  background: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode .clientes-admin-container h2 {
+  color: #FFA94D;
+}
+
+body.dark-mode .busqueda-input {
+  background-color: #2a2a2a;
+  border-color: #555;
+  color: #fff;
+}
+
+body.dark-mode .busqueda-input:focus {
+  border-color: #FFA94D;
+  box-shadow: 0 0 6px rgba(255, 169, 77, 0.4);
+}
+
+body.dark-mode .icono-lupa {
+  color: #FFA94D;
+}
+
+body.dark-mode .tarjeta-cliente {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .tarjeta-cliente:hover {
+  background-color: #3a2f24;
+  border-color: #FFA94D;
+}
+
+body.dark-mode .tarjeta-cliente h3 {
+  color: #FFA94D;
+}
+
+body.dark-mode .tarjeta-cliente p {
+  color: #ccc;
+}
+
+body.dark-mode .error {
+  background-color: #5c1d1d;
+  color: #ffbfbf;
 }

@@ -146,3 +146,36 @@
     content: none;
   }
 }
+
+/* ===== MODO OSCURO ===== */
+body.dark-mode .sidebar-admin {
+  background-color: #1e1e1e;
+  border-right: 1px solid #444;
+}
+
+body.dark-mode .brand-text-admin {
+  color: #ffffff;
+}
+
+body.dark-mode .subtitle-admin {
+  color: #aaaaaa;
+}
+
+body.dark-mode .toggle-button {
+  color: #ffffff;
+}
+
+body.dark-mode .toggle-button:hover {
+  background-color: #333;
+  color: #ffffff;
+}
+
+body.dark-mode .nav-link-admin {
+  color: #f0f0f0;
+}
+
+body.dark-mode .nav-link-admin:hover,
+body.dark-mode .nav-link-admin.active {
+  background-color: #333 !important;
+  color: #ffffff !important;
+}

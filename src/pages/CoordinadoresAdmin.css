@@ -1,4 +1,4 @@
-/* Renombrado para evitar conflicto */
+/* === Contenedor Principal === */
 .coordinadores-page-container {
   background-color: #fefcf9;
   color: #1f1f1f;
@@ -15,6 +15,7 @@
   padding-bottom: 8px;
 }
 
+/* === Tabla === */
 .tabla-coordinadores-admin {
   width: 100%;
   border: 1px solid #e0d3c3;
@@ -46,6 +47,7 @@
   transition: background-color 0.25s ease-in-out;
 }
 
+/* === Botones === */
 .btn-coordinador-guardar,
 .btn-coordinador-reasignar {
   background-color: transparent;
@@ -68,6 +70,7 @@
   box-shadow: 0 2px 6px rgba(90, 45, 0, 0.2);
 }
 
+/* === Select === */
 .coordinador-select {
   padding: 7px 10px;
   margin-right: 10px;
@@ -77,6 +80,7 @@
   font-size: 14px;
 }
 
+/* === Mensajes === */
 .mensaje-coordinador {
   color: #2e7d32;
   background-color: #eafaf1;
@@ -95,4 +99,66 @@
   border-left: 6px solid #c62828;
   border-radius: 4px;
   font-size: 14px;
+}
+
+/* === MODO OSCURO === */
+body.dark-mode .coordinadores-page-container {
+  background-color: #1e1e1e;
+  color: #eaeaea;
+}
+
+body.dark-mode .coordinadores-page-container h2 {
+  color: #FFA94D;
+  border-bottom-color: #5a3d1f;
+}
+
+body.dark-mode .tabla-coordinadores-admin {
+  background-color: #2b2b2b;
+  border: 1px solid #444;
+}
+
+body.dark-mode .tabla-coordinadores-admin th {
+  background-color: #3a3a3a;
+  color: #FFA94D;
+}
+
+body.dark-mode .tabla-coordinadores-admin td {
+  border-bottom: 1px solid #555;
+  color: #e0e0e0;
+}
+
+body.dark-mode .tabla-coordinadores-admin tr:hover {
+  background-color: #393939;
+}
+
+body.dark-mode .btn-coordinador-guardar,
+body.dark-mode .btn-coordinador-reasignar {
+  color: #FFA94D;
+  border: 1px solid #FFA94D;
+  background-color: transparent;
+}
+
+body.dark-mode .btn-coordinador-guardar:hover,
+body.dark-mode .btn-coordinador-reasignar:hover {
+  background-color: #FFA94D;
+  color: #1e1e1e;
+  box-shadow: 0 2px 6px rgba(255, 169, 77, 0.2);
+}
+
+body.dark-mode .coordinador-select {
+  background-color: #2c2c2c;
+  color: #eaeaea;
+  border: 1px solid #555;
+}
+
+body.dark-mode .mensaje-coordinador {
+  background-color: #244724;
+  color: #a7f7b5;
+  border-left-color: #66bb6a;
+}
+
+body.dark-mode .error-coordinador {
+  background-color: #3b1e1e;
+  color: #ff7070;
+  border-left-color: #ff7070;
 }

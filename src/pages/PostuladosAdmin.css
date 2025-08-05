@@ -75,3 +75,49 @@ h2 {
 .btn-aceptar:hover {
   background-color: #2e6115;
 }
+
+/* === MODO OSCURO === */
+body.dark-mode .admin-container {
+  background: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode h2 {
+  color: #FFA94D;
+}
+
+body.dark-mode .tarjeta-postulado,
+body.dark-mode .tarjeta-empleado {
+  background: #2c2c2c;
+  border: 1px solid #555;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .tarjeta-postulado:hover,
+body.dark-mode .tarjeta-empleado:hover {
+  background-color: #3a2f24;
+}
+
+body.dark-mode .tarjeta-postulado h3,
+body.dark-mode .tarjeta-empleado h3 {
+  color: #FFA94D;
+}
+
+body.dark-mode .tarjeta-postulado p,
+body.dark-mode .tarjeta-empleado p {
+  color: #ccc;
+}
+
+body.dark-mode .btn-aceptar {
+  background-color: #7ecc59;
+  color: #000;
+}
+
+body.dark-mode .btn-aceptar:hover {
+  background-color: #64a748;
+}
+
+body.dark-mode .error {
+  background-color: #5c1d1d;
+  color: #ffbfbf;
+}

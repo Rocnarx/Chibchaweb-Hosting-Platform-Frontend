@@ -1,104 +1,100 @@
 .asignar-tickets-container {
-  background-color: #fff7f0;
-  min-height: 100vh;
-  padding: 40px;
-  font-family: 'Segoe UI', sans-serif;
-  color: #333;
+  padding: 20px;
+  font-family: sans-serif;
 }
 
-.asignar-tickets-container h2 {
-  font-size: 26px;
-  color: #6b3b00;
-  margin-bottom: 20px;
+.ticket-list {
+  display: grid;
+  gap: 1rem;
 }
 
-.tabla-asignar {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.ticket-card {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.tabla-asignar th, .tabla-asignar td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+.ticket-card h3 {
+  margin-top: 0;
 }
 
-.tabla-asignar th {
-  background-color: #e8d8c3;
-  color: #6b3b00;
-}
-
-.tabla-asignar select {
-  padding: 6px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.tabla-asignar button {
+.ticket-card button {
+  margin-top: 10px;
+  padding: 8px 16px;
   background-color: #6b3b00;
   color: white;
-  padding: 6px 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-.tabla-asignar button:hover {
-  background-color: #4e2c00;
+.ticket-card button:hover {
+  background-color: #8d4d00;
 }
 
-.mensaje {
-  color: #2e7d32;
-  background-color: #eafaf1;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-left: 4px solid #2e7d32;
-}
-
-.error {
-  color: #c62828;
-  background-color: #fdecea;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-left: 4px solid #c62828;
-}
-.modal-asignacion {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0,0,0,0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 10;
+  justify-content: center;
 }
 
-.modal-contenido {
-  background: white;
+.modal-content {
+  background: #fff7f0;
   padding: 2rem;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 100%;
+  border-radius: 12px;
+  width: 400px;
   position: relative;
 }
 
-.cerrar-modal {
+.cerrar {
   position: absolute;
   top: 10px;
-  right: 10px;
-  border: none;
-  background: transparent;
-  font-size: 1.2rem;
+  right: 15px;
   cursor: pointer;
+  font-size: 24px;
 }
 
-.lista-empleados li {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #ccc;
+select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+}
+
+/* === MODO OSCURO === */
+body.dark-mode .ticket-card {
+  background: #2c2c2c;
+  color: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .ticket-card button {
+  background-color: #FFA94D;
+  color: #000;
+}
+
+body.dark-mode .ticket-card button:hover {
+  background-color: #e38b31;
+}
+
+body.dark-mode .modal-content {
+  background: #1e1e1e;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark-mode select {
+  background-color: #2c2c2c;
+  color: #fff;
+  border: 1px solid #777;
+}
+
+body.dark-mode .cerrar {
+  color: #fff;
 }

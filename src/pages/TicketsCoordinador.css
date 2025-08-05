@@ -19,7 +19,8 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.tabla-tickets th, .tabla-tickets td {
+.tabla-tickets th,
+.tabla-tickets td {
   padding: 12px 16px;
   border-bottom: 1px solid #ddd;
 }
@@ -40,4 +41,38 @@
   padding: 12px;
   border-left: 4px solid #c62828;
   margin-bottom: 15px;
+}
+
+/* ===== MODO OSCURO ===== */
+body.dark-mode .tickets-coordinador-container {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode .tickets-coordinador-container h2 {
+  color: #FFA94D;
+}
+
+body.dark-mode .tabla-tickets {
+  background: #2c2c2c;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .tabla-tickets th {
+  background-color: #3a3a3a;
+  color: #FFA94D;
+}
+
+body.dark-mode .tabla-tickets td {
+  color: #f0f0f0;
+}
+
+body.dark-mode .tabla-tickets tr:hover {
+  background-color: #333;
+}
+
+body.dark-mode .error {
+  background-color: #3a1e1e;
+  color: #ff7070;
+  border-left-color: #ff7070;
 }

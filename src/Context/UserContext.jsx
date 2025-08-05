@@ -1,4 +1,3 @@
-// src/Context/UserContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 
 const UserContext = createContext();
@@ -6,9 +5,15 @@ const UserContext = createContext();
 export function UserProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
 
-  // ✅ Función para actualizar parcialmente el usuario (solo lo necesario)
+  // ✅ Función para actualizar parcialmente el usuario
   const actualizarUsuario = (nuevosDatos) => {
     setUsuario((prev) => ({ ...prev, ...nuevosDatos }));
+  };
+
+  // ✅ Función para cerrar sesión (se usará en cualquier parte de la app)
+  const cerrarSesion = () => {
+    setUsuario(null);
+    localStorage.removeItem("usuario");
   };
 
   // Cargar usuario desde localStorage al iniciar la app
@@ -29,7 +34,9 @@ export function UserProvider({ children }) {
   }, [usuario]);
 
   return (
-    <UserContext.Provider value={{ usuario, setUsuario, actualizarUsuario }}>
+    <UserContext.Provider
+      value={{ usuario, setUsuario, actualizarUsuario, cerrarSesion }}
+    >
       {children}
     </UserContext.Provider>
   );
