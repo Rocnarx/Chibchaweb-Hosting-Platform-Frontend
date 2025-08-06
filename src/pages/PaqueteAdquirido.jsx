@@ -147,7 +147,7 @@ const obtenerLimiteTamano = (tipo) => {
   return (
     <div className="paquete-wrapper">
       <div className="paquete-contenedor">
-        <h1>Plan {planInfo?.info?.nombrepaquetehosting || "Sin nombre"}</h1>
+        <h1>Plan {planInfo?.info?.nombrepaquetehosting || ""}</h1>
         {diasRestantes !== null && (
           <p className="paquete-descripcion">
             Te quedan <strong>{diasRestantes} días</strong> de tu plan actual.
