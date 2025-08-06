@@ -5,78 +5,64 @@ import "./PaqueteAdquirido.css";
 export default function PaqueteAdquirido() {
   const API_URL = import.meta.env.VITE_API_URL;
   const API_KEY = import.meta.env.VITE_API_KEY;
-
   const { usuario } = useUser();
+
   const [idfactura, setIdFactura] = useState(null);
   const [items, setItems] = useState({});
-  const [cargando, setCargando] = useState(true);
+  const [planInfo, setPlanInfo] = useState(null);
   const [editandoItem, setEditandoItem] = useState(null);
   const [form, setForm] = useState({ nombreitem: "", tamano: "" });
   const [mensaje, setMensaje] = useState("");
   const [sinPaquete, setSinPaquete] = useState(false);
+  const [cargando, setCargando] = useState(true);
+  const [usuarioListo, setUsuarioListo] = useState(false);
 
   const formatoNombreGrupo = {
-    "WEB": "Sitios Web",
-    "CORREO": "Cuentas de Correo",
-    "GBENSSD": "Nube SSD",
-    "SSL": "Certificados SSL"
+    WEB: "Sitios Web",
+    CORREO: "Cuentas de Correo",
+    GBENSSD: "Nube SSD",
+    SSL: "Certificados SSL"
   };
 
-  useEffect(() => {
-    if (!usuario) return;
-    if (!usuario.idcuenta) {
-      setSinPaquete(true);
-      return;
-    }
+    useEffect(() => {
+    if (!usuario) return; // ⬅️ espera a que se cargue el contexto
 
-    const obtenerFacturaActiva = async () => {
-      try {
-        const res = await fetch(`${API_URL}/facturas-por-cuenta?idcuenta=${usuario.idcuenta}`, {
-          headers: { "Chibcha-api-key": API_KEY },
-        });
-        const data = await res.json();
-        console.log("📦 Respuesta completa de /facturas-por-cuenta:", data);
-
-        const facturas = Array.isArray(data) ? data : data.facturas;
-        if (!Array.isArray(facturas)) {
-          console.warn("❌ Estructura inesperada:", data);
-          setSinPaquete(true);
-          return;
-        }
-
-        console.log("📋 Lista de facturas encontradas:", facturas);
-
-        const activas = facturas.filter(f => Number(f.estado) === 1);
-        console.log("✅ Facturas activas filtradas:", activas);
-
-        if (activas.length === 0) {
-          console.log("🚫 No hay facturas activas.");
-          setSinPaquete(true);
-          return;
-        }
-
-        const facturaActiva = activas.reduce((a, b) =>
-          a.idfacturapaquete > b.idfacturapaquete ? a : b
-        );
-
-        console.log("🎯 Usando idfacturapaquete activo:", facturaActiva.idfacturapaquete);
-        setIdFactura(facturaActiva.idfacturapaquete);
-        cargarItems(facturaActiva.idfacturapaquete);
-      } catch (error) {
-        console.error("❌ Error al obtener facturas:", error);
+    const iniciar = async () => {
+        if (!usuario.idcuenta) {
+        console.warn("⚠️ No hay idcuenta");
         setSinPaquete(true);
-      }
+        return;
+        }
+
+        try {
+        const resPlan = await fetch(`${API_URL}/MiPaquete?idcuenta=${usuario.idcuenta}`, {
+            headers: { "Chibcha-api-key": API_KEY },
+        });
+        const dataPlan = await resPlan.json();
+
+        if (!dataPlan || !dataPlan.idfacturapaquete || Number(dataPlan.estado) !== 1) {
+            setSinPaquete(true);
+            return;
+        }
+
+        setPlanInfo(dataPlan);
+        setIdFactura(dataPlan.idfacturapaquete);
+        cargarItems(dataPlan.idfacturapaquete);
+        } catch (error) {
+        console.error("❌ Error al obtener paquete:", error);
+        setSinPaquete(true);
+        }
     };
 
-    obtenerFacturaActiva();
-  }, [usuario]);
+    iniciar();
+    }, [usuario]);
+
 
   const cargarItems = async (idfacturapaquete) => {
     try {
       const res = await fetch(`${API_URL}/ItemsFactura?idfacturapaquete=${idfacturapaquete}`, {
         headers: { "Chibcha-api-key": API_KEY },
       });
-
       const data = await res.json();
 
       const agrupados = data.reduce((acc, item) => {
@@ -85,11 +71,9 @@ export default function PaqueteAdquirido() {
         acc[tipo].push(item);
         return acc;
       }, {});
-
-      console.log("🧩 Items agrupados por tipo:", agrupados);
       setItems(agrupados);
-    } catch (error) {
-      console.error("Error al cargar items del paquete:", error);
+    } catch (err) {
+      console.error("❌ Error al cargar items:", err);
     } finally {
       setCargando(false);
     }
@@ -99,7 +83,7 @@ export default function PaqueteAdquirido() {
     setEditandoItem(item);
     setForm({
       nombreitem: item.NOMBREITEM,
-      tamano: item.TAMANO === "NA" ? "" : item.TAMANO
+      tamano: item.TAMANO === "NA" ? "" : item.TAMANO,
     });
   };
 
@@ -108,29 +92,27 @@ export default function PaqueteAdquirido() {
       const body = {
         idregitempaquete: editandoItem.IDREGITEMPAQUETE,
         nombreitem: form.nombreitem,
-        tamano: form.tamano || "NA"
+        tamano: form.tamano === "" ? "NA" : String(form.tamano),
       };
 
       const res = await fetch(`${API_URL}/EditarItemFactura`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Chibcha-api-key": API_KEY
+          "Chibcha-api-key": API_KEY,
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       });
 
-      if (!res.ok) throw new Error("Error al editar el item");
+      if (!res.ok) throw new Error("Error al editar");
 
       setEditandoItem(null);
       setForm({ nombreitem: "", tamano: "" });
       await cargarItems(idfactura);
-
-      setMensaje("✅ ¡Cambios guardados correctamente!");
+      setMensaje("✅ Cambios guardados correctamente");
       setTimeout(() => setMensaje(""), 3000);
-    } catch (error) {
-      console.error("Error al guardar cambios:", error);
-      alert("❌ Error al guardar cambios.");
+    } catch (err) {
+      console.error("❌ Error guardando:", err);
     }
   };
 
@@ -138,39 +120,51 @@ export default function PaqueteAdquirido() {
     return (
       <div className="paquete-wrapper">
         <div className="paquete-contenedor mensaje-sin-paquete">
-          <div className="icono-triste">😕</div>
-          <h1>Sin paquete activo</h1>
-          <p>
-            Actualmente no tienes un plan de hosting activo.<br />
-            Si realizaste un pago recientemente, espera unos minutos y vuelve a intentarlo.
-          </p>
+          <div className="icono-triste">📭</div>
+          <h2>No tienes un paquete activo</h2>
+          <p>Adquiere uno para ver y administrar tus servicios.</p>
         </div>
       </div>
     );
   }
 
+  const diasRestantes = planInfo?.fchvencimiento
+    ? Math.ceil((new Date(planInfo.fchvencimiento) - new Date()) / (1000 * 60 * 60 * 24))
+    : null;
+
+const obtenerLimiteTamano = (tipo) => {
+  const tipoKey = tipo.toUpperCase();
+  if (!planInfo?.info) return undefined;
+
+  switch (tipoKey) {
+    case "GBENSSD":
+      return planInfo.info.gbenssd;
+    default:
+      return undefined;
+  }
+};
+
   return (
     <div className="paquete-wrapper">
       <div className="paquete-contenedor">
-        <h1>Contenido del Paquete</h1>
-        <p className="paquete-descripcion">Aquí puedes ver y editar los servicios activos de tu paquete adquirido.</p>
+        <h1>Plan {planInfo?.info?.nombrepaquetehosting || "Sin nombre"}</h1>
+        {diasRestantes !== null && (
+          <p className="paquete-descripcion">
+            Te quedan <strong>{diasRestantes} días</strong> de tu plan actual.
+          </p>
+        )}
 
         {cargando ? (
-          <p className="cargando">Cargando contenido...</p>
-        ) : !Object.keys(items).length ? (
-          <div className="mensaje-sin-paquete">
-            <div className="icono-triste">📭</div>
-            <h2>No se encontraron servicios en tu paquete</h2>
-            <p>
-              Aunque tienes una factura activa, este paquete no tiene elementos asignados aún.<br />
-              Si crees que esto es un error, contacta a soporte.
-            </p>
-          </div>
+          <p>Cargando contenido...</p>
         ) : (
           <div className="secciones">
             {Object.entries(items).map(([clave, grupo]) => (
               <div className="seccion-amigable" key={clave}>
+                <div className="titulo-seccion-conteo">
                 <h2>{formatoNombreGrupo[clave] || clave}</h2>
+                <span className="cantidad-items">({grupo.length})</span>
+                </div>
+
                 <ul className="lista-items">
                   {grupo.map((item) => (
                     <li key={item.IDREGITEMPAQUETE}>
@@ -192,7 +186,6 @@ export default function PaqueteAdquirido() {
         )}
       </div>
 
-      {/* Modal de edición */}
       {editandoItem && (
         <div className="modal-overlay">
           <div className="modal-contenido">
@@ -212,10 +205,25 @@ export default function PaqueteAdquirido() {
                 <label>Tamaño</label>
                 <input
                   className="input-editar"
-                  type="text"
+                  type="number"
+                  max={obtenerLimiteTamano(editandoItem.DESCRIPCION)}
                   value={form.tamano}
-                  onChange={(e) => setForm({ ...form, tamano: e.target.value })}
+                  onChange={(e) => {
+                    const valor = e.target.value;
+                    const num = Number(valor);
+                    const limite = obtenerLimiteTamano(editandoItem.DESCRIPCION);
+
+                    if (limite !== undefined && num > limite) {
+                        setForm({ ...form, tamano: String(limite) });
+                    } else {
+                        setForm({ ...form, tamano: valor });
+                    }
+                    }}
+
                 />
+                <small>
+                  Máximo permitido: {obtenerLimiteTamano(editandoItem.DESCRIPCION)} GB
+                </small>
               </>
             )}
 

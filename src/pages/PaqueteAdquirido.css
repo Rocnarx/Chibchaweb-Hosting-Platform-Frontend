@@ -246,6 +246,30 @@
   margin-bottom: 10px;
 }
 
+.nombre-plan-titulo {
+  color: #924600;
+  font-weight: 600;
+}
+
+.titulo-seccion-conteo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.titulo-seccion-conteo h2 {
+  font-size: 22px;
+  color: #924600;
+  margin: 0;
+}
+
+.cantidad-items {
+  font-size: 15px;
+  color: #555;
+}
+
+
 /* Responsive */
 @media (max-width: 600px) {
   .modal-contenido {
