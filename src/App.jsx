@@ -14,6 +14,7 @@ import FormularioC from "./pages/FormularioRegistroCliente";
 import Cuenta from "./pages/Cuenta";
 import Tarjeta from "./pages/Tarjeta";
 import MetodosPago from "./pages/MetodosPago";
+import PaqueteAdquirido from "./pages/PaqueteAdquirido";
 
 // Componentes compartidos
 import FormularioD from "./pages/FormularioRegistroDistribuidor";
