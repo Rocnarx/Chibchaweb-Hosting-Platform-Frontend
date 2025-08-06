@@ -78,6 +78,7 @@ const esCoordinador =
           <Route path="/planesHosting" element={<PlanesHosting />} />
           <Route path="/paquetes" element={<PaquetesAdmin />} />
           <Route path="/panel-soporte" element={<VistaSoporteEmpleado />} />
+          <Route path="/paquete-adquirido" element={<PaqueteAdquirido />} />
 
           {/* Rutas protegidas comunes */}
           <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />

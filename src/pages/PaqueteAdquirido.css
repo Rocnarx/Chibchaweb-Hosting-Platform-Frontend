@@ -1,92 +1,327 @@
+/* Estilo base */
 .paquete-wrapper {
   background-color: #fdf6f0;
   min-height: 100vh;
-  padding: 40px 20px;
+  padding: 48px 20px;
   font-family: "Segoe UI", sans-serif;
 }
 
 .paquete-contenedor {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   background: #ffffff;
-  padding: 36px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
   text-align: center;
 }
 
 .paquete-contenedor h1 {
-  font-size: 30px;
-  color: #5d2b00;
-  margin-bottom: 10px;
+  font-size: 32px;
+  color: #5e2c00;
+  margin-bottom: 12px;
 }
 
 .paquete-descripcion {
   font-size: 16px;
   color: #666;
-  margin-bottom: 30px;
+  margin-bottom: 36px;
+}
+
+/* Secciones por tipo */
+.secciones {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .seccion-amigable {
-  background: #fff8f3;
-  border: 1px solid #ebd5c7;
-  border-left: 6px solid #b97144;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 28px;
+  background: #fff7f2;
+  border-left: 6px solid #c9833b;
+  border-radius: 14px;
+  padding: 28px 24px;
   text-align: left;
+  box-shadow: 0 4px 14px rgba(201, 131, 59, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.seccion-amigable:hover {
+  transform: scale(1.01);
 }
 
 .seccion-amigable h2 {
   font-size: 22px;
   color: #924600;
   margin-bottom: 16px;
+}
+
+/* Lista de ítems */
+.lista-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
 }
 
-.lista-items {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-
 .lista-items li {
-  padding: 10px 12px;
-  margin-bottom: 6px;
-  border-radius: 6px;
   background: #fff;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  border: 1px solid #ecd8cb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: #3a2b1f;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #333;
-  font-size: 15px;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, border 0.2s ease;
 }
 
 .lista-items li:hover {
-  background-color: #fdf3ea;
+  background-color: #fdf1e8;
+  border-color: #e1c1ad;
+}
+
+.item-nombre {
+  font-weight: 500;
 }
 
 .item-tamano {
-  font-size: 14px;
-  color: #999;
+  font-size: 13px;
+  color: #a67a53;
+  font-style: italic;
 }
 
+/* Botón de editar */
+.btn-editar {
+  font-size: 13px;
+  background-color: #ffe3cb;
+  color: #5d2c00;
+  border: 1px solid #f3c398;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-editar:hover {
+  background-color: #fcd7b6;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-contenido {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 420px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+.modal-contenido h2 {
+  font-size: 20px;
+  color: #924600;
+  margin-bottom: 20px;
+}
+
+.cerrar-modal {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+}
+
+.cerrar-modal:hover {
+  color: #000;
+}
+
+.input-editar {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border: 1px solid #c9a88a;
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.acciones-edicion {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn-guardar {
+  background-color: #b97144;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-cancelar {
+  background-color: #ddd;
+  color: #333;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Mensaje de éxito */
+.mensaje-flotante {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  animation: fadein 0.3s ease;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sin paquete activo */
+.mensaje-sin-paquete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  color: #6d3200;
+  text-align: center;
+}
+
+.mensaje-sin-paquete h1,
+.mensaje-sin-paquete h2 {
+  font-size: 26px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.mensaje-sin-paquete p {
+  font-size: 16px;
+  color: #555;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.icono-triste {
+  font-size: 54px;
+  margin-bottom: 10px;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
-  .seccion-amigable h2 {
-    font-size: 18px;
+  .modal-contenido {
+    width: 92%;
+    padding: 24px;
+  }
+
+  .acciones-edicion {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-editar {
+    padding: 6px 10px;
   }
 
   .lista-items li {
-    font-size: 14px;
     flex-direction: column;
     align-items: flex-start;
   }
 
   .item-tamano {
-    margin-top: 4px;
+    margin-top: 6px;
   }
+}
+
+/* Dark mode */
+body.dark-mode .paquete-wrapper {
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .paquete-contenedor {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+body.dark-mode .seccion-amigable {
+  background-color: #3a3a3a;
+  border-left: 6px solid #ffa94d;
+}
+
+body.dark-mode .item-nombre {
+  color: #ffa94d;
+}
+
+body.dark-mode .item-tamano {
+  color: #ccc;
+}
+
+body.dark-mode .lista-items li {
+  background: #2e2e2e;
+  border-color: #555;
+}
+
+body.dark-mode .modal-contenido {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+body.dark-mode .input-editar {
+  background-color: #1e1e1e;
+  color: #fff;
+  border-color: #777;
+}
+
+body.dark-mode .btn-guardar {
+  background-color: #ffa94d;
+  color: #000;
+}
+
+body.dark-mode .btn-cancelar {
+  background-color: #666;
+  color: #fff;
+}
+
+body.dark-mode .mensaje-flotante {
+  background-color: #3b883b;
+  color: #fff;
 }
