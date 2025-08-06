@@ -325,3 +325,11 @@ body.dark-mode .mensaje-flotante {
   background-color: #3b883b;
   color: #fff;
 }
+
+body.dark-mode .paquete-contenedor h1 {
+  color: #FFA94D;
+}
+
+body.dark-mode .paquete-contenedor p.paquete-descripcion {
+  color: #dddddd;
+}

@@ -2,6 +2,8 @@ import './PlanesHosting.css';
 import { useEffect, useState } from 'react';
 import { useUser } from '../Context/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate } from "react-router-dom";
+
 import {
   faServer,
   faDatabase,
@@ -19,6 +21,8 @@ function PlanesHosting() {
   const [cargando, setCargando] = useState(true);
   const [comprando, setComprando] = useState(null);
   const [paqueteActual, setPaqueteActual] = useState(null);
+  const navigate = useNavigate();
+
 
   const cargarPlanes = async () => {
     try {
@@ -228,17 +232,23 @@ const verificarMetodoPago = async () => {
                   <li><FontAwesomeIcon icon={faLock} /> Certificados SSL: {plan.ssl}</li>
                 </ul>
 
+              {mismoPlan && tienePlanActivo ? (
+                <button
+                  className="btn-adquirido"
+                  onClick={() => navigate("/paquete-adquirido")}
+                >
+                  Ver paquete
+                </button>
+              ) : (
                 <button
                   className="btn-adquirir"
-                  disabled={desactivado || comprando === plan.id || (mismoPlan && tienePlanActivo)}
+                  disabled={desactivado || comprando === plan.id}
                   onClick={() => adquirirPaquete(plan.id)}
                 >
-                  {mismoPlan && tienePlanActivo
-                    ? "Adquirido"
-                    : comprando === plan.id
-                    ? "Procesando..."
-                    : "Adquirir"}
+                  {comprando === plan.id ? "Procesando..." : "Adquirir"}
                 </button>
+              )}
+
               </div>
             );
           })}
