@@ -81,9 +81,27 @@ function Dominios() {
           body: JSON.stringify({ descripcion: nombre })
         });
 
+        if (!resIA.ok) {
+          const errorData = await resIA.json();
+          setError(errorData?.detail || 'Ocurrió un error al generar dominios.');
+          setBuscando(false);
+          return;
+        }
+
         const dataIA = await resIA.json();
-        const dominiosFiltrados = dataIA.dominios_generados.filter(dom => !dominiosEnCarrito.has(dom));
-        const conPrecios = dominiosFiltrados.map((dom) => ({
+
+        // ❌ Filtrar cualquier elemento que no parezca un dominio válido .com
+        const dominiosFiltrados = (dataIA.dominios_generados || []).filter(dom =>
+          typeof dom === 'string' && dom.includes('.') && /^[a-zA-Z0-9\-]+\.[a-z]{2,}$/.test(dom)
+        );
+
+        // 🟤 Remueve duplicados y cosas como el mensaje introductorio de la IA
+        const únicos = Array.from(new Set(dominiosFiltrados));
+
+        // 🔸 Obtener dominios no repetidos y no presentes en el carrito
+        const disponibles = únicos.filter(dom => !dominiosEnCarrito.has(dom));
+
+        const conPrecios = disponibles.map((dom) => ({
           id: dom,
           nombre: dom,
           precio: precios[dom.split('.').pop()] ?? 10000,
@@ -102,6 +120,7 @@ function Dominios() {
           setMostrarPrincipal(false);
           setResultados([]);
         }
+
       } else {
         const tieneExtension = nombre.includes('.') && EXTENSIONS.some(ext => nombre.endsWith(`.${ext}`));
         if (nombre.includes('.') && !tieneExtension) {
