@@ -8,6 +8,7 @@ import { usePreciosExtensiones } from "../Context/ExtensionContext";
 function Dominios() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const tipoBusqueda = queryParams.get('tipo') || 'normal';
   const dominioInicial = queryParams.get('nombre') || '';
   const { usuario } = useUser();
 
@@ -27,7 +28,7 @@ function Dominios() {
   useEffect(() => {
     if (dominioInicial) {
       setInput(dominioInicial);
-      manejarBusqueda(dominioInicial);
+      manejarBusqueda(dominioInicial, tipoBusqueda);
     }
   }, []);
 
@@ -61,37 +62,67 @@ function Dominios() {
     }
   };
 
-  const manejarBusqueda = async (valorManual = null) => {
-    let nombre = (valorManual ?? input).trim().toLowerCase();
+const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
+  let nombre = (valorManual ?? input).trim().toLowerCase();
 
-    if (nombre.endsWith('.')) {
-      nombre = nombre.slice(0, -1);
-    }
-
-    if (!nombre) {
-      setError('Por favor, escribe un nombre de dominio antes de buscar.');
-      setBuscando(false);
-      setBuscado(false);
-      return;
-    }
-
-    setError('');
-    setBuscando(true);
+  if (!nombre) {
+    setError('Por favor, escribe un nombre de dominio antes de buscar.');
+    setBuscando(false);
     setBuscado(false);
-    setResultados([]);
-    setPrincipalDisponible(false);
-    setMostrarPrincipal(true);
-    setDominiosAgregados(new Set());
+    return;
+  }
 
-    const tieneExtension = nombre.includes('.') && EXTENSIONS.some(ext => nombre.endsWith(`.${ext}`));
+  setError('');
+  setBuscando(true);
+  setBuscado(false);
+  setResultados([]);
+  setPrincipalDisponible(false);
+  setMostrarPrincipal(true);
+  setDominiosAgregados(new Set());
 
-    if (nombre.includes('.') && !tieneExtension) {
-      setError('La extensión del dominio no es válida.');
-      setBuscando(false);
-      return;
-    }
+  try {
+    const dominiosEnCarrito = await obtenerDominiosEnCarrito();
 
-    try {
+    if (tipo === 'ia') {
+      // 🔸 Lógica IA
+      const resIA = await fetch(`${import.meta.env.VITE_API_URL}/generar-dominiosIA`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Chibcha-api-key': import.meta.env.VITE_API_KEY
+        },
+        body: JSON.stringify({ descripcion: nombre })
+      });
+
+      const dataIA = await resIA.json();
+
+      const dominiosFiltrados = dataIA.dominios_generados.filter(dom => !dominiosEnCarrito.has(dom));
+      const conPrecios = dominiosFiltrados.map((dom) => ({
+        id: dom,
+        nombre: dom,
+        precio: precios[dom.split('.').pop()] ?? 10000,
+      }));
+
+      if (conPrecios.length > 0) {
+        setDominio(conPrecios[0].nombre); // 👈 primer dominio como principal
+        setMostrarPrincipal(true);
+        setResultados(conPrecios.slice(1)); // 👈 el resto como alternativas
+      } else {
+        setDominio(nombre);
+        setMostrarPrincipal(false);
+        setResultados([]);
+      }
+
+    } else {
+      // 🔸 Búsqueda tradicional
+      const tieneExtension = nombre.includes('.') && EXTENSIONS.some(ext => nombre.endsWith(`.${ext}`));
+
+      if (nombre.includes('.') && !tieneExtension) {
+        setError('La extensión del dominio no es válida.');
+        setBuscando(false);
+        return;
+      }
+
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/DominiosDisponible`,
         {
@@ -113,9 +144,6 @@ function Dominios() {
       const estaDisponible = estadoPrincipal && estadoPrincipal.registered === false;
 
       setPrincipalDisponible(estaDisponible);
-
-      const dominiosEnCarrito = await obtenerDominiosEnCarrito();
-
       setMostrarPrincipal(!dominiosEnCarrito.has(dominioPrincipal));
 
       const disponibles = data.alternativas.filter((d) =>
@@ -131,14 +159,16 @@ function Dominios() {
 
       setDominio(nombre);
       setResultados(conPrecios);
-    } catch (error) {
-      console.error("Error al consultar dominios:", error);
-      setError('Ocurrió un error al consultar los dominios.');
-    } finally {
-      setBuscando(false);
-      setBuscado(true);
     }
-  };
+  } catch (error) {
+    console.error("Error al consultar dominios:", error);
+    setError('Ocurrió un error al consultar los dominios.');
+  } finally {
+    setBuscando(false);
+    setBuscado(true);
+  }
+};
+
 
   const agregarAlCarrito = async (dom) => {
     if (!usuario || !usuario.identificacion || !usuario.idcuenta) {
@@ -197,7 +227,7 @@ function Dominios() {
           value={input}
           onChange={e => setInput(e.target.value)}
         />
-        <button className="boton-adquirir" onClick={() => manejarBusqueda()}>Buscar Dominio</button>
+        <button className="boton-adquirir" onClick={() => manejarBusqueda(null, tipoBusqueda)}>Buscar Dominio</button>
       </div>
 
       {buscando && <Loader mensaje="Consultando dominios disponibles" />}
