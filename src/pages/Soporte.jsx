@@ -89,7 +89,7 @@ function Soporte() {
       setErrorTickets('');
     } catch (err) {
       console.error("❌ Error al obtener tickets:", err);
-      setErrorTickets('No se pudieron cargar tus tickets.');
+      setErrorTickets('Aún no has registrado ningún ticket.');
     } finally {
       setCargandoTickets(false);
     }

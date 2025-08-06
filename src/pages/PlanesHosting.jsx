@@ -27,40 +27,17 @@ function PlanesHosting() {
   
 
   const navigate = useNavigate();
-
   useEffect(() => {
-  const verificarRedireccion = async () => {
-    if (!usuario?.idcuenta) return;
-
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/MiPaquete?idcuenta=${usuario.idcuenta}`, {
-        headers: {
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-      });
-
-      if (!res.ok) throw new Error("Sin paquete");
-
-      const data = await res.json();
-
-      const vigente = data?.idfacturapaquete &&
-                      Number(data.estado) === 1 &&
-                      new Date(data.fchvencimiento) >= new Date();
-
-      if (vigente) {
-        setRedirigiendo(true);
-        setTimeout(() => navigate("/paquete-adquirido"), 100); // ⚡ redirección rápida
-        return;
-      }
-    } catch (err) {
-      console.warn("No se redirige automáticamente:", err);
-    } finally {
-      setVerificandoRedireccion(false);
-    }
+  const iniciar = async () => {
+    const planes = await cargarPlanes();
+    setTodosLosPlanes(planes);
+    filtrarPlanes(planes, 30);
+    setCargando(false);
   };
 
-  verificarRedireccion();
-}, [usuario]);
+  iniciar();
+}, []);
+
 
   const cargarPlanes = async () => {
     try {
@@ -202,30 +179,41 @@ const verificarMetodoPago = async () => {
     }
   };
 
+
+
 useEffect(() => {
-  if (!usuario || !usuario.idcuenta) return;
+  if (!usuario || !usuario.idcuenta) {
+    setVerificandoRedireccion(false); // necesario para desbloquear vista
+    return;
+  }
 
-  const iniciar = async () => {
-    const planes = await cargarPlanes();
-    const periodicidad = await cargarMiPaquete(); // ← esto ya actualiza setPaqueteActual
-    setTodosLosPlanes(planes);
+  const verificarRedireccion = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/MiPaquete?idcuenta=${usuario.idcuenta}`, {
+        headers: { "Chibcha-api-key": import.meta.env.VITE_API_KEY },
+      });
 
-    // 🔍 Redirigir si ya tiene paquete activo y vigente
-    if (paqueteActual?.idfacturapaquete && Number(paqueteActual.estado) === 1) {
-      const vencimiento = new Date(paqueteActual.fchvencimiento);
-      const hoy = new Date();
+      if (!res.ok) throw new Error("Sin paquete");
 
-      if (hoy <= vencimiento) {
-        navigate("/paquete-adquirido");
-        return; // detener aquí
+      const data = await res.json();
+      const vigente =
+        data?.idfacturapaquete &&
+        Number(data.estado) === 1 &&
+        new Date(data.fchvencimiento) >= new Date();
+
+      if (vigente) {
+        setRedirigiendo(true);
+        setTimeout(() => navigate("/paquete-adquirido", { replace: true }), 100);
+        return;
       }
+    } catch (err) {
+      console.warn("No se redirige automáticamente:", err);
+    } finally {
+      setVerificandoRedireccion(false);
     }
-
-    filtrarPlanes(planes, periodicidad || 30);
-    setCargando(false);
   };
 
-  iniciar();
+  verificarRedireccion();
 }, [usuario]);
 
 if (redirigiendo) {
@@ -237,9 +225,8 @@ if (redirigiendo) {
   );
 }
 
-if (verificandoRedireccion) {
-  return null; // espera silenciosamente antes de mostrar cualquier cosa
-}
+if (verificandoRedireccion) return null;
+
 
 
 
