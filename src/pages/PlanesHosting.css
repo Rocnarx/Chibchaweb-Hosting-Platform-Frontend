@@ -141,6 +141,37 @@
   margin: 0 auto;
 }
 
+.pantalla-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  font-family: "Segoe UI", sans-serif;
+  color: #924600;
+}
+
+.pantalla-cargando p {
+  margin-top: 16px;
+  font-size: 18px;
+}
+
+.loader {
+  width: 42px;
+  height: 42px;
+  border: 5px solid #f3d8c4;
+  border-top: 5px solid #924600;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
 /* ===== MODO OSCURO ===== */
 
 body.dark-mode .planes-hosting {

@@ -21,8 +21,46 @@ function PlanesHosting() {
   const [cargando, setCargando] = useState(true);
   const [comprando, setComprando] = useState(null);
   const [paqueteActual, setPaqueteActual] = useState(null);
+  const [verificandoRedireccion, setVerificandoRedireccion] = useState(true);
+  const [redirigiendo, setRedirigiendo] = useState(false);
+  const [esperandoRedireccion, setEsperandoRedireccion] = useState(true);
+  
+
   const navigate = useNavigate();
 
+  useEffect(() => {
+  const verificarRedireccion = async () => {
+    if (!usuario?.idcuenta) return;
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/MiPaquete?idcuenta=${usuario.idcuenta}`, {
+        headers: {
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+      });
+
+      if (!res.ok) throw new Error("Sin paquete");
+
+      const data = await res.json();
+
+      const vigente = data?.idfacturapaquete &&
+                      Number(data.estado) === 1 &&
+                      new Date(data.fchvencimiento) >= new Date();
+
+      if (vigente) {
+        setRedirigiendo(true);
+        setTimeout(() => navigate("/paquete-adquirido"), 100); // ⚡ redirección rápida
+        return;
+      }
+    } catch (err) {
+      console.warn("No se redirige automáticamente:", err);
+    } finally {
+      setVerificandoRedireccion(false);
+    }
+  };
+
+  verificarRedireccion();
+}, [usuario]);
 
   const cargarPlanes = async () => {
     try {
@@ -66,10 +104,23 @@ function PlanesHosting() {
       if (!res.ok) return null;
 
       const data = await res.json();
-
       setPaqueteActual(data);
 
+      // 🟠 Si el usuario ya tiene un plan activo, redirigir con animación
+      const vigente = data?.idfacturapaquete &&
+                      Number(data.estado) === 1 &&
+                      new Date(data.fchvencimiento) >= new Date();
+
+      if (vigente) {
+        setRedirigiendo(true);
+        setTimeout(() => {
+          navigate("/paquete-adquirido");
+        }, 1000); // espera 1 segundo para mostrar la animación
+        return null; // detenemos aquí
+      }
+
       const periodicidad = parseInt(data.periodicidad.match(/\d+/)?.[0] || "30");
+      setEsperandoRedireccion(false); // ← al final de la función, siempre
       return periodicidad;
     } catch (err) {
       console.error("❌ Error al obtener MiPaquete:", err);
@@ -151,19 +202,45 @@ const verificarMetodoPago = async () => {
     }
   };
 
-  useEffect(() => {
-    if (!usuario || !usuario.idcuenta) return;
+useEffect(() => {
+  if (!usuario || !usuario.idcuenta) return;
 
-    const iniciar = async () => {
-      const planes = await cargarPlanes();
-      const periodicidad = await cargarMiPaquete();
-      setTodosLosPlanes(planes);
-      filtrarPlanes(planes, periodicidad || 30);
-      setCargando(false);
-    };
+  const iniciar = async () => {
+    const planes = await cargarPlanes();
+    const periodicidad = await cargarMiPaquete(); // ← esto ya actualiza setPaqueteActual
+    setTodosLosPlanes(planes);
 
-    iniciar();
-  }, [usuario]);
+    // 🔍 Redirigir si ya tiene paquete activo y vigente
+    if (paqueteActual?.idfacturapaquete && Number(paqueteActual.estado) === 1) {
+      const vencimiento = new Date(paqueteActual.fchvencimiento);
+      const hoy = new Date();
+
+      if (hoy <= vencimiento) {
+        navigate("/paquete-adquirido");
+        return; // detener aquí
+      }
+    }
+
+    filtrarPlanes(planes, periodicidad || 30);
+    setCargando(false);
+  };
+
+  iniciar();
+}, [usuario]);
+
+if (redirigiendo) {
+  return (
+    <div className="pantalla-cargando">
+      <div className="loader" />
+      <p>Redirigiendo a tu paquete adquirido...</p>
+    </div>
+  );
+}
+
+if (verificandoRedireccion) {
+  return null; // espera silenciosamente antes de mostrar cualquier cosa
+}
+
 
 
   return (
