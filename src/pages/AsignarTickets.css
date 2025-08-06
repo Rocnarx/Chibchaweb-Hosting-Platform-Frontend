@@ -98,3 +98,16 @@ body.dark-mode select {
 body.dark-mode .cerrar {
   color: #fff;
 }
+.escalar-btn {
+  background-color: #e67e22;
+  color: white;
+  padding: 6px 12px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.escalar-btn:hover {
+  background-color: #d35400;
+}

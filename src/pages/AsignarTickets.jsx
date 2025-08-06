@@ -12,7 +12,7 @@ export default function AsignarTickets() {
   const [empleadoIDCuenta, setEmpleadoIDCuenta] = useState(null);
   const [asignando, setAsignando] = useState(false);
 
-  const { usuario } = useUser(); // Usamos `usuario` como en la otra página
+  const { usuario } = useUser();
 
   useEffect(() => {
     const obtenerTickets = async () => {
@@ -27,7 +27,6 @@ export default function AsignarTickets() {
         );
         const data = await res.json();
 
-        // Determinar el nivel permitido según el tipo de cuenta
         let nivelPermitido;
         if (usuario?.tipocuenta === "COORDINADOR NIVEL 1") nivelPermitido = 1;
         else if (usuario?.tipocuenta === "COORDINADOR NIVEL 2") nivelPermitido = 2;
@@ -165,6 +164,34 @@ export default function AsignarTickets() {
     }
   };
 
+  const escalarTicket = async (idTicket, nivelActual) => {
+    const nuevoNivel = nivelActual + 1;
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/CambiarNivelTicket/${idTicket}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          },
+          body: JSON.stringify({ nivel: nuevoNivel }),
+        }
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData?.detail || "Error al escalar el ticket.");
+      }
+
+      setTickets((prev) => prev.filter((t) => t.id_ticket !== idTicket));
+      alert("Ticket escalado al siguiente nivel.");
+    } catch (error) {
+      console.error("Error al escalar ticket:", error);
+      alert("Error al escalar el ticket.");
+    }
+  };
+
   return (
     <div className="asignar-tickets-container">
       <h2>Asignar Tickets</h2>
@@ -177,6 +204,14 @@ export default function AsignarTickets() {
             <p><strong>Nivel:</strong> {ticket.nivel}</p>
             <p><strong>Cliente:</strong> {ticket.cliente?.nombre}</p>
             <button onClick={() => abrirAsignacion(ticket)}>Asignar</button>
+            {(ticket.nivel === 1 || ticket.nivel === 2) && (
+              <button
+                className="escalar-btn"
+                onClick={() => escalarTicket(ticket.id_ticket, ticket.nivel)}
+              >
+                Escalar
+              </button>
+            )}
           </div>
         ))}
       </div>
