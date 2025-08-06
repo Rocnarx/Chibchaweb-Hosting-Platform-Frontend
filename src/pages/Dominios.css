@@ -240,3 +240,27 @@ body.dark-mode .alternativa button:hover,
 body.dark-mode .buscador button:hover {
   background-color: #e38b31 !important;
 }
+@keyframes brillar-cafe {
+  0%, 100% {
+    box-shadow: 0 0 0px rgba(146, 70, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 10px 3px rgba(146, 70, 0, 0.4);
+  }
+}
+
+/* Solo en modo IA: el input y el botón del buscador brillan */
+.modo-ia .buscador input,
+.modo-ia .buscador button {
+  animation: brillar-cafe 2.2s ease-in-out infinite;
+  border-radius: 8px;
+  border: 1px solid #924600;
+}
+
+/* Opcional: en modo oscuro */
+body.dark-mode .modo-ia .buscador input,
+body.dark-mode .modo-ia .buscador button {
+  animation: brillar-cafe 2.2s ease-in-out infinite;
+  border: 1px solid #FFA94D;
+  box-shadow: 0 0 10px 3px rgba(255, 132, 0, 0.654);
+}

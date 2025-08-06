@@ -155,3 +155,34 @@ body.dark-mode .clear-button:hover {
   color: #ffffff;
 }
 
+/* ==== Brillo suave para Hero en modo IA ==== */
+@keyframes brillar-hero {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(146, 70, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(146, 70, 0, 0.45);
+  }
+}
+
+.modo-ia .hero-input,
+.modo-ia .hero-button {
+  animation: brillar-hero 2.2s ease-in-out infinite;
+  border: 1px solid #924600;
+}
+
+/* ==== En modo oscuro ==== */
+@keyframes brillar-hero-dark {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(255, 169, 77, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(255, 169, 77, 0.75);
+  }
+}
+
+body.dark-mode .modo-ia .hero-input,
+body.dark-mode .modo-ia .hero-button {
+  animation: brillar-hero-dark 2.2s ease-in-out infinite;
+  border: 1px solid #FFA94D;
+}

@@ -4,16 +4,19 @@ import Loader from "../Components/Loader";
 import { useLocation } from 'react-router-dom';
 import { useUser } from "../Context/UserContext";
 import { usePreciosExtensiones } from "../Context/ExtensionContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 
 function Dominios() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const tipoBusqueda = queryParams.get('tipo') || 'normal';
   const dominioInicial = queryParams.get('nombre') || '';
+  const tipoInicial = queryParams.get('tipo') || 'normal';
   const { usuario } = useUser();
 
   const [input, setInput] = useState(dominioInicial);
   const [dominio, setDominio] = useState('');
+  const [tipoBusqueda, setTipoBusqueda] = useState(tipoInicial);
   const [buscando, setBuscando] = useState(false);
   const [buscado, setBuscado] = useState(false);
   const [resultados, setResultados] = useState([]);
@@ -28,104 +31,86 @@ function Dominios() {
   useEffect(() => {
     if (dominioInicial) {
       setInput(dominioInicial);
-      manejarBusqueda(dominioInicial, tipoBusqueda);
+      manejarBusqueda(dominioInicial, tipoInicial);
     }
   }, []);
 
   const obtenerDominiosEnCarrito = async () => {
     if (!usuario || !usuario.idcuenta) return new Set();
-
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`,
-        {
-          headers: {
-            'Chibcha-api-key': import.meta.env.VITE_API_KEY,
-          },
-        }
-      );
-
-      if (res.status === 404) {
-        // No hay dominios previos, no es un error fatal
-        return new Set();
-      }
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/carrito/dominios?idcuenta=${usuario.idcuenta}`, {
+        headers: { 'Chibcha-api-key': import.meta.env.VITE_API_KEY },
+      });
       if (!res.ok) return new Set();
-
       const datos = await res.json();
-      if (!Array.isArray(datos)) return new Set();
-
-      const dominios = datos.map(d => d.dominio);
-      return new Set(dominios);
-    } catch (err) {
-      console.error("Error al obtener dominios del carrito:", err);
+      return new Set(datos.map(d => d.dominio));
+    } catch {
       return new Set();
     }
   };
 
-const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
-  let nombre = (valorManual ?? input).trim().toLowerCase();
+  const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
+    let nombre = (valorManual ?? input).trim().toLowerCase();
+    if (nombre.endsWith('.')) nombre = nombre.slice(0, -1);
 
-  if (!nombre) {
-    setError('Por favor, escribe un nombre de dominio antes de buscar.');
-    setBuscando(false);
+    if (!nombre) {
+      setError('Por favor, escribe un nombre de dominio antes de buscar.');
+      setBuscando(false);
+      setBuscado(false);
+      return;
+    }
+
+    setError('');
+    setBuscando(true);
     setBuscado(false);
-    return;
-  }
+    setResultados([]);
+    setPrincipalDisponible(false);
+    setMostrarPrincipal(true);
+    setDominiosAgregados(new Set());
 
-  setError('');
-  setBuscando(true);
-  setBuscado(false);
-  setResultados([]);
-  setPrincipalDisponible(false);
-  setMostrarPrincipal(true);
-  setDominiosAgregados(new Set());
-
-  try {
     const dominiosEnCarrito = await obtenerDominiosEnCarrito();
 
-    if (tipo === 'ia') {
-      // 🔸 Lógica IA
-      const resIA = await fetch(`${import.meta.env.VITE_API_URL}/generar-dominiosIA`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Chibcha-api-key': import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify({ descripcion: nombre })
-      });
+    try {
+      if (tipo === 'ia') {
+        const resIA = await fetch(`${import.meta.env.VITE_API_URL}/generar-dominiosIA`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Chibcha-api-key': import.meta.env.VITE_API_KEY
+          },
+          body: JSON.stringify({ descripcion: nombre })
+        });
 
-      const dataIA = await resIA.json();
+        const dataIA = await resIA.json();
+        const dominiosFiltrados = dataIA.dominios_generados.filter(dom => !dominiosEnCarrito.has(dom));
+        const conPrecios = dominiosFiltrados.map((dom) => ({
+          id: dom,
+          nombre: dom,
+          precio: precios[dom.split('.').pop()] ?? 10000,
+        }));
 
-      const dominiosFiltrados = dataIA.dominios_generados.filter(dom => !dominiosEnCarrito.has(dom));
-      const conPrecios = dominiosFiltrados.map((dom) => ({
-        id: dom,
-        nombre: dom,
-        precio: precios[dom.split('.').pop()] ?? 10000,
-      }));
-
-      if (conPrecios.length > 0) {
-        setDominio(conPrecios[0].nombre); // 👈 primer dominio como principal
-        setMostrarPrincipal(true);
-        setResultados(conPrecios.slice(1)); // 👈 el resto como alternativas
+        if (conPrecios.length > 0) {
+          setDominio(conPrecios[0].nombre);
+          setPrincipalDisponible(true);
+          setMostrarPrincipal(true);
+          setResultados(conPrecios.slice(1));
+          setDominiosAgregados(new Set());
+        } else {
+          const dominioConExtension = nombre.includes('.') ? nombre : `${nombre}.com`;
+          setDominio(dominioConExtension);
+          setPrincipalDisponible(false);
+          setMostrarPrincipal(false);
+          setResultados([]);
+        }
       } else {
-        setDominio(nombre);
-        setMostrarPrincipal(false);
-        setResultados([]);
-      }
+        const tieneExtension = nombre.includes('.') && EXTENSIONS.some(ext => nombre.endsWith(`.${ext}`));
+        if (nombre.includes('.') && !tieneExtension) {
+          setError('La extensión del dominio no es válida.');
+          setBuscando(false);
+          return;
+        }
 
-    } else {
-      // 🔸 Búsqueda tradicional
-      const tieneExtension = nombre.includes('.') && EXTENSIONS.some(ext => nombre.endsWith(`.${ext}`));
-
-      if (nombre.includes('.') && !tieneExtension) {
-        setError('La extensión del dominio no es válida.');
-        setBuscando(false);
-        return;
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/DominiosDisponible`,
-        {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/DominiosDisponible`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -134,41 +119,40 @@ const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
           body: JSON.stringify({
             domain: nombre.includes('.') ? nombre.split('.')[0] : nombre
           })
-        }
-      );
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      const dominioPrincipal = tieneExtension ? nombre : `${nombre}.com`;
-      const estadoPrincipal = data.alternativas.find(d => d.domain === dominioPrincipal);
-      const estaDisponible = estadoPrincipal && estadoPrincipal.registered === false;
+        const dominioPrincipal = tieneExtension ? nombre : `${nombre}.com`;
+        const estadoPrincipal = data.alternativas.find(d => d.domain === dominioPrincipal);
+        const estaDisponible = estadoPrincipal && estadoPrincipal.registered === false;
 
-      setPrincipalDisponible(estaDisponible);
-      setMostrarPrincipal(!dominiosEnCarrito.has(dominioPrincipal));
+        setPrincipalDisponible(estaDisponible);
+        setMostrarPrincipal(!dominiosEnCarrito.has(dominioPrincipal));
 
-      const disponibles = data.alternativas.filter((d) =>
-        d.registered === false &&
-        !dominiosEnCarrito.has(d.domain)
-      );
+        const disponibles = data.alternativas.filter((d) =>
+          d.registered === false &&
+          !dominiosEnCarrito.has(d.domain)
+        );
 
-      const conPrecios = disponibles.map((dom) => ({
-        id: dom.domain,
-        nombre: dom.domain,
-        precio: precios[dom.domain.split('.').pop()] ?? 10000,
-      }));
+        const conPrecios = disponibles.map((dom) => ({
+          id: dom.domain,
+          nombre: dom.domain,
+          precio: precios[dom.domain.split('.').pop()] ?? 10000,
+        }));
 
-      setDominio(nombre);
-      setResultados(conPrecios);
+        const dominioConExtension = nombre.includes('.') ? nombre : `${nombre}.com`;
+        setDominio(dominioConExtension);
+        setResultados(conPrecios);
+      }
+    } catch (error) {
+      console.error("Error al consultar dominios:", error);
+      setError('Ocurrió un error al consultar los dominios.');
+    } finally {
+      setBuscando(false);
+      setBuscado(true);
     }
-  } catch (error) {
-    console.error("Error al consultar dominios:", error);
-    setError('Ocurrió un error al consultar los dominios.');
-  } finally {
-    setBuscando(false);
-    setBuscado(true);
-  }
-};
-
+  };
 
   const agregarAlCarrito = async (dom) => {
     if (!usuario || !usuario.identificacion || !usuario.idcuenta) {
@@ -192,11 +176,7 @@ const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
         })
       });
 
-      if (!response.ok) {
-        console.error("Error al agregar dominio:", await response.text());
-        alert("No se pudo agregar el dominio.");
-        return;
-      }
+      if (!response.ok) throw new Error("Error al agregar dominio");
 
       await fetch(`${import.meta.env.VITE_API_URL}/dominios/agregar-a-carrito-existente`, {
         method: 'POST',
@@ -213,30 +193,46 @@ const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
       setDominiosAgregados(prev => new Set(prev).add(dom.id));
       alert(`✅ Dominio ${dom.nombre} agregado al carrito.`);
     } catch (err) {
-      console.error("Error de red:", err);
-      alert("Error al conectar con la API.");
+      alert("No se pudo agregar el dominio.");
     }
   };
 
   return (
-    <main className="dominios">
+    <main className={`dominios ${tipoBusqueda === 'ia' ? 'modo-ia' : ''}`}>
+      {/* Filtro de búsqueda */}
+      <div className="hero-toggle">
+        <button
+          className={tipoBusqueda === 'normal' ? 'activo' : ''}
+          onClick={() => setTipoBusqueda('normal')}
+        >
+          Dominio normal
+        </button>
+        <button
+          className={tipoBusqueda === 'ia' ? 'activo' : ''}
+          onClick={() => setTipoBusqueda('ia')}
+        >
+          Dominio con IA
+        </button>
+      </div>
+
+      {/* Buscador */}
+    <div className="buscador-contenedor">
       <div className="buscador">
         <input
           type="text"
-          placeholder="chibchaweb"
+          placeholder={tipoBusqueda === 'ia' ? "Describe tu idea de negocio" : "chibchaweb"}
           value={input}
           onChange={e => setInput(e.target.value)}
         />
-        <button className="boton-adquirir" onClick={() => manejarBusqueda(null, tipoBusqueda)}>Buscar Dominio</button>
+        <button className="boton-adquirir" onClick={() => manejarBusqueda(null, tipoBusqueda)}>
+          Buscar Dominio
+        </button>
       </div>
+    </div>
 
       {buscando && <Loader mensaje="Consultando dominios disponibles" />}
 
-      {error && (
-        <div className="alerta-error">
-          {error}
-        </div>
-      )}
+      {error && <div className="alerta-error">{error}</div>}
 
       {buscado && !buscando && !error && (
         <>
@@ -244,13 +240,11 @@ const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
             <div className="resultado">
               <div className="bloque resultado-dominio">
                 <div className="info-dominio">
-                  <strong>{dominio.includes('.') ? dominio : `${dominio}.com`}</strong>
+                  <strong>{dominio}</strong>
                   <div className="precio-dominio">
-                    {principalDisponible
-                      ? `$${(
-                          precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ?? 10000
-                        ).toLocaleString()} USD`
-                      : '$'}
+                    ${(
+                      precios[dominio.split('.').pop()] ?? 10000
+                    ).toLocaleString()} USD
                   </div>
                   <p>
                     {principalDisponible
@@ -261,19 +255,17 @@ const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
                 <button
                   className={principalDisponible ? 'btn-agregar' : 'boton-deshabilitado'}
                   disabled={
-                    !principalDisponible ||
-                    dominiosAgregados.has(dominio.includes('.') ? dominio : `${dominio}.com`)
+                    !principalDisponible || dominiosAgregados.has(dominio)
                   }
                   onClick={() =>
                     agregarAlCarrito({
-                      id: dominio.includes('.') ? dominio : `${dominio}.com`,
-                      nombre: dominio.includes('.') ? dominio : `${dominio}.com`,
-                      precio:
-                        precios[(dominio.includes('.') ? dominio.split('.').pop() : "com")] ?? 10000,
+                      id: dominio,
+                      nombre: dominio,
+                      precio: precios[dominio.split('.').pop()] ?? 10000,
                     })
                   }
                 >
-                  {dominiosAgregados.has(dominio.includes('.') ? dominio : `${dominio}.com`)
+                  {dominiosAgregados.has(dominio)
                     ? "Agregado"
                     : "Agregar al carrito"}
                 </button>
@@ -290,7 +282,6 @@ const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
           )}
 
           <h3>Alternativas</h3>
-
           <div className="alternativas">
             {resultados.length === 0 ? (
               <div className="sin-resultados">
@@ -319,6 +310,7 @@ const manejarBusqueda = async (valorManual = null, tipo = 'normal') => {
       )}
     </main>
   );
+
 }
 
 export default Dominios;
