@@ -135,6 +135,12 @@
   background-color: #7a3900;
 }
 
+.btn-adquirido{
+  display: block;
+  padding: 12px 20px;
+  margin: 0 auto;
+}
+
 /* ===== MODO OSCURO ===== */
 
 body.dark-mode .planes-hosting {

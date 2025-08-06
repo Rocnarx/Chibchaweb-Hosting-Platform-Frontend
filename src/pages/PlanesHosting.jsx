@@ -152,6 +152,8 @@ const verificarMetodoPago = async () => {
   };
 
   useEffect(() => {
+    if (!usuario || !usuario.idcuenta) return;
+
     const iniciar = async () => {
       const planes = await cargarPlanes();
       const periodicidad = await cargarMiPaquete();
@@ -161,7 +163,8 @@ const verificarMetodoPago = async () => {
     };
 
     iniciar();
-  }, []);
+  }, [usuario]);
+
 
   return (
     <main className="planes-hosting">
