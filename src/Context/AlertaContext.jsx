@@ -8,8 +8,10 @@ export function AlertaProvider({ children }) {
   const [mensaje, setMensaje] = useState("");
 
   const mostrarAlerta = (texto) => {
-    setMensaje(texto);
-    // NO borrar aquí, se maneja en el componente
+    setMensaje(""); // fuerza reinicio incluso si el mensaje es igual
+    setTimeout(() => {
+      setMensaje(texto);
+    }, 10); // pequeño delay para reiniciar
   };
 
   useEffect(() => {
