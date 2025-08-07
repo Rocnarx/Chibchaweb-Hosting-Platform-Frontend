@@ -235,3 +235,52 @@ body.dark-mode .nav-link-admin.active {
     margin-top: 70px; /* Altura del navbar móvil */
   }
 }
+/* ===== Botón Modo Oscuro ===== */
+.dark-mode-toggle-admin {
+  margin-top: 350%;
+  padding-top: 20px;
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+}
+
+.mode-toggle-button-admin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #924600;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover */
+.mode-toggle-button-admin:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.03);
+}
+
+/* Sidebar colapsada */
+.sidebar-admin.collapsed .dark-mode-toggle-admin {
+  justify-content: center; /* También centrado en colapsada */
+}
+
+.sidebar-admin.collapsed .mode-toggle-button-admin span {
+  display: none;
+}
+
+/* Modo oscuro */
+body.dark-mode .mode-toggle-button-admin {
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border-color: #555;
+}
+
+body.dark-mode .mode-toggle-button-admin:hover {
+  background-color: #3a3a3a;
+}

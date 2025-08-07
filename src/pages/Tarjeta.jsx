@@ -154,6 +154,8 @@ export default function Tarjeta() {
               <>
                 <img src="/visa.png" alt="Visa" />
                 <img src="/mastercard.png" alt="MasterCard" />
+                <img src="/diner.png" alt="Diners" />
+
               </>
             )}
           </div>
