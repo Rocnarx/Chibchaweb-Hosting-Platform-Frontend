@@ -137,7 +137,6 @@
   padding: 10px;
   white-space: pre-wrap;
   margin-top: 6px;
-  font-family: 'Segoe UI', sans-serif;
   font-size: 0.88rem;
   color: #333;
 }
@@ -179,10 +178,14 @@
   padding: 10px;
   white-space: pre-wrap;
   margin-top: 6px;
-  font-family: 'Segoe UI', sans-serif;
   font-size: 0.88rem;
   color: #333;
 }
+
+textarea {
+  font-family: inherit;
+}
+
 
 .soporte-tickets {
   display: flex;
