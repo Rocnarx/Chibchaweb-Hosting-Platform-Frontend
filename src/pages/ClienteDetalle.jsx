@@ -16,7 +16,8 @@ export default function ClienteDetalle() {
   const [formData, setFormData] = useState({});
   const [modoEdicion, setModoEdicion] = useState(false);
   const [error, setError] = useState("");
-  const [mensaje, setMensaje] = useState("");
+  const [alerta, setAlerta] = useState(null);
+  const [mostrarTarjeta, setMostrarTarjeta] = useState(false);
   const navigate = useNavigate();
 
   const tiposCuenta = {
@@ -27,6 +28,11 @@ export default function ClienteDetalle() {
     5: "POSTULADO",
     6: "ELIMINADA",
     7: "INHABILITADO",
+  };
+
+  const mostrarAlerta = (mensaje, tipo = "info") => {
+    setAlerta({ mensaje, tipo });
+    setTimeout(() => setAlerta(null), 3000);
   };
 
   useEffect(() => {
@@ -74,19 +80,18 @@ export default function ClienteDetalle() {
 
       if (!res.ok) throw new Error("Error al guardar cambios");
 
-      setMensaje("Cambios guardados correctamente.");
+      mostrarAlerta("Cambios guardados correctamente.", "success");
       setModoEdicion(false);
       setCliente(formData);
     } catch (err) {
       console.error(err);
-      setError("No se pudo guardar los cambios.");
+      mostrarAlerta("No se pudo guardar los cambios.", "error");
     }
   };
 
   const handleCancelar = () => {
     setFormData(cliente);
     setModoEdicion(false);
-    setMensaje("");
   };
 
   const handleEliminar = async () => {
@@ -105,10 +110,11 @@ export default function ClienteDetalle() {
 
       if (!res.ok) throw new Error("Error al eliminar la cuenta");
 
-      navigate("/ClientesAdmin");
+      // Mostrar tarjeta emergente
+      setMostrarTarjeta(true);
     } catch (err) {
       console.error(err);
-      setError("No se pudo eliminar la cuenta.");
+      mostrarAlerta("No se pudo eliminar la cuenta", "error");
     }
   };
 
@@ -125,11 +131,11 @@ export default function ClienteDetalle() {
 
       if (!res.ok) throw new Error("Error al restaurar la cuenta");
 
-      setMensaje("Cuenta restaurada exitosamente.");
+      mostrarAlerta("Cuenta restaurada exitosamente.", "success");
       setFormData({ ...formData, IDTIPOCUENTA: 1 });
     } catch (err) {
       console.error(err);
-      setError("No se pudo restaurar la cuenta.");
+      mostrarAlerta("No se pudo restaurar la cuenta.", "error");
     }
   };
 
@@ -138,6 +144,26 @@ export default function ClienteDetalle() {
 
   return (
     <div className="cliente-detalle-container">
+      {alerta && (
+        <div className={`alerta alerta-${alerta.tipo}`}>
+          {alerta.mensaje}
+        </div>
+      )}
+
+      {mostrarTarjeta && (
+        <div className="tarjeta-overlay">
+          <div className="tarjeta-modal">
+            <h3>Empleado eliminado correctamente</h3>
+            <button onClick={() => {
+              setMostrarTarjeta(false);
+              navigate("/ClientesAdmin");
+            }}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
       <button
         className="btn-volver-arriba"
         onClick={() => navigate(-1)}
@@ -149,6 +175,7 @@ export default function ClienteDetalle() {
       <h2>Detalle del Cliente</h2>
 
       <div className="cliente-form">
+        {/* Campos */}
         <label>ID Usuario:
           <input type="text" name="IDCUENTA" value={formData.IDCUENTA || ""} disabled />
         </label>
@@ -189,37 +216,31 @@ export default function ClienteDetalle() {
       </div>
 
       <div className="botones">
-  {!modoEdicion ? (
-    <button className="btn btn-editar" onClick={() => setModoEdicion(true)}>
-      <FiEdit /> Editar
-    </button>
-  ) : (
-    <>
-      <div className="grupo-edicion">
-        <button className="btn btn-guardar" onClick={handleGuardar}>
-          <FiSave /> Guardar
-        </button>
-        <button className="btn btn-volver cancelar-derecha" onClick={handleCancelar}>
-          <FiX /> Cancelar
-        </button>
+        {!modoEdicion ? (
+          <button className="btn btn-editar" onClick={() => setModoEdicion(true)}>
+            <FiEdit /> Editar
+          </button>
+        ) : (
+          <div className="grupo-edicion">
+            <button className="btn btn-guardar" onClick={handleGuardar}>
+              <FiSave /> Guardar
+            </button>
+            <button className="btn btn-volver cancelar-derecha" onClick={handleCancelar}>
+              <FiX /> Cancelar
+            </button>
+          </div>
+        )}
+
+        {formData.IDTIPOCUENTA === 6 ? (
+          <button className="btn btn-guardar" onClick={handleRestaurar}>
+            <FiRefreshCcw /> Restaurar cuenta
+          </button>
+        ) : (
+          <button className="btn btn-eliminar" onClick={handleEliminar}>
+            <FiTrash2 /> Eliminar cuenta
+          </button>
+        )}
       </div>
-    </>
-  )}
-
-  {formData.IDTIPOCUENTA === 6 ? (
-    <button className="btn btn-guardar" onClick={handleRestaurar}>
-      <FiRefreshCcw /> Restaurar cuenta
-    </button>
-  ) : (
-    <button className="btn btn-eliminar" onClick={handleEliminar}>
-      <FiTrash2 /> Eliminar cuenta
-    </button>
-  )}
-</div>
-
-
-      {mensaje && <p className="mensaje">{mensaje}</p>}
     </div>
   );
 }
-  

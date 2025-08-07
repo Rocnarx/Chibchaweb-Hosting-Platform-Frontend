@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useUser } from "./Context/UserContext";
+import { useUser } from './Context/UserContext';
 
 // Componentes comunes
 import Footer from "./Components/Footer";
@@ -14,7 +14,6 @@ import FormularioC from "./pages/FormularioRegistroCliente";
 import Cuenta from "./pages/Cuenta";
 import Tarjeta from "./pages/Tarjeta";
 import MetodosPago from "./pages/MetodosPago";
-import PaqueteAdquirido from "./pages/PaqueteAdquirido";
 
 // Componentes compartidos
 import FormularioD from "./pages/FormularioRegistroDistribuidor";
@@ -40,22 +39,28 @@ import EmpleadosAdmin from "./pages/EmpleadosAdmin";
 import EmpleadoDetalle from "./pages/EmpleadoDetalle";
 import CoordinadoresAdmin from "./pages/CoordinadoresAdmin";
 
-// Componentes para coordinadores (nuevos)
+// Componentes para coordinadores
 import NavbarCoordinador from "./Components/NavbarCoordinador";
 import FooterCoordinador from "./Components/FooterCoordinador";
 import TicketsCoordinador from "./pages/TicketsCoordinador";
 import AsignarTickets from "./pages/AsignarTickets";
+
+// Página para POSTULADO
+import CuentaPostulado from "./pages/CuentaPostulado";
 
 import RutaProtegida from "./Components/RutaProtegida";
 import './styles.css';
 
 function App() {
   const { usuario } = useUser();
+
   const esAdmin = usuario?.tipocuenta === "ADMIN";
-const esCoordinador =
-  usuario?.tipocuenta === "COORDINADOR NIVEL 1" ||
-  usuario?.tipocuenta === "COORDINADOR NIVEL 2" ||
-  usuario?.tipocuenta === "COORDINADOR NIVEL 3";
+  const esCoordinador = ["COORDINADOR NIVEL 1", "COORDINADOR NIVEL 2", "COORDINADOR NIVEL 3"].includes(usuario?.tipocuenta);
+
+  // Mostrar pantalla de revisión si es POSTULADO
+  if (usuario?.tipocuenta === "POSTULADO") {
+    return <CuentaPostulado />;
+  }
 
   return (
     <div className={`app-layout ${esAdmin ? 'admin-layout' : ''}`}>
@@ -77,8 +82,7 @@ const esCoordinador =
           <Route path="/verificar" element={<ConfirmarCuenta />} />
           <Route path="/planesHosting" element={<PlanesHosting />} />
           <Route path="/paquetes" element={<PaquetesAdmin />} />
-          <Route path="/panel-soporte" element={<VistaSoporteEmpleado />} />
-          <Route path="/paquete-adquirido" element={<PaqueteAdquirido />} />
+          <Route path=" " element={<VistaSoporteEmpleado />} />
 
           {/* Rutas protegidas comunes */}
           <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
