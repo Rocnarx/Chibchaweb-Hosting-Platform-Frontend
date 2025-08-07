@@ -56,7 +56,7 @@ function Navbar() {
   const irAlCarrito = () => {
     handleMenuClick();
     if (!usuario || !usuario.idcuenta) {
-      alert("Debes iniciar sesión para ver tu carrito.");
+      alert("❌ Debes iniciar sesión para ver tu carrito.");
     } else {
       navigate("/carrito");
     }
