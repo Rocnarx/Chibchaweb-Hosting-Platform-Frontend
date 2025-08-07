@@ -6,8 +6,12 @@ import { useUser } from '../Context/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon } from '@fortawesome/free-solid-svg-icons';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
+import { useAlerta } from "../Context/AlertaContext";
+
 
 function Navbar() {
+  
+  const { mostrarAlerta } = useAlerta();
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const menuRef = useRef();
@@ -52,7 +56,7 @@ function Navbar() {
   const irAlCarrito = () => {
     handleMenuClick();
     if (!usuario || !usuario.idcuenta) {
-      alert("Debes iniciar sesión para ver tu carrito.");
+      mostrarAlerta("Debes iniciar sesión para ver tu carrito.");
     } else {
       navigate("/carrito");
     }

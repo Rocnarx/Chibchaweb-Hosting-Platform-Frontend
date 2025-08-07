@@ -1,7 +1,7 @@
 .alerta-flotante {
   position: fixed;
   bottom: 24px;
-  right: 24px;
+  left: 24px;
   background-color: #dff6dd;
   color: #276738;
   border: 1px solid #a2d5a5;
