@@ -96,3 +96,9 @@ body.dark-mode .numero {
 body.dark-mode .id-usuario {
   color: #bbbbbb;
 }
+
+.logo-tarjeta {
+  height: 30px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}

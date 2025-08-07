@@ -58,82 +58,82 @@ export default function FormularioRegistro() {
     return null;
   };
 
-  const manejarSubmit = async (e) => {
-    e.preventDefault();
-    setMensaje("");
+ const manejarSubmit = async (e) => {
+  e.preventDefault();
+  setMensaje("");
 
-    const error = validar();
-    if (error) {
-      setMensaje(error);
-      return;
-    }
+  const error = validar();
+  if (error) {
+    setMensaje(error);
+    return;
+  }
 
-    setCargando(true);
+  setCargando(true);
 
-    const datos = {
-      identificacion: form.identificacion,
-      nombrecuenta: form.nombreCuenta,
-      correo: form.correo,
-      telefono: form.telefono || "0",
-      direccion: form.direccion,
-      idtipocuenta: "1",
-      idpais: form.idpais,
-      idplan: form.idplan,
-      password: form.contrasenaCuenta,
-    };
+  const datos = {
+    identificacion: form.identificacion,
+    nombrecuenta: form.nombreCuenta,
+    correo: form.correo,
+    telefono: form.telefono || "0",
+    direccion: form.direccion,
+    idtipocuenta: "1",
+    idpais: form.idpais,
+    idplan: form.idplan,
+    password: form.contrasenaCuenta,
+  };
 
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-        body: JSON.stringify(datos),
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+      },
+      body: JSON.stringify(datos),
+    });
+
+    if (res.ok) {
+      const respuesta = await res.json();
+      const idcuenta = respuesta.idcuenta;
+
+      localStorage.setItem("idCuenta", idcuenta);
+      localStorage.setItem(
+        "loginTemp",
+        JSON.stringify({
+          identificacion: datos.identificacion,
+          password: datos.password,
+        })
+      );
+
+      setMensaje("✅ Cuenta registrada y carrito creado. Redirigiendo...");
+
+      setForm({
+        nombreCuenta: "",
+        identificacion: "",
+        direccion: "",
+        correo: "",
+        telefono: "",
+        contrasenaCuenta: "",
+        repetirContrasena: "",
+        idpais: "170",
+        idplan: "1",
       });
 
-      if (res.ok) {
-        const respuesta = await res.json();
-        const idcuenta = respuesta.idcuenta;
-
-        localStorage.setItem("idCuenta", idcuenta);
-        localStorage.setItem(
-          "loginTemp",
-          JSON.stringify({
-            identificacion: datos.identificacion,
-            password: datos.password,
-          })
-        );
-
-        setMensaje("✅ Cuenta registrada y carrito creado. Redirigiendo...");
-
-        // Limpiar campos al terminar
-        setForm({
-          nombreCuenta: "",
-          identificacion: "",
-          direccion: "",
-          correo: "",
-          telefono: "",
-          contrasenaCuenta: "",
-          repetirContrasena: "",
-          idpais: "170",
-          idplan: "1",
-        });
-
-        setTimeout(() => {
-          navigate("/verificar");
-        }, 1500);
-      } else {
-        const texto = await res.text();
-        setMensaje(`Error: ${texto}`);
-      }
-    } catch (err) {
-      console.error("Error de red:", err);
-      setMensaje("❌ Error de red al registrar la cuenta.");
-    } finally {
-      setCargando(false);
+      setTimeout(() => {
+        navigate("/verificar");
+      }, 1500);
+    } else {
+      // 👇 Aquí el cambio importante
+      setMensaje("❌ No se pudo completar el registro. Por favor, intenta más tarde.");
     }
-  };
+  } catch (err) {
+    console.error("Error de red:", err);
+    setMensaje("❌ Error de red al registrar la cuenta.");
+  } finally {
+    setCargando(false);
+  }
+};
+
 
   return (
     <div className="registro-container">

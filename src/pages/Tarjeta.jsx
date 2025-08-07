@@ -18,8 +18,8 @@ export default function Tarjeta() {
 
   const [mensaje, setMensaje] = useState("");
   const [tipoTarjeta, setTipoTarjeta] = useState("");
+  const [cargando, setCargando] = useState(false);
 
-  // Detectar tipo de tarjeta
   const detectarTipoTarjeta = (numero) => {
     if (/^4/.test(numero)) return "Visa";
     if (/^5/.test(numero) || /^2/.test(numero)) return "Mastercard";
@@ -57,6 +57,7 @@ export default function Tarjeta() {
   const manejarSubmit = async (e) => {
     e.preventDefault();
     setMensaje("");
+    setCargando(true);
 
     try {
       const numeroLimpio = form.numero.replace(/\D/g, "");
@@ -122,10 +123,11 @@ export default function Tarjeta() {
     } catch (error) {
       console.error("Error:", error);
       setMensaje(`❌ ${error.message}`);
+    } finally {
+      setCargando(false);
     }
   };
 
-  // Esta función debe ir después de tipoTarjeta para acceder correctamente al estado
   const obtenerLogoTarjeta = () => {
     switch (tipoTarjeta) {
       case "Visa":
@@ -155,7 +157,6 @@ export default function Tarjeta() {
                 <img src="/visa.png" alt="Visa" />
                 <img src="/mastercard.png" alt="MasterCard" />
                 <img src="/diner.png" alt="Diners" />
-
               </>
             )}
           </div>
@@ -215,7 +216,9 @@ export default function Tarjeta() {
           </span>
         </label>
 
-        <button type="submit">Guardar tarjeta</button>
+        <button type="submit" disabled={cargando}>
+          {cargando ? "Guardando..." : "Guardar tarjeta"}
+        </button>
       </form>
 
       {mensaje && <p className="mensaje-estado">{mensaje}</p>}

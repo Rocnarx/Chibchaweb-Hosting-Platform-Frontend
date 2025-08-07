@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './VistaSoporteEmpleado.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { useUser } from '../Context/UserContext';
 
 function VistaSoporteEmpleado() {
   const [tickets, setTickets] = useState([]);
@@ -11,6 +12,22 @@ function VistaSoporteEmpleado() {
   const [respuestaTexto, setRespuestaTexto] = useState('');
   const [enviandoRespuesta, setEnviandoRespuesta] = useState(false);
   const [respuestas, setRespuestas] = useState([]);
+
+  const { usuario } = useUser();
+
+  useEffect(() => {
+    if (!usuario) return;
+
+    const tipo = usuario.tipocuenta?.toUpperCase() || "";
+
+    if (tipo.includes("TECNICO")) {
+      const nivel =
+        tipo.includes("1") ? "1" :
+        tipo.includes("2") ? "2" :
+        tipo.includes("3") ? "3" : "todos";
+      setNivelFiltro(nivel);
+    }
+  }, [usuario]);
 
   useEffect(() => {
     const cargarTicketsDesdeBackend = async () => {
@@ -177,12 +194,14 @@ function VistaSoporteEmpleado() {
         <button className={estadoFiltro === "resuelto" ? "activo" : ""} onClick={() => setEstadoFiltro("resuelto")}>Resueltos</button>
       </div>
 
-      <div className="filtro-niveles">
-        <button className={nivelFiltro === "todos" ? "activo" : ""} onClick={() => setNivelFiltro("todos")}>Cualquier nivel</button>
-        <button className={nivelFiltro === "1" ? "activo" : ""} onClick={() => setNivelFiltro("1")}>Soporte 1</button>
-        <button className={nivelFiltro === "2" ? "activo" : ""} onClick={() => setNivelFiltro("2")}>Soporte 2</button>
-        <button className={nivelFiltro === "3" ? "activo" : ""} onClick={() => setNivelFiltro("3")}>Soporte 3</button>
-      </div>
+      {!usuario?.tipocuenta?.includes("TECNICO") && (
+        <div className="filtro-niveles">
+          <button className={nivelFiltro === "todos" ? "activo" : ""} onClick={() => setNivelFiltro("todos")}>Cualquier nivel</button>
+          <button className={nivelFiltro === "1" ? "activo" : ""} onClick={() => setNivelFiltro("1")}>Soporte 1</button>
+          <button className={nivelFiltro === "2" ? "activo" : ""} onClick={() => setNivelFiltro("2")}>Soporte 2</button>
+          <button className={nivelFiltro === "3" ? "activo" : ""} onClick={() => setNivelFiltro("3")}>Soporte 3</button>
+        </div>
+      )}
 
       <table>
         <thead>
