@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './VistaSoporteEmpleado.css';
+import './VistaSoporteAdmin.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -70,83 +70,7 @@ function VistaSoporteEmpleado() {
 
     cargarTicketsDesdeBackend();
   }, [estadoFiltro, nivelFiltro]);
-
-  const subirNivel = async (id, nivelActual) => {
-    const nuevoNivel = nivelActual + 1;
-    if (nuevoNivel > 3 || !id) return;
-
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/CambiarNivelTicket/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Chibcha-api-key': import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify({ nivel: nuevoNivel })
-      });
-
-      if (!res.ok) throw new Error("No se pudo escalar el ticket");
-
-      setTickets(prev =>
-        prev.map(ticket =>
-          ticket.id === id
-            ? { ...ticket, nivel: `Soporte ${nuevoNivel}` }
-            : ticket
-        )
-      );
-    } catch (err) {
-      console.error("❌ Error al escalar ticket:", err);
-      alert("No se pudo escalar el ticket.");
-    }
-  };
-
-  const enviarRespuestaTicket = async () => {
-    if (!respuestaTexto.trim() || !ticketActivo?.id) return;
-
-    try {
-      setEnviandoRespuesta(true);
-
-      const resRespuesta = await fetch(`${import.meta.env.VITE_API_URL}/ticket/${ticketActivo.id}/respuesta`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Chibcha-api-key': import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify({ mensaje: respuestaTexto.trim() })
-      });
-
-      if (!resRespuesta.ok) throw new Error('Error al enviar respuesta');
-
-      const resEstado = await fetch(`${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketActivo.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Chibcha-api-key': import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify({ estado: 2 })
-      });
-
-      if (!resEstado.ok) throw new Error('Error al cambiar estado');
-
-      setTickets(prev =>
-        prev.map(ticket =>
-          ticket.id === ticketActivo.id
-            ? { ...ticket, estado: 'Resuelto' }
-            : ticket
-        )
-      );
-
-      alert("✅ Respuesta enviada con éxito");
-      setTicketActivo(null);
-      setRespuestaTexto('');
-    } catch (err) {
-      alert("❌ No se pudo enviar la respuesta o actualizar el estado.");
-      console.error("Error:", err);
-    } finally {
-      setEnviandoRespuesta(false);
-    }
-  };
-
+  
   const abrirTicket = async (ticket) => {
     setTicketActivo(ticket);
     setRespuestaTexto('');
@@ -169,7 +93,7 @@ function VistaSoporteEmpleado() {
 
   return (
     <div className="panel-soporte">
-      <h2>📋 Panel de Soporte Técnico</h2>
+      <h2>📋 Soporte técnico</h2>
 
       <div className="filtro-estados">
         <button className={estadoFiltro === "todos" ? "activo" : ""} onClick={() => setEstadoFiltro("todos")}>Todos</button>
@@ -203,22 +127,6 @@ function VistaSoporteEmpleado() {
               <td data-label="Nivel">
                 <span className="nivel-wrapper">
                   {ticket.nivel}
-                  {ticket.estado !== 'Resuelto' && ticket.nivel !== 'Soporte 3' && (
-                    <span
-                      className="icono-escalar"
-                      title="Escalar ticket"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const confirmar = window.confirm('¿Deseas escalar este ticket al siguiente nivel?');
-                        if (confirmar) {
-                          const nivelActual = Number(ticket.nivel?.match(/\d+/)?.[0] || 1);
-                          subirNivel(ticket.id, nivelActual);
-                        }
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faArrowUp} />
-                    </span>
-                  )}
                 </span>
               </td>
               <td data-label="Estado">

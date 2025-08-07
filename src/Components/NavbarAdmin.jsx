@@ -98,7 +98,7 @@ export default function NavbarAdmin() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/panel-soporte" className="nav-link-admin">
+            <NavLink to="/vista-soporte-admin" className="nav-link-admin">
               <FontAwesomeIcon icon={faHeadset} />
               {sidebarAbierta && <span>Soporte</span>}
             </NavLink>
