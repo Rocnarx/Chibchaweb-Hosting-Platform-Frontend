@@ -117,7 +117,6 @@ export default function NavbarAdmin() {
             </li>
           </ul>
 
-          {/* Botón modo oscuro abajo */}
           <div className="dark-mode-toggle-admin">
             <button className="mode-toggle-button-admin" onClick={toggleDarkMode}>
               <FontAwesomeIcon icon={darkMode ? faCircleHalfStroke : faMoon} />
