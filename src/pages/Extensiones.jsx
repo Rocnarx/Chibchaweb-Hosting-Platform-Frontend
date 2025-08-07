@@ -54,7 +54,13 @@ export default function Extensiones() {
                   <input
                     type="number"
                     value={precioTemp}
-                    onChange={(e) => setPrecioTemp(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Permitir solo números, punto decimal y máximo un punto
+                      if (/^\d*\.?\d*$/.test(value)) {
+                        setPrecioTemp(value);
+                      }
+                    }}
                     onClick={(e) => e.stopPropagation()}
                   />
                   <button
