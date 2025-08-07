@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+// src/App.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "./Context/UserContext";
 
 // Componentes comunes
@@ -40,22 +41,30 @@ import EmpleadosAdmin from "./pages/EmpleadosAdmin";
 import EmpleadoDetalle from "./pages/EmpleadoDetalle";
 import CoordinadoresAdmin from "./pages/CoordinadoresAdmin";
 
-// Componentes para coordinadores (nuevos)
+// Componentes para coordinadores
 import NavbarCoordinador from "./Components/NavbarCoordinador";
 import FooterCoordinador from "./Components/FooterCoordinador";
 import TicketsCoordinador from "./pages/TicketsCoordinador";
 import AsignarTickets from "./pages/AsignarTickets";
 
+// Ruta protegida
 import RutaProtegida from "./Components/RutaProtegida";
+
 import './styles.css';
 
 function App() {
-  const { usuario } = useUser();
+  const { usuario, cargandoUsuario } = useUser();
+
   const esAdmin = usuario?.tipocuenta === "ADMIN";
-const esCoordinador =
-  usuario?.tipocuenta === "COORDINADOR NIVEL 1" ||
-  usuario?.tipocuenta === "COORDINADOR NIVEL 2" ||
-  usuario?.tipocuenta === "COORDINADOR NIVEL 3";
+  const esCoordinador =
+    usuario?.tipocuenta === "COORDINADOR NIVEL 1" ||
+    usuario?.tipocuenta === "COORDINADOR NIVEL 2" ||
+    usuario?.tipocuenta === "COORDINADOR NIVEL 3";
+
+  // 🕒 Esperar a que el usuario se cargue antes de renderizar rutas
+  if (cargandoUsuario) {
+    return <div className="pantalla-cargando">Cargando...</div>;
+  }
 
   return (
     <div className={`app-layout ${esAdmin ? 'admin-layout' : ''}`}>
@@ -82,11 +91,7 @@ const esCoordinador =
 
           {/* Rutas protegidas comunes */}
           <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
-          <Route path="/carrito" element={
-            <RutaProtegida requiereVerificacion={true}>
-              <Carrito />
-            </RutaProtegida>
-          } />
+          <Route path="/carrito" element={<RutaProtegida requiereVerificacion={true}><Carrito /></RutaProtegida>} />
           <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
           <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
           <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />
