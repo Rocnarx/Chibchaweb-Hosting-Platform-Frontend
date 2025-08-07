@@ -220,35 +220,18 @@ body.dark-mode .nav-link-admin.active {
   }
 }
 
-.main-content {
-  margin-left: 250px; /* espacio para el sidebar fijo */
+.admin-layout .main-content {
+  margin-left: 250px;
   padding: 20px;
-  transition: margin-left 0.3s ease;
 }
 
-.sidebar-admin.collapsed ~ .main-content {
-  margin-left: 70px; /* cuando está colapsado */
+.admin-layout .sidebar-admin.collapsed ~ .main-content {
+  margin-left: 70px;
 }
 
 @media (max-width: 768px) {
-  .main-content {
+  .admin-layout .main-content {
     margin-left: 0;
-    margin-top: 70px; 
-  }
-}
-.main-content {
-  margin-left: 250px; /* espacio para el sidebar fijo */
-  padding: 20px;
-  transition: margin-left 0.3s ease;
-}
-
-.sidebar-admin.collapsed ~ .main-content {
-  margin-left: 70px; /* cuando está colapsado */
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    margin-left: 0;
-    margin-top: 70px; /* ajusta esto según la altura del navbar en móvil */
+    margin-top: 70px; /* Altura del navbar móvil */
   }
 }
