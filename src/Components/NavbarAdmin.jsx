@@ -100,7 +100,7 @@ export default function NavbarAdmin() {
             <li>
               <NavLink to="/DistribuidoresAdmin" className="nav-link-admin">
                 <FontAwesomeIcon icon={faGlobe} />
-                {sidebarAbierta && <span>Distribuidores</span>}
+                {sidebarAbierta && <span>Distribuidoressss</span>}
               </NavLink>
             </li>
             <li>
