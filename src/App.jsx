@@ -48,16 +48,22 @@ import AsignarTickets from "./pages/AsignarTickets";
 // Página para POSTULADO
 import CuentaPostulado from "./pages/CuentaPostulado";
 
+// Ruta protegida
 import RutaProtegida from "./Components/RutaProtegida";
+
 import './styles.css';
 
 function App() {
-  const { usuario } = useUser();
+  const { usuario, cargandoUsuario } = useUser();
 
   const esAdmin = usuario?.tipocuenta === "ADMIN";
-  const esCoordinador = ["COORDINADOR NIVEL 1", "COORDINADOR NIVEL 2", "COORDINADOR NIVEL 3"].includes(usuario?.tipocuenta);
+  const esCoordinador =
+    ["COORDINADOR NIVEL 1", "COORDINADOR NIVEL 2", "COORDINADOR NIVEL 3"].includes(usuario?.tipocuenta);
 
-  // Mostrar pantalla de revisión si es POSTULADO
+  if (cargandoUsuario) {
+    return <div className="pantalla-cargando">Cargando...</div>;
+  }
+
   if (usuario?.tipocuenta === "POSTULADO") {
     return <CuentaPostulado />;
   }
@@ -82,15 +88,11 @@ function App() {
           <Route path="/verificar" element={<ConfirmarCuenta />} />
           <Route path="/planesHosting" element={<PlanesHosting />} />
           <Route path="/paquetes" element={<PaquetesAdmin />} />
-          <Route path=" " element={<VistaSoporteEmpleado />} />
+          <Route path="/vista-soporte-empleado" element={<VistaSoporteEmpleado />} />
 
           {/* Rutas protegidas comunes */}
           <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
-          <Route path="/carrito" element={
-            <RutaProtegida requiereVerificacion={true}>
-              <Carrito />
-            </RutaProtegida>
-          } />
+          <Route path="/carrito" element={<RutaProtegida requiereVerificacion={true}><Carrito /></RutaProtegida>} />
           <Route path="/tarjeta" element={<RutaProtegida><Tarjeta /></RutaProtegida>} />
           <Route path="/metodos" element={<RutaProtegida><MetodosPago /></RutaProtegida>} />
           <Route path="/DominiosAdquiridos" element={<RutaProtegida><DominiosAdquiridos /></RutaProtegida>} />

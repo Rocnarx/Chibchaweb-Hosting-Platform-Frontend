@@ -1,16 +1,18 @@
+// src/Context/UserContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
+  const [cargandoUsuario, setCargandoUsuario] = useState(true); // 🆕 estado de carga
 
   // ✅ Función para actualizar parcialmente el usuario
   const actualizarUsuario = (nuevosDatos) => {
     setUsuario((prev) => ({ ...prev, ...nuevosDatos }));
   };
 
-  // ✅ Función para cerrar sesión (se usará en cualquier parte de la app)
+  // ✅ Función para cerrar sesión
   const cerrarSesion = () => {
     setUsuario(null);
     localStorage.removeItem("usuario");
@@ -22,6 +24,7 @@ export function UserProvider({ children }) {
     if (datosGuardados) {
       setUsuario(JSON.parse(datosGuardados));
     }
+    setCargandoUsuario(false); // ✅ Indica que ya terminó de cargar
   }, []);
 
   // Guardar usuario actualizado en localStorage
@@ -35,7 +38,13 @@ export function UserProvider({ children }) {
 
   return (
     <UserContext.Provider
-      value={{ usuario, setUsuario, actualizarUsuario, cerrarSesion }}
+      value={{
+        usuario,
+        setUsuario,
+        actualizarUsuario,
+        cerrarSesion,
+        cargandoUsuario, // 🆕 exportamos cargandoUsuario
+      }}
     >
       {children}
     </UserContext.Provider>
