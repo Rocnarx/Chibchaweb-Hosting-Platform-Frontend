@@ -14,7 +14,8 @@ import {
   faGlobe,
   faServer,
   faUser,
-  faUserGroup
+  faUserGroup,
+  faHeadset  // 👈 Nuevo ícono para soporte
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function NavbarAdmin() {
@@ -94,6 +95,12 @@ export default function NavbarAdmin() {
             <NavLink to="/perfil" className="nav-link-admin">
               <FontAwesomeIcon icon={faUser} />
               {sidebarAbierta && <span>Perfil</span>}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/panel-soporte" className="nav-link-admin">
+              <FontAwesomeIcon icon={faHeadset} />
+              {sidebarAbierta && <span>Soporte</span>}
             </NavLink>
           </li>
         </ul>

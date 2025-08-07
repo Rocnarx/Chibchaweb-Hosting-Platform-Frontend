@@ -179,3 +179,43 @@ body.dark-mode .nav-link-admin.active {
   background-color: #333 !important;
   color: #ffffff !important;
 }
+
+@media (max-width: 768px) {
+  .toggle-container {
+    display: block;
+  }
+
+  .sidebar-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .logo-container {
+    flex: 1;
+  }
+
+  .sidebar-menu-admin {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  .nav-link-admin {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .sidebar-admin.collapsed .nav-link-admin span {
+    display: none;
+  }
+
+  .sidebar-admin:not(.collapsed) .nav-link-admin span {
+    display: inline;
+  }
+
+  .overlay {
+    display: none; /* En móvil no es necesario superponer fondo */
+  }
+}
