@@ -75,17 +75,16 @@ function Navbar() {
       </div>
 
       <div className={`navbar-right ${menuOpen ? 'open' : ''}`} ref={menuRef}>
-       <ul className="navbar-menu">
-  <li><NavLink to="/" className="nav-link" onClick={handleMenuClick}>Inicio</NavLink></li>
-  <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
+        <ul className="navbar-menu">
+          <li><NavLink to="/" className="nav-link" onClick={handleMenuClick}>Inicio</NavLink></li>
+           {usuario?.tipocuenta !== "DISTRIBUIDOR" && (
+                  <li><NavLink to="/planesHosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
+          )}
 
-  {usuario?.tipocuenta !== "DISTRIBUIDOR" && (
-    <li><NavLink to="/DominiosAdquiridos" className="nav-link" onClick={handleMenuClick}>Mis dominios</NavLink></li>
-  )}
-
-  <li><NavLink to="/soporte" className="nav-link" onClick={handleMenuClick}>Soporte</NavLink></li>
-</ul>
-
+          <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
+          <li><NavLink to="/DominiosAdquiridos" className="nav-link" onClick={handleMenuClick}>Mis dominios</NavLink></li>
+          <li><NavLink to="/soporte" className="nav-link" onClick={handleMenuClick}>Soporte</NavLink></li>
+        </ul>
 
         <button className="cart-button" onClick={irAlCarrito}>
           Carrito
