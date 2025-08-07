@@ -87,27 +87,7 @@ export default function FormularioRegistro() {
           })
         );
 
-        // Crear carrito
-        const nuevoCarrito = {
-          idestadocarrito: "1",
-          idcuenta: idcuenta,
-          idmetodopagocuenta: "1",
-        };
-
-        const resCarrito = await fetch(`${import.meta.env.VITE_API_URL}/agregarCarrito`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-          },
-          body: JSON.stringify(nuevoCarrito),
-        });
-
-        if (resCarrito.ok) {
           setMensaje("✅ Cuenta registrada y carrito creado. Redirigiendo...");
-        } else {
-          setMensaje("Cuenta registrada, pero no se pudo crear el carrito.");
-        }
 
         setForm({
           nombreCuenta: "",
