@@ -5,7 +5,7 @@
   transform: translateX(-50%);
   background-color: var(--cafe);
   color: var(--texto-boton);
-  border: 1px solid #e5b88f;
+  border: 1px solid #b26d33;
   padding: 14px 20px;
   border-radius: 10px;
   font-weight: bold;
@@ -14,14 +14,22 @@
   z-index: 9999;
   max-width: 90%;
   text-align: center;
-  animation: aparecer 0.4s ease forwards;
-  opacity: 0; /* Inicialmente oculto, será animado */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Cuando la alerta está visible */
+.alerta-flotante.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
 }
 
 @keyframes aparecer {
   from {
     opacity: 0;
-    transform: translate(-50%, 12px); /* Centrado desde el inicio */
+    transform: translate(-50%, 12px);
   }
   to {
     opacity: 1;
@@ -31,7 +39,7 @@
 
 /* 🌙 Modo oscuro */
 body.dark-mode .alerta-flotante {
-  background-color: var(--cafe);       /* Se adapta con tus variables */
+  background-color: var(--cafe);
   color: var(--texto-boton);
   border-color: #ffa94d88;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
