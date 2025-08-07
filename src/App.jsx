@@ -14,6 +14,8 @@ import FormularioC from "./pages/FormularioRegistroCliente";
 import Cuenta from "./pages/Cuenta";
 import Tarjeta from "./pages/Tarjeta";
 import MetodosPago from "./pages/MetodosPago";
+import PaqueteAdquirido from "./pages/PaqueteAdquirido";
+
 
 // Componentes compartidos
 import FormularioD from "./pages/FormularioRegistroDistribuidor";
@@ -118,6 +120,8 @@ function App() {
 
           {/* Rutas exclusivas para clientes */}
           {!esAdmin && !esCoordinador && <Route path="/dominios" element={<Dominios />} />}
+          {!esAdmin && !esCoordinador && <Route path="/paquete-adquirido" element={<PaqueteAdquirido />} />}
+
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />
