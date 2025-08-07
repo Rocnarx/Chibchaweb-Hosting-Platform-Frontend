@@ -130,3 +130,53 @@ body.dark-mode button[type="submit"] {
 body.dark-mode button[type="submit"]:hover {
   background-color: #e38b31;
 }
+/* Selector de fecha */
+.date-picker {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 5px;
+  font-size: 14px;
+  width: 100%;
+}
+
+body.dark-mode .date-picker {
+  background-color: #1e1e1e;
+  color: white;
+  border: 1px solid #777;
+}
+.iconos-marcas {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconos-marcas img {
+  width: 50px;
+  height: auto;
+  object-fit: contain;
+}
+
+.date-picker {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+.date-picker:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+.date-picker {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}

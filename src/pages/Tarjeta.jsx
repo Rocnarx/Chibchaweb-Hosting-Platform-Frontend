@@ -1,22 +1,57 @@
 import React, { useState } from "react";
 import "./Tarjeta.css";
 import { useUser } from "../Context/UserContext";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import es from "date-fns/locale/es";
+registerLocale("es", es);
 
 export default function Tarjeta() {
   const { usuario } = useUser();
 
   const [form, setForm] = useState({
     numero: "",
-    vencimiento: "",
+    vencimiento: null,
     cvc: "",
     guardar: false,
   });
 
   const [mensaje, setMensaje] = useState("");
+  const [tipoTarjeta, setTipoTarjeta] = useState("");
+
+  // Detectar tipo de tarjeta
+  const detectarTipoTarjeta = (numero) => {
+    if (/^4/.test(numero)) return "Visa";
+    if (/^5/.test(numero) || /^2/.test(numero)) return "Mastercard";
+    if (/^34/.test(numero) || /^37/.test(numero)) return "American Express";
+    if (/^6/.test(numero)) return "Discover";
+    return "";
+  };
+
+  const obtenerMaxDigitos = () => {
+    switch (tipoTarjeta) {
+      case "Visa":
+      case "Mastercard":
+      case "Discover":
+        return 16;
+      case "American Express":
+        return 15;
+      default:
+        return 16;
+    }
+  };
 
   const manejarCambio = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+
+    if (name === "numero") {
+      const limpio = value.replace(/\D/g, "");
+      const tipo = detectarTipoTarjeta(limpio);
+      setTipoTarjeta(tipo);
+      setForm({ ...form, numero: limpio.slice(0, obtenerMaxDigitos()) });
+    } else {
+      setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    }
   };
 
   const manejarSubmit = async (e) => {
@@ -24,23 +59,26 @@ export default function Tarjeta() {
     setMensaje("");
 
     try {
-      
-      const numeroLimpio = form.numero.replace(/\D/g, ""); 
-      if (numeroLimpio.length !== 10 || isNaN(numeroLimpio)) {
-        throw new Error("Número de tarjeta inválido. Debe tener 10 dígitos numéricos.");
+      const numeroLimpio = form.numero.replace(/\D/g, "");
+      if (
+        isNaN(numeroLimpio) ||
+        numeroLimpio.length !== obtenerMaxDigitos()
+      ) {
+        throw new Error(`Número inválido para una tarjeta ${tipoTarjeta}`);
       }
 
-      // Validar fecha vencimiento
-      const [mes, anio] = form.vencimiento.split("/");
-      if (!mes || !anio || mes.length !== 2 || anio.length !== 2) {
-        throw new Error("Fecha de vencimiento inválida (usa el formato MM/AA)");
+      if (!form.vencimiento) {
+        throw new Error("Selecciona una fecha de vencimiento válida.");
       }
+
+      const mes = String(form.vencimiento.getMonth() + 1).padStart(2, "0");
+      const anio = form.vencimiento.getFullYear();
 
       const tarjetaPayload = {
-        idtipotarjeta: 1, 
+        idtipotarjeta: 1,
         numerotarjeta: parseInt(numeroLimpio),
         ccv: parseInt(form.cvc),
-        fechavto: `20${anio}-${mes}-01`,
+        fechavto: `${anio}-${mes}-01`,
       };
 
       const resTarjeta = await fetch(`${import.meta.env.VITE_API_URL}/tarjeta`, {
@@ -59,15 +97,8 @@ export default function Tarjeta() {
 
       const tarjetaData = await resTarjeta.json();
 
-if (!tarjetaData.idtarjeta) {
-  throw new Error("No se recibió el ID de la tarjeta registrada");
-}
-
-const idtarjeta = String(tarjetaData.idtarjeta);  // Usa el ID correcto
- 
-
       const metodoPagoPayload = {
-        idtarjeta: idtarjeta,
+        idtarjeta: String(tarjetaData.idtarjeta),
         idcuenta: String(usuario.idcuenta),
         idtipometodopago: 1,
         activometodopagocuenta: form.guardar,
@@ -87,10 +118,26 @@ const idtarjeta = String(tarjetaData.idtarjeta);  // Usa el ID correcto
         throw new Error(errorMetodo.detail || "Error al asociar el método de pago");
       }
 
-      setMensaje(" Tarjeta y método de pago guardados correctamente.");
+      setMensaje("✅ Tarjeta y método de pago guardados correctamente.");
     } catch (error) {
-      console.error(" Error al guardar tarjeta:", error);
-      setMensaje(` ${error.message}`);
+      console.error("Error:", error);
+      setMensaje(`❌ ${error.message}`);
+    }
+  };
+
+  // Esta función debe ir después de tipoTarjeta para acceder correctamente al estado
+  const obtenerLogoTarjeta = () => {
+    switch (tipoTarjeta) {
+      case "Visa":
+        return "/visa.png";
+      case "Mastercard":
+        return "/mastercard.png";
+      case "American Express":
+        return "/amex.png";
+      case "Discover":
+        return "/discover.png";
+      default:
+        return null;
     }
   };
 
@@ -99,10 +146,16 @@ const idtarjeta = String(tarjetaData.idtarjeta);  // Usa el ID correcto
       <h2>Método de Pago</h2>
       <form onSubmit={manejarSubmit} className="tarjeta-formulario">
         <div className="tarjeta-titulo">
-          <span className="icono-tarjeta">💳</span> Tarjeta
+          <span className="icono-tarjeta">💳</span> Tarjeta ({tipoTarjeta || "Desconocida"})
           <div className="iconos-marcas">
-            <img src="/visa.png" alt="Visa" />
-            <img src="/Mastercard.png" alt="MasterCard" />
+            {obtenerLogoTarjeta() ? (
+              <img src={obtenerLogoTarjeta()} alt={tipoTarjeta} />
+            ) : (
+              <>
+                <img src="/visa.png" alt="Visa" />
+                <img src="/mastercard.png" alt="MasterCard" />
+              </>
+            )}
           </div>
         </div>
 
@@ -110,8 +163,7 @@ const idtarjeta = String(tarjetaData.idtarjeta);  // Usa el ID correcto
         <input
           type="text"
           name="numero"
-          maxLength={10}
-          placeholder="1234567890"
+          placeholder="123456..."
           value={form.numero}
           onChange={manejarCambio}
           required
@@ -120,12 +172,16 @@ const idtarjeta = String(tarjetaData.idtarjeta);  // Usa el ID correcto
         <div className="tarjeta-flex">
           <div>
             <label>Fecha de vencimiento</label>
-            <input
-              type="text"
-              name="vencimiento"
-              placeholder="MM/AA"
-              value={form.vencimiento}
-              onChange={manejarCambio}
+            <DatePicker
+              selected={form.vencimiento}
+              onChange={(date) => setForm({ ...form, vencimiento: date })}
+              dateFormat="MM/yyyy"
+              showMonthYearPicker
+              showFullMonthYearPicker
+              locale="es"
+              placeholderText="MM/AAAA"
+              className="date-picker"
+              minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
               required
             />
           </div>
@@ -134,6 +190,7 @@ const idtarjeta = String(tarjetaData.idtarjeta);  // Usa el ID correcto
             <input
               type="text"
               name="cvc"
+              maxLength={4}
               placeholder="123"
               value={form.cvc}
               onChange={manejarCambio}

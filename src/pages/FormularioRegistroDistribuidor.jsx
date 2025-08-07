@@ -54,16 +54,17 @@ export default function FormularioRegistroDistribuidor() {
     setCargando(true);
 
     const datos = {
-      razonsocial: form.razonSocial,
-      nit: form.nit,
-      correo: form.correo,
-      telefono: form.telefono || "0",
-      direccion: form.direccion || "N/A",
-      password: form.contrasenaCuenta,
-      idtipocuenta: "2",
-      idpais: form.idpais,
-      idplan: "0",
-    };
+  nombrecuenta: form.razonSocial, // ← reemplaza razonsocial
+  identificacion: form.nit,       // ← reemplaza nit
+  correo: form.correo,
+  telefono: form.telefono || "0",
+  direccion: form.direccion || "N/A",
+  password: form.contrasenaCuenta,
+  idtipocuenta: "2",
+  idpais: form.idpais,
+  idplan: "0",
+};
+
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
