@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./FormularioRegistroCliente.css";
 import logo from "../Components/resources/logo.png";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +10,8 @@ export default function FormularioRegistro() {
     direccion: "",
     correo: "",
     telefono: "",
-    idCredencialCuenta: "",
     contrasenaCuenta: "",
+    repetirContrasena: "",
     idpais: "170",
     idplan: "1",
   });
@@ -20,10 +20,24 @@ export default function FormularioRegistro() {
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
 
+  // Vaciar campos al montar el componente
+  useEffect(() => {
+    setForm({
+      nombreCuenta: "",
+      identificacion: "",
+      direccion: "",
+      correo: "",
+      telefono: "",
+      contrasenaCuenta: "",
+      repetirContrasena: "",
+      idpais: "170",
+      idplan: "1",
+    });
+  }, []);
+
   const manejarCambio = (e) => {
     const { name, value } = e.target;
 
-    // Solo permitir números en identificación y teléfono
     if ((name === "identificacion" || name === "telefono") && /[^\d]/.test(value)) {
       return;
     }
@@ -36,6 +50,11 @@ export default function FormularioRegistro() {
     if (!paisesValidos.includes(form.idpais)) {
       return "País no soportado";
     }
+
+    if (form.contrasenaCuenta !== form.repetirContrasena) {
+      return "Las contraseñas no coinciden.";
+    }
+
     return null;
   };
 
@@ -77,7 +96,6 @@ export default function FormularioRegistro() {
         const respuesta = await res.json();
         const idcuenta = respuesta.idcuenta;
 
-        // Guardar ID y login temporal
         localStorage.setItem("idCuenta", idcuenta);
         localStorage.setItem(
           "loginTemp",
@@ -87,16 +105,17 @@ export default function FormularioRegistro() {
           })
         );
 
-          setMensaje("✅ Cuenta registrada y carrito creado. Redirigiendo...");
+        setMensaje("✅ Cuenta registrada y carrito creado. Redirigiendo...");
 
+        // Limpiar campos al terminar
         setForm({
           nombreCuenta: "",
           identificacion: "",
           direccion: "",
           correo: "",
           telefono: "",
-          idCredencialCuenta: "",
           contrasenaCuenta: "",
+          repetirContrasena: "",
           idpais: "170",
           idplan: "1",
         });
@@ -125,41 +144,39 @@ export default function FormularioRegistro() {
           <h3 className="subtitulo">Accede a nuestros planes de hosting</h3>
           <h1 className="titulo">Crea tu cuenta y empieza a construir tu presencia en la web</h1>
 
-          <div className="form-wrapper">
-            <form onSubmit={manejarSubmit} className="form-dos-columnas">
-              {/* Columna izquierda */}
-              <div className="columna-formulario">
-                <div className="separador-formulario">Datos personales</div>
-                <input type="text" placeholder="Nombre completo" name="nombreCuenta" required value={form.nombreCuenta} onChange={manejarCambio} />
-                <input type="text" placeholder="Identificación" name="identificacion" required value={form.identificacion} onChange={manejarCambio} maxLength={10} />
-                <input type="text" placeholder="Dirección (opcional)" name="direccion" value={form.direccion} onChange={manejarCambio} />
+          <form onSubmit={manejarSubmit} className="form-dos-columnas">
+            {/* Columna izquierda */}
+            <div className="columna-formulario">
+              <div className="separador-formulario">Datos personales</div>
+              <input type="text" placeholder="Nombre completo" name="nombreCuenta" required value={form.nombreCuenta} onChange={manejarCambio} />
+              <input type="text" placeholder="Identificación" name="identificacion" required value={form.identificacion} onChange={manejarCambio} maxLength={10} />
+              <input type="text" placeholder="Dirección (opcional)" name="direccion" value={form.direccion} onChange={manejarCambio} />
 
-                <div className="separador-formulario">Datos de contacto</div>
-                <input type="email" placeholder="Correo electrónico" name="correo" required value={form.correo} onChange={manejarCambio} />
-                <input type="tel" placeholder="Teléfono (opcional)" name="telefono" value={form.telefono} onChange={manejarCambio} maxLength={10} />
-              </div>
+              <div className="separador-formulario">Datos de contacto</div>
+              <input type="email" placeholder="Correo electrónico" name="correo" required value={form.correo} onChange={manejarCambio} />
+              <input type="tel" placeholder="Teléfono (opcional)" name="telefono" value={form.telefono} onChange={manejarCambio} maxLength={10} />
+            </div>
 
-              {/* Columna derecha */}
-              <div className="columna-formulario">
-                <div className="separador-formulario">Credenciales</div>
-                <input type="text" placeholder="Nombre de usuario" name="idCredencialCuenta" value={form.idCredencialCuenta} onChange={manejarCambio} />
-                <input type="password" placeholder="Contraseña" name="contrasenaCuenta" required value={form.contrasenaCuenta} onChange={manejarCambio} />
+            {/* Columna derecha */}
+            <div className="columna-formulario">
+              <div className="separador-formulario">Credenciales</div>
+              <input type="password" placeholder="Contraseña" name="contrasenaCuenta" required value={form.contrasenaCuenta} onChange={manejarCambio} />
+              <input type="password" placeholder="Repetir contraseña" name="repetirContrasena" required value={form.repetirContrasena} onChange={manejarCambio} />
 
-                <div className="separador-formulario">País</div>
-                <select name="idpais" value={form.idpais} onChange={manejarCambio}>
-                  <option value="76">Brasil</option>
-                  <option value="170">Colombia</option>
-                  <option value="218">Ecuador</option>
-                  <option value="604">Perú</option>
-                  <option value="862">Venezuela</option>
-                </select>
+              <div className="separador-formulario">País</div>
+              <select name="idpais" value={form.idpais} onChange={manejarCambio}>
+                <option value="76">Brasil</option>
+                <option value="170">Colombia</option>
+                <option value="218">Ecuador</option>
+                <option value="604">Perú</option>
+                <option value="862">Venezuela</option>
+              </select>
 
-                <button type="submit" disabled={cargando}>
-                  {cargando ? "Registrando..." : "Registrarse"}
-                </button>
-              </div>
-            </form>
-          </div>
+              <button type="submit" disabled={cargando}>
+                {cargando ? "Registrando..." : "Registrarse"}
+              </button>
+            </div>
+          </form>
 
           {mensaje && <p className="mensaje-estado">{mensaje}</p>}
 

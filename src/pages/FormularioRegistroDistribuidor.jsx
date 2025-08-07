@@ -10,7 +10,6 @@ export default function FormularioRegistroDistribuidor() {
     correo: "",
     telefono: "",
     direccion: "",
-    idCredencialCuenta: "",
     contrasenaCuenta: "",
     contrasenaRepetida: "",
     idpais: "170",
@@ -22,15 +21,21 @@ export default function FormularioRegistroDistribuidor() {
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
-    if (name === "telefono" && /[^\d]/.test(value)) return;
 
-    if (name === "nit" && /[^0-9-]/.test(value)) return;
+    if (name === "telefono" && /[^\d]/.test(value)) return;
+    if (name === "nit" && /[^0-9]/.test(value)) return;
+
     setForm({ ...form, [name]: value });
   };
 
   const validar = () => {
     if (form.contrasenaCuenta !== form.contrasenaRepetida) {
       return "Las contraseñas no coinciden.";
+    }
+
+    // Validar longitud del NIT
+    if (!/^\d{9,10}$/.test(form.nit)) {
+      return "El NIT debe tener entre 9 y 10 dígitos numéricos.";
     }
 
     const paisesValidos = ["76", "170", "218", "604", "862"];
@@ -54,17 +59,16 @@ export default function FormularioRegistroDistribuidor() {
     setCargando(true);
 
     const datos = {
-  nombrecuenta: form.razonSocial, // ← reemplaza razonsocial
-  identificacion: form.nit,       // ← reemplaza nit
-  correo: form.correo,
-  telefono: form.telefono || "0",
-  direccion: form.direccion || "N/A",
-  password: form.contrasenaCuenta,
-  idtipocuenta: "2",
-  idpais: form.idpais,
-  idplan: "0",
-};
-
+      nombrecuenta: form.razonSocial,
+      identificacion: form.nit,
+      correo: form.correo,
+      telefono: form.telefono || "0",
+      direccion: form.direccion || "N/A",
+      password: form.contrasenaCuenta,
+      idtipocuenta: "2",
+      idpais: form.idpais,
+      idplan: "0",
+    };
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
@@ -85,12 +89,14 @@ export default function FormularioRegistroDistribuidor() {
       const respuesta = await res.json();
       const idcuenta = respuesta.idcuenta;
 
-      // Guardar en localStorage para ConfirmarCuenta.jsx
       localStorage.setItem("idCuenta", idcuenta);
-      localStorage.setItem("loginTemp", JSON.stringify({
-        identificacion: form.nit,
-        password: form.contrasenaCuenta,
-      }));
+      localStorage.setItem(
+        "loginTemp",
+        JSON.stringify({
+          identificacion: form.nit,
+          password: form.contrasenaCuenta,
+        })
+      );
 
       setMensaje("✅ Distribuidor registrado. Redirigiendo a verificación...");
 
@@ -100,7 +106,6 @@ export default function FormularioRegistroDistribuidor() {
         correo: "",
         telefono: "",
         direccion: "",
-        idCredencialCuenta: "",
         contrasenaCuenta: "",
         contrasenaRepetida: "",
         idpais: "170",
@@ -121,8 +126,12 @@ export default function FormularioRegistroDistribuidor() {
       <div className="form-wrapper">
         <div className="registro-form">
           <img src={logo} alt="ChibchaWeb logo" className="registro-logo" />
-          <h3 className="subtitulo">Accede a nuestros planes de distribución y beneficios exclusivos</h3>
-          <h1 className="titulo">Regístrate como distribuidor y comienza a generar ingresos hoy mismo</h1>
+          <h3 className="subtitulo">
+            Accede a nuestros planes de distribución y beneficios exclusivos
+          </h3>
+          <h1 className="titulo">
+            Regístrate como distribuidor y comienza a generar ingresos hoy mismo
+          </h1>
 
           <form onSubmit={manejarSubmit} className="form-dos-columnas">
             {/* Columna izquierda */}
@@ -143,6 +152,7 @@ export default function FormularioRegistroDistribuidor() {
                 required
                 value={form.nit}
                 onChange={manejarCambio}
+                maxLength={10}
               />
 
               <div className="separador-formulario">Datos de contacto</div>
@@ -173,13 +183,6 @@ export default function FormularioRegistroDistribuidor() {
             {/* Columna derecha */}
             <div className="columna-formulario">
               <div className="separador-formulario">Credenciales</div>
-              <input
-                type="text"
-                placeholder="Nombre de usuario"
-                name="idCredencialCuenta"
-                value={form.idCredencialCuenta}
-                onChange={manejarCambio}
-              />
               <input
                 type="password"
                 placeholder="Contraseña"
