@@ -22,7 +22,9 @@ export default function FormularioRegistroDistribuidor() {
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
-    if ((name === "telefono" || name === "nit") && /[^\d]/.test(value)) return;
+    if (name === "telefono" && /[^\d]/.test(value)) return;
+
+    if (name === "nit" && /[^0-9-]/.test(value)) return;
     setForm({ ...form, [name]: value });
   };
 
@@ -57,7 +59,6 @@ export default function FormularioRegistroDistribuidor() {
       correo: form.correo,
       telefono: form.telefono || "0",
       direccion: form.direccion || "N/A",
-      idcredencialcuenta: form.idCredencialCuenta,
       password: form.contrasenaCuenta,
       idtipocuenta: "2",
       idpais: form.idpais,
@@ -65,7 +66,7 @@ export default function FormularioRegistroDistribuidor() {
     };
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrarDistribuidor`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/registrar2`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
