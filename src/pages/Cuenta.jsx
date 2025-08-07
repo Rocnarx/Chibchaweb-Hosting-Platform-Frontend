@@ -74,8 +74,6 @@ export default function Cuenta() {
     }
 
     setGuardando(true);
-    console.log("📤 Enviando al backend:", JSON.stringify(formData, null, 2));
-
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${formData.IDCUENTA}`, {
         method: "PUT",
@@ -85,8 +83,6 @@ export default function Cuenta() {
         },
         body: JSON.stringify(formData),
       });
-
-      console.log("📥 Código de respuesta:", res.status);
 
       if (!res.ok) throw new Error("No se pudo guardar.");
 
@@ -112,6 +108,19 @@ export default function Cuenta() {
       setGuardando(false);
     }
   };
+
+  // ⚠️ Tipos de usuario que NO pueden ver métodos de pago
+  const tiposRestringidos = [
+    "COORDINADOR NIVEL 1",
+    "COORDINADOR NIVEL 2",
+    "COORDINADOR NIVEL 3",
+    "TECNICO NIVEL 1",
+    "TECNICO NIVEL 2",
+    "TECNICO NIVEL 3",
+    "ADMIN",
+  ];
+
+  const puedeVerMetodosPago = !tiposRestringidos.includes(usuario.tipocuenta?.toUpperCase?.());
 
   return (
     <div className="cuenta-container">
@@ -172,8 +181,14 @@ export default function Cuenta() {
         ) : (
           <>
             <button className="btn-metodo-pago" onClick={() => setModoEdicion(true)}>Editar perfil</button>
-            <button className="btn-metodo-pago" onClick={() => navigate("/Tarjeta")}>Agregar método de pago</button>
-            <button className="btn-metodo-pago" onClick={() => navigate("/metodos")}>Mis métodos</button>
+
+            {puedeVerMetodosPago && (
+              <>
+                <button className="btn-metodo-pago" onClick={() => navigate("/Tarjeta")}>Agregar método de pago</button>
+                <button className="btn-metodo-pago" onClick={() => navigate("/metodos")}>Mis métodos</button>
+              </>
+            )}
+
             <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
               <FiLogOut style={{ marginRight: "8px" }} />
               Cerrar sesión

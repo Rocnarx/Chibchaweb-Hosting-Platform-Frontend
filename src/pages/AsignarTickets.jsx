@@ -112,57 +112,60 @@ export default function AsignarTickets() {
     }
   };
 
-  const asignarTicket = async () => {
-    if (!ticketSeleccionado?.id_ticket || !empleadoIDCuenta) {
-      alert("Faltan datos para asignar el ticket.");
-      return;
+const asignarTicket = async () => {
+  if (!ticketSeleccionado?.id_ticket || !empleadoIDCuenta) {
+    alert("Faltan datos para asignar el ticket.");
+    return;
+  }
+
+  setAsignando(true);
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/asignarTicket/${ticketSeleccionado.id_ticket}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({ IDEMPLEADO: empleadoIDCuenta }),
+      }
+    );
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData?.detail || "Error al asignar el ticket.");
     }
 
-    setAsignando(true);
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/asignarTicket/${ticketSeleccionado.id_ticket}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-          },
-          body: JSON.stringify({ IDEMPLEADO: empleadoIDCuenta }),
-        }
-      );
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData?.detail || "Error al asignar el ticket.");
+    const cambioEstado = await fetch(
+      `${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketSeleccionado.id_ticket}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({ estado: 1 }),
       }
+    );
 
-      const cambioEstado = await fetch(
-        `${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketSeleccionado.id_ticket}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-          },
-          body: JSON.stringify({ estado: 1 }),
-        }
-      );
-
-      if (!cambioEstado.ok) {
-        const errorData = await cambioEstado.json();
-        throw new Error(errorData?.detail || "Error al cambiar el estado del ticket.");
-      }
-
-      setTickets(tickets.filter(t => t.id_ticket !== ticketSeleccionado.id_ticket));
-      cerrarModal();
-    } catch (err) {
-      console.error("Error:", err);
-      alert("Error al asignar el ticket: " + err.message);
-    } finally {
-      setAsignando(false);
+    if (!cambioEstado.ok) {
+      const errorData = await cambioEstado.json();
+      throw new Error(errorData?.detail || "Error al cambiar el estado del ticket.");
     }
-  };
+
+    alert(`Ticket asignado exitosamente a: ${correoSeleccionado}`);
+
+    setTickets(tickets.filter(t => t.id_ticket !== ticketSeleccionado.id_ticket));
+    cerrarModal();
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Error al asignar el ticket: " + err.message);
+  } finally {
+    setAsignando(false);
+  }
+};
+
 
   const escalarTicket = async (idTicket, nivelActual) => {
     const nuevoNivel = nivelActual + 1;
