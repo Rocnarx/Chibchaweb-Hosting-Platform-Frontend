@@ -113,3 +113,25 @@ body.dark-mode .btn-metodo-pago:hover,
 body.dark-mode .btn-cerrar-sesion:hover {
   background-color: #e38b31;
 }
+.cuenta-dato input,
+.cuenta-dato select {
+  flex: 1;
+  margin-left: 1rem;
+  padding: 6px 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+}
+
+.cuenta-aviso {
+  background-color: #fff3cd;
+  color: #856404;
+  font-size: 0.9rem;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  border: 1px solid #ffeeba;
+}
