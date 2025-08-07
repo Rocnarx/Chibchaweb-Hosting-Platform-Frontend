@@ -4,12 +4,21 @@ import logo from "../Components/resources/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext";
 import { BiArrowBack } from "react-icons/bi"; 
+import { useEffect } from "react";
+
 export default function Login() {
   const [form, setForm] = useState({ usuario: "", password: "" });
   const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
   const { setUsuario } = useUser();
+
+  useEffect(() => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (usuarioGuardado) {
+      navigate("/perfil", { replace: true });
+    }
+  }, []);
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;

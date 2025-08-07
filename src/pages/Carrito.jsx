@@ -54,6 +54,28 @@ function Carrito() {
     }
   };
 
+  const verificarMetodoPago = async () => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/metodosPagoUsuario?identificacion=${usuario.identificacion}`, {
+      headers: {
+        'Chibcha-api-key': import.meta.env.VITE_API_KEY,
+      },
+    });
+
+    if (!res.ok) {
+      console.error("Error al obtener métodos de pago:", res.status);
+      return false;
+    }
+
+    const data = await res.json();
+    return Array.isArray(data.metodos_pago) && data.metodos_pago.length > 0;
+  } catch (error) {
+    console.error("❌ Error al verificar métodos de pago:", error);
+    return false;
+  }
+};
+
+
   const cargarComision = async () => {
     if (!usuario || !usuario.idcuenta || usuario.tipocuenta?.toUpperCase() !== "DISTRIBUIDOR") return;
 
@@ -88,13 +110,20 @@ function Carrito() {
   const descuento = Math.round((subtotal * comision) / 100);
   const totalConDescuento = total - descuento;
 
-  const manejarPago = async () => {
-    setPagando(true);
+const manejarPago = async () => {
+  setPagando(true);
 
-    try {
-      const dominiosAActualizar = items.map((item) => ({
-        iddominio: item.nombre,
-      }));
+  try {
+    const tieneMetodoPago = await verificarMetodoPago();
+    if (!tieneMetodoPago) {
+      alert("❌ Debes agregar un método de pago antes de realizar la compra.");
+      setPagando(false);
+      return;
+    }
+
+    const dominiosAActualizar = items.map((item) => ({
+      iddominio: item.nombre,
+    }));
 
       // Paso 1: Llamar al endpoint para actualizar los dominios y generar factura
       const response = await fetch(`${import.meta.env.VITE_API_URL}/ActualizarOcupadoDominio`, {

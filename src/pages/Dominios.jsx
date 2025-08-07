@@ -175,7 +175,7 @@ function Dominios() {
 
   const agregarAlCarrito = async (dom) => {
     if (!usuario || !usuario.identificacion || !usuario.idcuenta) {
-      alert("Debes iniciar sesión para agregar dominios al carrito.");
+      alert(" ❌ Debes iniciar sesión para agregar dominios al carrito.");
       return;
     }
 

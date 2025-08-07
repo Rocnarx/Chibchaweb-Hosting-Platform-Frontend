@@ -138,7 +138,7 @@ const verificarMetodoPago = async () => {
 
   const adquirirPaquete = async (idpaquetehosting) => {
     if (!usuario || !usuario.idcuenta || !usuario.identificacion) {
-      alert("Debes iniciar sesión para adquirir un plan.");
+      alert(" ❌ Debes iniciar sesión para adquirir un plan.");
       return;
     }
 
