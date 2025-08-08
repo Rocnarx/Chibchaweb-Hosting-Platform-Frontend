@@ -10,7 +10,9 @@ import {
   faGlobe,
   faServer,
   faUser,
-  faUserGroup
+  faUserGroup,
+  faHeadset,
+  faChartLine
 } from '@fortawesome/free-solid-svg-icons';
 
 function FooterAdmin() {
