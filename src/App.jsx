@@ -15,7 +15,6 @@ import Cuenta from "./pages/Cuenta";
 import Tarjeta from "./pages/Tarjeta";
 import MetodosPago from "./pages/MetodosPago";
 import PaqueteAdquirido from "./pages/PaqueteAdquirido";
-import Estadisticas from "./pages/Estadisticas";
 
 
 // Componentes compartidos
@@ -43,6 +42,7 @@ import EmpleadoDetalle from "./pages/EmpleadoDetalle";
 import CoordinadoresAdmin from "./pages/CoordinadoresAdmin";
 import VistaSoporteAdmin from "./pages/VistaSoporteAdmin";
 import Contacto from "./pages/Contacto";
+import Estadisticas from "./pages/Estadisticas";
 
 // Componentes para coordinadores
 import NavbarCoordinador from "./Components/NavbarCoordinador";
@@ -96,7 +96,6 @@ function App() {
           <Route path="/vista-soporte-empleado" element={<VistaSoporteEmpleado />} />
           <Route path="/vista-soporte-admin" element={<VistaSoporteAdmin />} />
           <Route path="/contacto" element={<Contacto />} />
-          <Route path="/estadisticas" element={<Estadisticas />} />
 
 
           {/* Rutas protegidas comunes */}
@@ -118,6 +117,13 @@ function App() {
           {esAdmin && <Route path="/CoordinadoresAdmin" element={<CoordinadoresAdmin />} />}
           {esAdmin && <Route path="/postulado/:correo" element={<PostuladoDetalle />} />}
           {esAdmin && <Route path="/empleados/:correo" element={<EmpleadoDetalle />} />}
+          {esAdmin && <Route path="/estadisticas" element={<Estadisticas />} />}
+          
+          {/* Rutas para clientes */}
+          {!esAdmin && !esCoordinador && <Route path="/dominios" element={<Dominios />} />}
+          {!esAdmin && !esCoordinador && <Route path="/dominios/:nombre" element={<Dominios />} />}
+
+          {/* Rutas para coordinadores */}
 
           {/* Rutas exclusivas para coordinadores */}
           {esCoordinador && <Route path="/tickets" element={<TicketsCoordinador />} />}

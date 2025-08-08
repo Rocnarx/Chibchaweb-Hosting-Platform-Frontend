@@ -16,7 +16,9 @@ import {
   faUser,
   faUserGroup,
   faMoon,
-  faCircleHalfStroke
+  faCircleHalfStroke,
+  faHeadset,
+  faChartLine,
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function NavbarAdmin() {
@@ -109,6 +111,20 @@ export default function NavbarAdmin() {
                 {sidebarAbierta && <span>Hosting</span>}
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/vista-soporte-admin" className="nav-link-admin">
+                <FontAwesomeIcon icon={faHeadset} />
+                {sidebarAbierta && <span>Soporte</span>}
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/estadisticas" className="nav-link-admin">
+                <FontAwesomeIcon icon={faChartLine} />
+                {sidebarAbierta && <span>Estadísticas</span>}
+              </NavLink>
+            </li>
+          
             <li>
               <NavLink to="/perfil" className="nav-link-admin">
                 <FontAwesomeIcon icon={faUser} />
