@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import "./Cuenta.css";
+import "./CuentaDistribuidor.css";
 import { FiLogOut } from "react-icons/fi";
 
 export default function Cuenta() {
@@ -11,11 +12,14 @@ export default function Cuenta() {
   const [modoEdicion, setModoEdicion] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [formData, setFormData] = useState({});
-  const [descuento, setDescuento] = useState(null);
   const [mostrarDialogo, setMostrarDialogo] = useState(false);
   const [contrasenaActual, setContrasenaActual] = useState("");
   const [contrasenaNueva, setContrasenaNueva] = useState("");
   const [cambiandoContrasena, setCambiandoContrasena] = useState(false);
+
+  const [infoDistribuidor, setInfoDistribuidor] = useState(null);
+  const [distLoading, setDistLoading] = useState(false);
+  const [distError, setDistError] = useState("");
 
   const paises = {
     76: "BRASIL",
@@ -40,7 +44,12 @@ export default function Cuenta() {
     const datosIniciales = {
       IDCUENTA: usuario.idcuenta,
       IDTIPOCUENTA: typeof usuario.tipocuenta === "number" ? usuario.tipocuenta : 1,
-      IDPLAN: typeof usuario.plan === "number" ? usuario.plan : usuario.plan === "Sin plan" ? 0 : 1,
+      IDPLAN:
+        typeof usuario.plan === "number"
+          ? usuario.plan
+          : usuario.plan === "Sin plan"
+          ? 0
+          : 1,
       NOMBRECUENTA: usuario.nombrecuenta,
       CORREO: usuario.correo,
       TELEFONO: usuario.telefono || "",
@@ -51,16 +60,32 @@ export default function Cuenta() {
     setFormData(datosIniciales);
 
     if (usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR") {
-      fetch(`${import.meta.env.VITE_API_URL}/reporte/admin/comisiones-distribuidores?idcuenta=${usuario.idcuenta}`, {
-        headers: {
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setDescuento(data.descuento || data.comision || 0);
-        })
-        .catch((err) => console.error("Error obteniendo descuentos:", err));
+      const loadDistribuidor = async () => {
+        try {
+          setDistLoading(true);
+          setDistError("");
+          const res = await fetch(
+            `${import.meta.env.VITE_API_URL}/ahorro-distribuidor?idcuenta=${usuario.idcuenta}`,
+            {
+              headers: {
+                "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+              },
+            }
+          );
+          if (!res.ok) throw new Error("No se pudo obtener la información.");
+          const data = await res.json();
+          setInfoDistribuidor(data);
+        } catch (e) {
+          setDistError(e.message || "Error desconocido");
+        } finally {
+          setDistLoading(false);
+        }
+      };
+      loadDistribuidor();
+    } else {
+      setInfoDistribuidor(null);
+      setDistError("");
+      setDistLoading(false);
     }
   }, [usuario]);
 
@@ -74,9 +99,7 @@ export default function Cuenta() {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "IDPAIS" || name === "IDPLAN" || name === "TELEFONO"
-        ? parseInt(value)
-        : value,
+      [name]: name === "IDPAIS" || name === "IDPLAN" || name === "TELEFONO" ? parseInt(value) : value,
     }));
   };
 
@@ -93,14 +116,17 @@ export default function Cuenta() {
 
     setGuardando(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${formData.IDCUENTA}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${formData.IDCUENTA}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!res.ok) throw new Error("No se pudo guardar.");
 
@@ -127,44 +153,41 @@ export default function Cuenta() {
     }
   };
 
-const cambiarContrasena = async () => {
-  if (!contrasenaActual || !contrasenaNueva) {
-    alert("Por favor llena ambos campos.");
-    return;
-  }
+  const cambiarContrasena = async () => {
+    if (!contrasenaActual || !contrasenaNueva) {
+      alert("Por favor llena ambos campos.");
+      return;
+    }
 
-  setCambiandoContrasena(true);
+    setCambiandoContrasena(true);
 
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/cambiar-contrasena`, {
-      method: "POST", // <-- cambia esto de PUT a POST
-      headers: {
-        "Content-Type": "application/json",
-        "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-      },
-      body: JSON.stringify({
-        idcuenta: usuario.idcuenta,
-        contrasena_actual: contrasenaActual,
-        contrasena_nueva: contrasenaNueva,
-      }),
-    });
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/cambiar-contrasena`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({
+          idcuenta: usuario.idcuenta,
+          contrasena_actual: contrasenaActual,
+          contrasena_nueva: contrasenaNueva,
+        }),
+      });
 
-    if (!res.ok) throw new Error("No se pudo actualizar la contraseña.");
+      if (!res.ok) throw new Error("No se pudo actualizar la contraseña.");
 
-    alert("Contraseña actualizada correctamente.");
-    setMostrarDialogo(false);
-    setContrasenaActual("");
-    setContrasenaNueva("");
-  } catch (error) {
-    console.error("❌ Error al cambiar contraseña:", error);
-    alert("Error al actualizar la contraseña.");
-  } finally {
-    setCambiandoContrasena(false);
-  }
-};
-
-
-
+      alert("Contraseña actualizada correctamente.");
+      setMostrarDialogo(false);
+      setContrasenaActual("");
+      setContrasenaNueva("");
+    } catch (error) {
+      console.error("❌ Error al cambiar contraseña:", error);
+      alert("Error al actualizar la contraseña.");
+    } finally {
+      setCambiandoContrasena(false);
+    }
+  };
 
   const tiposRestringidos = [
     "COORDINADOR NIVEL 1",
@@ -185,22 +208,10 @@ const cambiarContrasena = async () => {
       <div className="cuenta-info">
         {modoEdicion ? (
           <>
-            <div className="cuenta-dato">
-              <strong>Nombre:</strong>
-              <input name="NOMBRECUENTA" value={formData.NOMBRECUENTA} onChange={handleInputChange} />
-            </div>
-            <div className="cuenta-dato">
-              <strong>Correo:</strong>
-              <input name="CORREO" value={formData.CORREO} onChange={handleInputChange} />
-            </div>
-            <div className="cuenta-dato">
-              <strong>Teléfono:</strong>
-              <input name="TELEFONO" value={formData.TELEFONO} onChange={handleInputChange} />
-            </div>
-            <div className="cuenta-dato">
-              <strong>Dirección:</strong>
-              <input name="DIRECCION" value={formData.DIRECCION} onChange={handleInputChange} />
-            </div>
+            <div className="cuenta-dato"><strong>Nombre:</strong><input name="NOMBRECUENTA" value={formData.NOMBRECUENTA} onChange={handleInputChange} /></div>
+            <div className="cuenta-dato"><strong>Correo:</strong><input name="CORREO" value={formData.CORREO} onChange={handleInputChange} /></div>
+            <div className="cuenta-dato"><strong>Teléfono:</strong><input name="TELEFONO" value={formData.TELEFONO} onChange={handleInputChange} /></div>
+            <div className="cuenta-dato"><strong>Dirección:</strong><input name="DIRECCION" value={formData.DIRECCION} onChange={handleInputChange} /></div>
             <div className="cuenta-dato">
               <strong>País:</strong>
               <select name="IDPAIS" value={formData.IDPAIS} onChange={handleInputChange}>
@@ -212,40 +223,89 @@ const cambiarContrasena = async () => {
           </>
         ) : (
           <>
-            <div className="cuenta-dato"><strong>Nombre:</strong> <span>{usuario.nombrecuenta}</span></div>
-            <div className="cuenta-dato"><strong>CC:</strong> <span>{usuario.identificacion}</span></div>
-            <div className="cuenta-dato"><strong>Correo:</strong> <span>{usuario.correo}</span></div>
-            <div className="cuenta-dato"><strong>Teléfono:</strong> <span>{usuario.telefono || "No registrado"}</span></div>
-            <div className="cuenta-dato"><strong>Dirección:</strong> <span>{usuario.direccion || "No registrada"}</span></div>
-            <div className="cuenta-dato"><strong>País:</strong> <span>{paises[usuario.pais] || usuario.pais}</span></div>
-            {usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR" && (
-              <div className="cuenta-dato">
-                <strong>Descuentos aplicados:</strong>
-                <span>{descuento !== null ? `${descuento}%` : "Cargando..."}</span>
-              </div>
-            )}
+            <div className="cuenta-dato"><strong>Nombre:</strong><span>{usuario.nombrecuenta}</span></div>
+            <div className="cuenta-dato"><strong>CC:</strong><span>{usuario.identificacion}</span></div>
+            <div className="cuenta-dato"><strong>Correo:</strong><span>{usuario.correo}</span></div>
+            <div className="cuenta-dato"><strong>Teléfono:</strong><span>{usuario.telefono || "No registrado"}</span></div>
+            <div className="cuenta-dato"><strong>Dirección:</strong><span>{usuario.direccion || "No registrada"}</span></div>
+            <div className="cuenta-dato"><strong>País:</strong><span>{paises[usuario.pais] || usuario.pais}</span></div>
           </>
         )}
       </div>
 
+      {/* ===================== DISTRIBUIDOR ===================== */}
+      {usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR" && (
+        <section className="distribuidor-card">
+          <div className="distribuidor-header">
+            <h3>Descuentos aplicados</h3>
+            {infoDistribuidor?.distribuidor?.plan && (
+              <span className="badge">{infoDistribuidor.distribuidor.plan}</span>
+            )}
+          </div>
+
+          {distLoading && <div className="distribuidor-loading">Cargando información…</div>}
+          {distError && <div className="distribuidor-error">No se pudo cargar la información: {distError}</div>}
+
+          {!distLoading && !distError && infoDistribuidor && (
+            <>
+              <div className="distribuidor-grid">
+                <div className="grid-item"><span className="label">Comisión</span><span className="value">{infoDistribuidor.distribuidor.comision}%</span></div>
+                <div className="grid-item"><span className="label">Nombre</span><span className="value">{infoDistribuidor.distribuidor.nombre}</span></div>
+              </div>
+
+              <div className="distribuidor-stats">
+                <div className="stat"><div className="stat-title">Total dominios</div><div className="stat-value">{infoDistribuidor.total_dominios_comprados}</div></div>
+                <div className="stat"><div className="stat-title">Total ahorrado</div><div className="stat-value currency">${Number(infoDistribuidor.total_ahorrado || 0).toLocaleString()}</div></div>
+              </div>
+
+              <div className="distribuidor-table-wrapper">
+                <table className="distribuidor-table">
+                  <thead>
+                    <tr>
+                      <th>Dominio</th>
+                      <th>Precio original</th>
+                      <th>Ahorro por comisión</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {infoDistribuidor.dominios?.length > 0 ? (
+                      infoDistribuidor.dominios.map((d, idx) => (
+                        <tr key={idx}>
+                          <td>{d.nombre_dominio}</td>
+                          <td>${Number(d.precio_original).toLocaleString()}</td>
+                          <td className="positivo">${Number(d.ahorro_por_comision).toLocaleString()}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr><td colSpan="3" className="empty">Aún no hay dominios registrados.</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </section>
+      )}
+      {/* ======================================================== */}
+
       <div className="botones-accion">
         {modoEdicion ? (
           <>
-            <button className="btn-metodo-pago" onClick={guardarCambios} disabled={guardando}>
-              {guardando ? "Guardando..." : "Guardar cambios"}
-            </button>
+            <button className="btn-metodo-pago" onClick={guardarCambios} disabled={guardando}>{guardando ? "Guardando..." : "Guardar cambios"}</button>
             <button className="btn-cerrar-sesion" onClick={() => setModoEdicion(false)}>Cancelar</button>
           </>
         ) : (
           <>
             <button className="btn-metodo-pago" onClick={() => setModoEdicion(true)}>Editar perfil</button>
             <button className="btn-metodo-pago" onClick={() => setMostrarDialogo(true)}>Actualizar contraseña</button>
+
             {puedeVerMetodosPago && (
               <>
                 <button className="btn-metodo-pago" onClick={() => navigate("/Tarjeta")}>Agregar método de pago</button>
                 <button className="btn-metodo-pago" onClick={() => navigate("/metodos")}>Mis métodos</button>
               </>
             )}
+
             <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
               <FiLogOut style={{ marginRight: "8px" }} />
               Cerrar sesión
@@ -258,22 +318,10 @@ const cambiarContrasena = async () => {
         <div className="modal-overlay">
           <div className="modal">
             <h3>Actualizar contraseña</h3>
-            <input
-              type="password"
-              placeholder="Contraseña actual"
-              value={contrasenaActual}
-              onChange={(e) => setContrasenaActual(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Nueva contraseña"
-              value={contrasenaNueva}
-              onChange={(e) => setContrasenaNueva(e.target.value)}
-            />
+            <input type="password" placeholder="Contraseña actual" value={contrasenaActual} onChange={(e) => setContrasenaActual(e.target.value)} />
+            <input type="password" placeholder="Nueva contraseña" value={contrasenaNueva} onChange={(e) => setContrasenaNueva(e.target.value)} />
             <div className="modal-buttons">
-              <button onClick={cambiarContrasena} disabled={cambiandoContrasena}>
-                {cambiandoContrasena ? "Actualizando..." : "Actualizar"}
-              </button>
+              <button onClick={cambiarContrasena} disabled={cambiandoContrasena}>{cambiandoContrasena ? "Actualizando..." : "Actualizar"}</button>
               <button onClick={() => setMostrarDialogo(false)}>Cancelar</button>
             </div>
           </div>
@@ -282,4 +330,3 @@ const cambiarContrasena = async () => {
     </div>
   );
 }
-  

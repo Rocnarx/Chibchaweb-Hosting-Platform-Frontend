@@ -1,54 +1,133 @@
+/* NAVBAR COORDINADOR BASE */
 .navbar-coordinador {
-  background-color: #6b3b00;
-  color: white;
-  padding: 15px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 15px 40px;
+  background-color: #6b3b00; /* Modo claro */
+  color: white;
   font-family: 'Segoe UI', sans-serif;
 }
 
+/* LOGO */
 .nav-logo .logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
   color: white;
-  font-size: 22px;
-  font-weight: 700;
   text-decoration: none;
 }
 
+/* ENLACES */
 .nav-links {
-  list-style: none;
   display: flex;
   gap: 30px;
+  list-style: none;
 }
 
 .nav-links li a {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 1rem;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: color 0.2s ease;
 }
 
 .nav-links li a:hover {
-  color: #ffe0c0;
+  text-decoration: underline;
+  color: #ffe0b3;
 }
 
+/* BOTONES */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mode-toggle-button,
 .logout-btn {
-  background-color: #4e2c00;
-  color: white;
   border: none;
   padding: 8px 14px;
   border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* === MODO CLARO === */
+.mode-toggle-button {
+  background-color: #a45200;
+  color: white;
+}
+
+.mode-toggle-button:hover {
+  background-color: #873d00;
+}
+
+.logout-btn {
+  background-color: #ffa94d;
+  color: black;
 }
 
 .logout-btn:hover {
-  background-color: #3b1f00;
+  background-color: #e38b31;
+}
+
+/* === MODO OSCURO === */
+body.dark-mode .navbar-coordinador {
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .nav-logo .logo-text {
+  color: #ffa94d;
+}
+
+body.dark-mode .nav-links li a {
+  color: #ffffff;
+}
+
+body.dark-mode .nav-links li a:hover {
+  color: #ffa94d;
+}
+
+body.dark-mode .mode-toggle-button {
+  background-color: #ffa94d;
+  color: black;
+}
+
+body.dark-mode .mode-toggle-button:hover {
+  background-color: #e38b31;
+}
+
+body.dark-mode .logout-btn {
+  background-color: #2c2c2c;
+  color: #ffa94d;
+  border: 1px solid #ffa94d;
+}
+
+body.dark-mode .logout-btn:hover {
+  background-color: #3a3a3a;
+}
+
+/* RESPONSIVE OPCIONAL */
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .navbar-coordinador {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .nav-actions {
+    align-self: flex-end;
+  }
 }

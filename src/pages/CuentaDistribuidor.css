@@ -1,0 +1,269 @@
+/* Tarjeta principal */
+.distribuidor-card {
+  margin-top: 2rem;
+  background: #fffaf7;
+  border: 1px solid #e8d7c5;
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+/* Encabezado */
+.distribuidor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+
+.distribuidor-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #6b3b00;
+}
+
+.badge {
+  display: inline-block;
+  padding: .25rem .6rem;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 600;
+  background: #f4e3d3;
+  border: 1px solid #e0c8b0;
+  color: #6b3b00;
+}
+
+/* Estados */
+.distribuidor-loading,
+.distribuidor-error {
+  padding: .75rem 1rem;
+  border-radius: 10px;
+  font-size: .95rem;
+}
+
+.distribuidor-loading {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.distribuidor-error {
+  background: #ffe6e6;
+  color: #8a1f1f;
+  border: 1px solid #ffcccc;
+}
+
+/* Grid de datos rápidos */
+.distribuidor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+  margin-top: .5rem;
+}
+
+.grid-item {
+  background: #fff;
+  border: 1px solid #e8d7c5;
+  border-radius: 10px;
+  padding: .75rem .9rem;
+}
+
+.label {
+  display: block;
+  font-size: .8rem;
+  color: #6b3b00;
+  opacity: .8;
+  margin-bottom: .25rem;
+}
+.value {
+  font-weight: 600;
+  color: #4a2e00;
+}
+
+/* Resumen (stats) */
+.distribuidor-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+  margin: 1rem 0 .5rem;
+}
+.stat {
+  background: #fff;
+  border: 1px solid #e8d7c5;
+  border-radius: 12px;
+  padding: .9rem;
+  text-align: center;
+}
+.stat-title {
+  font-size: .85rem;
+  color: #6b3b00;
+  margin-bottom: .25rem;
+  opacity: .85;
+}
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #4a2e00;
+}
+.stat-value.currency {
+  letter-spacing: .3px;
+}
+
+/* Tabla de dominios */
+.distribuidor-table-wrapper {
+  overflow-x: auto;
+  margin-top: .5rem;
+}
+
+.distribuidor-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e8d7c5;
+  border-radius: 10px;
+}
+
+.distribuidor-table thead th {
+  background: #f4e3d3;
+  color: #6b3b00;
+  text-align: left;
+  font-weight: 700;
+  padding: .6rem .75rem;
+  border-bottom: 1px solid #e0c8b0;
+}
+
+.distribuidor-table tbody td {
+  padding: .6rem .75rem;
+  border-top: 1px solid #f0e4d8;
+  color: #4a2e00;
+}
+
+.distribuidor-table tbody tr:hover {
+  background: #fff7f0;
+    cursor: default;
+}
+
+.distribuidor-table td.positivo {
+  color: #0a7a2f;
+  font-weight: 600;
+}
+
+.distribuidor-table td.empty {
+  text-align: center;
+  color: #6b3b00;
+  opacity: .8;
+}
+
+/* ===== MODO OSCURO ===== */
+body.dark-mode .distribuidor-card {
+  background: #1e1e1e;
+  border: 1px solid #555;
+}
+body.dark-mode .distribuidor-header h3,
+body.dark-mode .label,
+body.dark-mode .value {
+  color: #FFA94D;
+}
+body.dark-mode .badge {
+  background: #2b2b2b;
+  border-color: #555;
+  color: #FFA94D;
+}
+body.dark-mode .grid-item,
+body.dark-mode .stat,
+body.dark-mode .distribuidor-table {
+  background: #2b2b2b;
+  border-color: #555;
+}
+body.dark-mode .distribuidor-table thead th {
+  background: #3a3a3a;
+  color: #FFA94D;
+  border-bottom-color: #555;
+}
+body.dark-mode .distribuidor-table tbody td {
+  color: #fff;
+  border-top-color: #444;
+}
+body.dark-mode .distribuidor-table tbody tr:hover {
+  background: #333;
+}
+/* --- existente --- (tu hoja nueva previa) */
+
+/* --- existente --- (tu hoja nueva previa) */
+
+/* ========== GRID Y STATS RESPONSIVOS ========== */
+@media (max-width: 1024px) {
+  .distribuidor-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .distribuidor-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .distribuidor-card {
+    padding: 1rem;
+  }
+
+  .distribuidor-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .distribuidor-grid {
+    grid-template-columns: 1fr; /* una columna */
+  }
+
+  .stat {
+    padding: .75rem;
+  }
+  .stat-value {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .badge {
+    font-size: .78rem;
+    padding: .18rem .5rem;
+  }
+}
+
+/* ========== TABLA -> TARJETAS EN MÓVIL ========== */
+/* Desktop/tablet: se mantiene tabla normal; en <=640px se apilan */
+@media (max-width: 640px) {
+  .distribuidor-table td {
+    display: block; /* en lugar de grid */
+    padding: .6rem .75rem;
+    border: 0;
+    border-top: 1px solid #f0e4d8;
+  }
+
+  /* Primera celda sin borde superior */
+  .distribuidor-table td:first-child {
+    border-top: 0;
+  }
+
+  /* Labels */
+  .distribuidor-table td::before {
+    display: block;         /* ahora en su propia línea */
+    margin-bottom: 4px;     /* separación con el valor */
+    font-weight: 600;
+    color: #6b3b00;
+    font-size: 0.85rem;
+  }
+
+  .distribuidor-table td:nth-child(1)::before { content: "Dominio"; }
+  .distribuidor-table td:nth-child(2)::before { content: "Precio original"; }
+  .distribuidor-table td:nth-child(3)::before { content: "Ahorro por comisión"; }
+
+  /* Valores */
+  .distribuidor-table td.positivo {
+    color: #0a7a2f;
+    font-weight: 700;
+  }
+
+  .distribuidor-table td.empty {
+    text-align: left;
+  }
+}

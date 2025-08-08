@@ -138,3 +138,79 @@ button.btn-volver-arriba:hover {
   border-color: #6b3b00;
   box-shadow: 0 0 0 2px rgba(107, 59, 0, 0.2);
 }
+
+/* === MODO OSCURO === */
+body.dark-mode .postulado-detalle-container {
+  background-color: #2c2c2c;
+  color: #f0f0f0;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .postulado-detalle-container h2 {
+  color: #FFA94D;
+}
+
+body.dark-mode .postulado-detalle-container p {
+  color: #f0f0f0;
+  border-bottom: 1px solid #555;
+}
+
+body.dark-mode .postulado-detalle-container strong {
+  color: #FFA94D;
+}
+
+body.dark-mode .btn-asignar {
+  background-color: #FFA94D;
+  color: #000;
+}
+
+body.dark-mode .btn-asignar:hover {
+  background-color: #e38b31;
+}
+
+body.dark-mode .btn-asignar:disabled {
+  background-color: #666;
+  color: #999;
+}
+
+body.dark-mode button.btn-volver-arriba {
+  color: #FFA94D;
+}
+
+body.dark-mode button.btn-volver-arriba:hover {
+  color: #e38b31;
+}
+
+body.dark-mode .error {
+  color: #ff6b6b;
+  background-color: #5c1d1d;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+body.dark-mode .cargando {
+  color: #ccc;
+}
+
+body.dark-mode .nivel-soporte-label {
+  color: #FFA94D;
+}
+
+body.dark-mode .boton-nivel {
+  background-color: #2c2c2c;
+  color: #f0f0f0;
+  border: 2px solid #555;
+}
+
+body.dark-mode .boton-nivel:hover {
+  background-color: #3a3a3a;
+  border-color: #FFA94D;
+}
+
+body.dark-mode .boton-nivel.selected {
+  background-color: #FFA94D;
+  color: #000;
+  border-color: #FFA94D;
+  box-shadow: 0 0 0 2px rgba(255, 169, 77, 0.2);
+}
+

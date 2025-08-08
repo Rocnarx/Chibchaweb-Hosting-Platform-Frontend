@@ -16,7 +16,6 @@ import Tarjeta from "./pages/Tarjeta";
 import MetodosPago from "./pages/MetodosPago";
 import PaqueteAdquirido from "./pages/PaqueteAdquirido";
 
-
 // Componentes compartidos
 import FormularioD from "./pages/FormularioRegistroDistribuidor";
 import FormularioE from "./pages/FormularioRegistroEmpleado";
@@ -42,7 +41,8 @@ import EmpleadoDetalle from "./pages/EmpleadoDetalle";
 import CoordinadoresAdmin from "./pages/CoordinadoresAdmin";
 import VistaSoporteAdmin from "./pages/VistaSoporteAdmin";
 import Contacto from "./pages/Contacto";
-import DetalleEmpleado from './pages/EmpleadoDetalle';
+import Estadisticas from "./pages/Estadisticas";
+
 // Componentes para coordinadores
 import NavbarCoordinador from "./Components/NavbarCoordinador";
 import FooterCoordinador from "./Components/FooterCoordinador";
@@ -96,7 +96,6 @@ function App() {
           <Route path="/vista-soporte-admin" element={<VistaSoporteAdmin />} />
           <Route path="/contacto" element={<Contacto />} />
 
-
           {/* Rutas protegidas comunes */}
           <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
           <Route path="/carrito" element={<RutaProtegida requiereVerificacion={true}><Carrito /></RutaProtegida>} />
@@ -116,16 +115,16 @@ function App() {
           {esAdmin && <Route path="/CoordinadoresAdmin" element={<CoordinadoresAdmin />} />}
           {esAdmin && <Route path="/postulado/:correo" element={<PostuladoDetalle />} />}
           {esAdmin && <Route path="/empleado/:correo" element={<EmpleadoDetalle />} />}
+          {esAdmin && <Route path="/estadisticas" element={<Estadisticas />} />}
 
-
-          {/* Rutas exclusivas para coordinadores */}
+          {/* Rutas para coordinadores */}
           {esCoordinador && <Route path="/tickets" element={<TicketsCoordinador />} />}
           {esCoordinador && <Route path="/asignar-tickets" element={<AsignarTickets />} />}
 
           {/* Rutas exclusivas para clientes */}
           {!esAdmin && !esCoordinador && <Route path="/dominios" element={<Dominios />} />}
+          {!esAdmin && !esCoordinador && <Route path="/dominios/:nombre" element={<Dominios />} />}
           {!esAdmin && !esCoordinador && <Route path="/paquete-adquirido" element={<PaqueteAdquirido />} />}
-
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />

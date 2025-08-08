@@ -3,6 +3,7 @@ import "./Login.css";
 import logo from "../Components/resources/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext";
+import { useStats } from "../Context/StatsContext";
 import { BiArrowBack } from "react-icons/bi";
 
 export default function Login() {
@@ -11,6 +12,7 @@ export default function Login() {
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
   const { setUsuario } = useUser();
+  const { preload } = useStats();
 
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario");
@@ -65,7 +67,13 @@ export default function Login() {
       const verificacionJson = await verificacionRes.json();
       const verificado = verificacionJson.verificado === true;
 
-      setUsuario({ ...datos, verificado });
+      const usuarioFinal = { ...datos, verificado };
+      setUsuario(usuarioFinal);
+
+      // ✅ Prefetch solo si es ADMIN
+      if (usuarioFinal.tipocuenta?.toUpperCase() === "ADMIN") {
+        preload().catch(() => {});
+      }
 
       if (verificado) {
         setMensaje("✅ ¡Bienvenido!");
@@ -83,6 +91,7 @@ export default function Login() {
     }
   };
 
+  // Modales para recuperación de contraseña
   const [mostrarModalCorreo, setMostrarModalCorreo] = useState(false);
   const [mostrarModalToken, setMostrarModalToken] = useState(false);
   const [correoRecuperacion, setCorreoRecuperacion] = useState("");
@@ -150,6 +159,7 @@ export default function Login() {
         <BiArrowBack size={20} />
         Volver
       </button>
+
       <div className="login-box">
         <img src={logo} alt="ChibchaWeb" className="logo-login" />
         <h2 className="titulo-login">Iniciar sesión</h2>

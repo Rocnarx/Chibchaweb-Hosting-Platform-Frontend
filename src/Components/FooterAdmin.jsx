@@ -10,7 +10,9 @@ import {
   faGlobe,
   faServer,
   faUser,
-  faUserGroup
+  faUserGroup,
+  faHeadset,
+  faChartLine
 } from '@fortawesome/free-solid-svg-icons';
 
 function FooterAdmin() {
@@ -56,6 +58,16 @@ function FooterAdmin() {
           <li>
             <NavLink to="/paquetes" className="nav-link-admin">
               <FontAwesomeIcon icon={faServer} /> Hosting
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/vista-soporte-admin" className="nav-link-admin">
+              <FontAwesomeIcon icon={faHeadset} /> Soporte
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/estadisticas" className="nav-link-admin">
+              <FontAwesomeIcon icon={faChartLine} /> Estadísticas
             </NavLink>
           </li>
           <li>

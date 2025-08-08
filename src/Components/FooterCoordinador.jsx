@@ -6,10 +6,14 @@ export default function FooterCoordinador() {
   return (
     <footer className="footer-coordinador">
       <div className="footer-content">
-        <p>© {new Date().getFullYear()} ChibchaWeb - Coordinador</p>
-        <p className="footer-links">
-          <Link to="/tickets">Tickets</Link> | <Link to="/asignar-tickets">Asignar</Link>
+        <p className="footer-copy">
+          © {new Date().getFullYear()} ChibchaWeb - Coordinador
         </p>
+        <div className="footer-links">
+          <Link to="/tickets">Tickets</Link>
+          <span className="divider">|</span>
+          <Link to="/asignar-tickets">Asignar</Link>
+        </div>
       </div>
     </footer>
   );
