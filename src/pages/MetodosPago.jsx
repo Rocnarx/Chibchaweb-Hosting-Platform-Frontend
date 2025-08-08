@@ -56,7 +56,7 @@ export default function MetodosPago() {
       case "Visa":
         return "/visa.png";
       case "Mastercard":
-        return "/mastercard.png";
+        return "/Mastercard.png";
       case "American Express":
         return "/amex.png";
       case "Discover":
