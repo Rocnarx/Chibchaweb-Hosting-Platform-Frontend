@@ -4,13 +4,10 @@ import logo from './resources/logo.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from '../Context/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon } from '@fortawesome/free-solid-svg-icons';
-import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
+import { faMoon, faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import { useAlerta } from "../Context/AlertaContext";
 
-
 function Navbar() {
-  
   const { mostrarAlerta } = useAlerta();
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -21,24 +18,14 @@ function Navbar() {
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedMode);
-
-    if (savedMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
+    document.body.classList.toggle("dark-mode", savedMode);
   }, []);
 
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
     localStorage.setItem("darkMode", newMode);
-
-    if (newMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
+    document.body.classList.toggle("dark-mode", newMode);
   };
 
   useEffect(() => {
@@ -62,6 +49,12 @@ function Navbar() {
     }
   };
 
+  const esTecnico = [
+    "TECNICO NIVEL 1",
+    "TECNICO NIVEL 2",
+    "TECNICO NIVEL 3"
+  ].includes(usuario?.tipocuenta);
+
   return (
     <nav className="navbar">
       <NavLink to="/" className="navbar-logo">
@@ -80,19 +73,37 @@ function Navbar() {
 
       <div className={`navbar-right ${menuOpen ? 'open' : ''}`} ref={menuRef}>
         <ul className="navbar-menu">
-          <li><NavLink to="/" className="nav-link" onClick={handleMenuClick}>Inicio</NavLink></li>
-           {usuario?.tipocuenta !== "DISTRIBUIDOR" && (
-                  <li><NavLink to="/planesHosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
+          {esTecnico ? (
+            <>
+              <li>
+                <NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>
+                  Mi perfil
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/vista-soporte-empleado" className="nav-link" onClick={handleMenuClick}>
+                  Tickets
+                </NavLink>
+              </li>
+            </>
+          ) : (
+            <>
+              <li><NavLink to="/" className="nav-link" onClick={handleMenuClick}>Inicio</NavLink></li>
+              {usuario?.tipocuenta !== "DISTRIBUIDOR" && (
+                <li><NavLink to="/planesHosting" className="nav-link" onClick={handleMenuClick}>Hosting</NavLink></li>
+              )}
+              <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
+              <li><NavLink to="/DominiosAdquiridos" className="nav-link" onClick={handleMenuClick}>Mis dominios</NavLink></li>
+              <li><NavLink to="/soporte" className="nav-link" onClick={handleMenuClick}>Soporte</NavLink></li>
+            </>
           )}
-
-          <li><NavLink to="/perfil" className="nav-link" onClick={handleMenuClick}>Mi perfil</NavLink></li>
-          <li><NavLink to="/DominiosAdquiridos" className="nav-link" onClick={handleMenuClick}>Mis dominios</NavLink></li>
-          <li><NavLink to="/soporte" className="nav-link" onClick={handleMenuClick}>Soporte</NavLink></li>
         </ul>
 
-        <button className="cart-button" onClick={irAlCarrito}>
-          Carrito
-        </button>
+        {!esTecnico && (
+          <button className="cart-button" onClick={irAlCarrito}>
+            Carrito
+          </button>
+        )}
 
         <button className="mode-toggle-button" onClick={toggleDarkMode}>
           <FontAwesomeIcon icon={darkMode ? faCircleHalfStroke : faMoon} />

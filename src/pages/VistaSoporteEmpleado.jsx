@@ -6,8 +6,6 @@ import { useUser } from '../Context/UserContext';
 
 function VistaSoporteEmpleado() {
   const [tickets, setTickets] = useState([]);
-  const [estadoFiltro, setEstadoFiltro] = useState("todos");
-  const [nivelFiltro, setNivelFiltro] = useState("todos");
   const [ticketActivo, setTicketActivo] = useState(null);
   const [respuestaTexto, setRespuestaTexto] = useState('');
   const [enviandoRespuesta, setEnviandoRespuesta] = useState(false);
@@ -16,106 +14,52 @@ function VistaSoporteEmpleado() {
   const { usuario } = useUser();
 
   useEffect(() => {
-    if (!usuario) return;
+    console.log("Usuario:", usuario);
 
-    const tipo = usuario.tipocuenta?.toUpperCase() || "";
+    const cargarTicketsAsignados = async () => {
+      if (!usuario?.idcuenta) return;
 
-    if (tipo.includes("TECNICO")) {
-      const nivel =
-        tipo.includes("1") ? "1" :
-        tipo.includes("2") ? "2" :
-        tipo.includes("3") ? "3" : "todos";
-      setNivelFiltro(nivel);
-    }
-  }, [usuario]);
-
-  useEffect(() => {
-    const cargarTicketsDesdeBackend = async () => {
       try {
-        const niveles = [1, 2, 3];
-        const estados = estadoFiltro === "todos" ? [1, 2]
-                      : estadoFiltro === "proceso" ? [1]
-                      : [2];
-
-        const nivelesFiltrados = nivelFiltro === "todos"
-          ? niveles
-          : [parseInt(nivelFiltro)];
-
-        const peticiones = [];
-
-        for (const nivel of nivelesFiltrados) {
-          for (const estado of estados) {
-            peticiones.push(
-              fetch(`${import.meta.env.VITE_API_URL}/ver-tickets-niveles?estado_ticket=${estado}&nivel_ticket=${nivel}`, {
-                headers: {
-                  'Chibcha-api-key': import.meta.env.VITE_API_KEY
-                }
-              })
-              .then(async res => {
-                if (res.status === 404) return [];
-                if (!res.ok) throw new Error(`Error ${res.status}`);
-                return await res.json();
-              })
-            );
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/mis-tickets-empleado?idempleado=${usuario.idcuenta}`,
+          {
+            headers: {
+              'Chibcha-api-key': import.meta.env.VITE_API_KEY
+            }
           }
-        }
+        );
 
-        const respuestas = await Promise.allSettled(peticiones);
+        if (!res.ok) throw new Error("Error al cargar tickets asignados");
 
-        const todos = respuestas
-          .filter(r => r.status === "fulfilled")
-          .flatMap(r => r.value);
+        const data = await res.json();
+console.log("Tickets obtenidos:", data);
 
-        const formateados = todos.map((t) => ({
-          id: String(t.id_ticket),
-          cliente: t.cliente?.nombre || 'Sin nombre',
-          correo: t.cliente?.correo || '',
-          descripcion: t.descripcion ?? '',
-          fecha_creacion: t.fecha_creacion ?? '',
-          asunto: typeof t.descripcion === 'string' && t.descripcion.trim()
-            ? t.descripcion.slice(0, 60) + (t.descripcion.length > 60 ? '…' : '')
-            : 'Sin descripción',
-          nivel: typeof t.nivel === 'number' ? `Soporte ${t.nivel}` : 'Sin nivel',
-          estado: t.estado === 2 ? 'Resuelto' : 'En proceso',
-        }));
+if (!Array.isArray(data.tickets_asignados)) {
+  throw new Error("La respuesta no es un arreglo");
+}
+
+const formateados = data.tickets_asignados.map((t) => ({
+  id: String(t.id_ticket),
+  cliente: t.cliente?.nombre || 'Sin nombre',
+  correo: t.cliente?.correo || '',
+  descripcion: t.descripcion ?? '',
+  fecha_creacion: t.fecha_creacion ?? '',
+  asunto: typeof t.descripcion === 'string' && t.descripcion.trim()
+    ? t.descripcion.slice(0, 60) + (t.descripcion.length > 60 ? '…' : '')
+    : 'Sin descripción',
+  nivel: typeof t.nivel === 'number' ? `Soporte ${t.nivel}` : 'Sin nivel',
+  estado: t.estado === 2 ? 'Resuelto' : 'En proceso',
+}));
+
 
         setTickets(formateados);
       } catch (err) {
-        console.error('❌ Error al cargar tickets:', err);
+        console.error('❌ Error al cargar tickets asignados:', err);
       }
     };
 
-    cargarTicketsDesdeBackend();
-  }, [estadoFiltro, nivelFiltro]);
-
-  const subirNivel = async (id, nivelActual) => {
-    const nuevoNivel = nivelActual + 1;
-    if (nuevoNivel > 3 || !id) return;
-
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/CambiarNivelTicket/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Chibcha-api-key': import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify({ nivel: nuevoNivel })
-      });
-
-      if (!res.ok) throw new Error("No se pudo escalar el ticket");
-
-      setTickets(prev =>
-        prev.map(ticket =>
-          ticket.id === id
-            ? { ...ticket, nivel: `Soporte ${nuevoNivel}` }
-            : ticket
-        )
-      );
-    } catch (err) {
-      console.error("❌ Error al escalar ticket:", err);
-      alert("No se pudo escalar el ticket.");
-    }
-  };
+    cargarTicketsAsignados();
+  }, [usuario]);
 
   const enviarRespuestaTicket = async () => {
     if (!respuestaTexto.trim() || !ticketActivo?.id) return;
@@ -123,25 +67,31 @@ function VistaSoporteEmpleado() {
     try {
       setEnviandoRespuesta(true);
 
-      const resRespuesta = await fetch(`${import.meta.env.VITE_API_URL}/ticket/${ticketActivo.id}/respuesta`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Chibcha-api-key': import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify({ mensaje: respuestaTexto.trim() })
-      });
+      const resRespuesta = await fetch(
+        `${import.meta.env.VITE_API_URL}/ticket/${ticketActivo.id}/respuesta`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Chibcha-api-key': import.meta.env.VITE_API_KEY
+          },
+          body: JSON.stringify({ mensaje: respuestaTexto.trim() })
+        }
+      );
 
       if (!resRespuesta.ok) throw new Error('Error al enviar respuesta');
 
-      const resEstado = await fetch(`${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketActivo.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Chibcha-api-key': import.meta.env.VITE_API_KEY
-        },
-        body: JSON.stringify({ estado: 2 })
-      });
+      const resEstado = await fetch(
+        `${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketActivo.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Chibcha-api-key': import.meta.env.VITE_API_KEY
+          },
+          body: JSON.stringify({ estado: 2 })
+        }
+      );
 
       if (!resEstado.ok) throw new Error('Error al cambiar estado');
 
@@ -186,22 +136,7 @@ function VistaSoporteEmpleado() {
 
   return (
     <div className="panel-soporte">
-      <h2>📋 Panel de Soporte Técnico</h2>
-
-      <div className="filtro-estados">
-        <button className={estadoFiltro === "todos" ? "activo" : ""} onClick={() => setEstadoFiltro("todos")}>Todos</button>
-        <button className={estadoFiltro === "proceso" ? "activo" : ""} onClick={() => setEstadoFiltro("proceso")}>En proceso</button>
-        <button className={estadoFiltro === "resuelto" ? "activo" : ""} onClick={() => setEstadoFiltro("resuelto")}>Resueltos</button>
-      </div>
-
-      {!usuario?.tipocuenta?.includes("TECNICO") && (
-        <div className="filtro-niveles">
-          <button className={nivelFiltro === "todos" ? "activo" : ""} onClick={() => setNivelFiltro("todos")}>Cualquier nivel</button>
-          <button className={nivelFiltro === "1" ? "activo" : ""} onClick={() => setNivelFiltro("1")}>Soporte 1</button>
-          <button className={nivelFiltro === "2" ? "activo" : ""} onClick={() => setNivelFiltro("2")}>Soporte 2</button>
-          <button className={nivelFiltro === "3" ? "activo" : ""} onClick={() => setNivelFiltro("3")}>Soporte 3</button>
-        </div>
-      )}
+      <h2>🎫 Tickets Asignados</h2>
 
       <table>
         <thead>
@@ -219,27 +154,7 @@ function VistaSoporteEmpleado() {
               <td>#{ticket.id}</td>
               <td>{ticket.cliente}</td>
               <td>{ticket.asunto}</td>
-              <td>
-                <span className="nivel-wrapper">
-                  {ticket.nivel}
-                  {ticket.estado !== 'Resuelto' && ticket.nivel !== 'Soporte 3' && (
-                    <span
-                      className="icono-escalar"
-                      title="Escalar ticket"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const confirmar = window.confirm('¿Deseas escalar este ticket al siguiente nivel?');
-                        if (confirmar) {
-                          const nivelActual = Number(ticket.nivel?.match(/\d+/)?.[0] || 1);
-                          subirNivel(ticket.id, nivelActual);
-                        }
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faArrowUp} />
-                    </span>
-                  )}
-                </span>
-              </td>
+              <td>{ticket.nivel}</td>
               <td>
                 <span className={`estado-tag ${ticket.estado.toLowerCase().replace(" ", "-")}`}>
                   {ticket.estado}

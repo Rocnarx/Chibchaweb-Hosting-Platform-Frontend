@@ -123,7 +123,7 @@ export default function NavbarAdmin() {
               <FontAwesomeIcon icon={darkMode ? faCircleHalfStroke : faMoon} />
               {sidebarAbierta && <span>{darkMode ? "" : ""}</span>}
             </button>
-          </div>
+          </div>  
         </div>
       </aside>
 
