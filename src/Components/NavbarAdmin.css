@@ -237,7 +237,7 @@ body.dark-mode .nav-link-admin.active {
 }
 /* ===== Botón Modo Oscuro ===== */
 .dark-mode-toggle-admin {
-  margin-top: 350%;
+  margin-top: 1px;
   padding-top: 20px;
   display: flex;
   justify-content: center; /* Centrado horizontal */
