@@ -1,6 +1,54 @@
-.admin-footer {
+/* ====== MODO OSCURO ====== */
+.admin-footer.dark {
   background-color: #1a1a1a;
   color: #f0f0f0;
+}
+
+.admin-footer.dark .footer-brand h3 {
+  color: #ffaa33;
+}
+
+.admin-footer.dark .footer-brand p {
+  color: #ccc;
+}
+
+.admin-footer.dark .footer-links a {
+  color: #ffa;
+}
+
+.admin-footer.dark .footer-copy {
+  color: #aaa;
+}
+
+/* ====== MODO CLARO ====== */
+.admin-footer.light {
+  background-color: #ffffff;
+  color: #333;
+  border-top: 1px solid #ddd;
+}
+
+.admin-footer.light .footer-brand h3 {
+  color: #007bff; /* Azul estilo links del carrito */
+}
+
+.admin-footer.light .footer-brand p {
+  color: #555;
+}
+
+.admin-footer.light .footer-links a {
+  color: #007bff;
+}
+
+.admin-footer.light .footer-links a:hover {
+  text-decoration: underline;
+}
+
+.admin-footer.light .footer-copy {
+  color: #666;
+}
+
+/* ====== COMÚN ====== */
+.admin-footer {
   padding: 30px 20px 15px;
   font-family: 'Segoe UI', sans-serif;
 }
@@ -15,38 +63,23 @@
   margin: 0 auto 15px;
 }
 
-.admin-footer .footer-brand h3 {
-  color: #ffaa33;
-  margin: 0 0 8px;
-}
-
-.admin-footer .footer-brand p {
-  margin: 0;
-  font-size: 14px;
-  color: #ccc;
-}
-
 .admin-footer .footer-links {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row; /* ✅ Ahora en fila horizontal */
+  gap: 20px; /* Más espacio entre items */
+  flex-wrap: wrap; /* Permite que salten a otra línea en pantallas pequeñas */
 }
+
 
 .admin-footer .footer-links a {
-  color: #ffa;
   text-decoration: none;
   font-size: 14px;
-}
-
-.admin-footer .footer-links a:hover {
-  text-decoration: underline;
 }
 
 .admin-footer .footer-copy {
   text-align: center;
   font-size: 12px;
-  color: #aaa;
 }
