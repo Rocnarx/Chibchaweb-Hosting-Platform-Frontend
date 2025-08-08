@@ -84,3 +84,18 @@ body.dark-mode .footer-links a:hover {
 body.dark-mode .footer-copy {
   color: #999999;
 }
+.social-links {
+  margin-top: 10px;
+}
+
+.social-links a {
+  margin-right: 12px;
+  font-size: 1.3rem;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #007bff; /* Cambia por el color principal de tu marca */
+}
+
