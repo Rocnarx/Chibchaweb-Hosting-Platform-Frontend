@@ -4,28 +4,22 @@ import './Contacto.css';
 export default function Contacto() {
   return (
     <div className="contacto-container">
-      <h2>¿Necesitas ayuda?</h2>
+      <h2>Centro de Ayuda</h2>
       <p className="subtexto">
-        Estamos aquí para ayudarte. Puedes contactarnos a través de los siguientes canales:
+        ¿Tienes dudas sobre el funcionamiento de la plataforma? Aquí te indicamos cómo contactarnos:
       </p>
 
       <div className="info-grid">
         <div className="info-card">
+          <div className="icono">📨</div>
+          <h3>Soporte por Ticket</h3>
+          <p>Envía una solicitud desde la sección de soporte técnico y recibe una respuesta personalizada.</p>
+        </div>
+
+        <div className="info-card">
           <div className="icono">📧</div>
-          <h3>Correo electrónico</h3>
-          <p>soporte@midominio.com</p>
-        </div>
-
-        <div className="info-card">
-          <div className="icono">📍</div>
-          <h3>Dirección</h3>
-          <p>Calle 13 # 31 -75<br />Bogotá, Colombia</p>
-        </div>
-
-        <div className="info-card">
-          <div className="icono">⏰</div>
-          <h3>Horario de atención</h3>
-          <p>Lunes a Viernes<br />8:00 a.m. - 6:00 p.m.</p>
+          <h3>Correo de Soporte</h3>
+          <p>chibchawebcom@gmail.com</p>
         </div>
       </div>
     </div>
