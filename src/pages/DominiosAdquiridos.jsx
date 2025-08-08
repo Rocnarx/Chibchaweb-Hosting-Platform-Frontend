@@ -149,7 +149,6 @@ function DominiosAdquiridos() {
             <div className="grupo-input">
               <label>Transferir a:</label>
               <div className="input-con-icono">
-                <i className="fa-solid fa-envelope"></i>
                 <input
                   type="email"
                   placeholder="correo@ejemplo.com"
