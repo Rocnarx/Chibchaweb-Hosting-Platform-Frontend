@@ -172,7 +172,7 @@ export default function ClienteDetalle() {
         <FiArrowLeft />
       </button>
 
-      <h2>Detalle del Cliente</h2>
+      <h2>Detalleee del Cliente</h2>
 
       <div className="cliente-form">
         {/* Campos */}
