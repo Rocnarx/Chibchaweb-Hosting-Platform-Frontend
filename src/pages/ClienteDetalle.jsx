@@ -153,7 +153,7 @@ export default function ClienteDetalle() {
       {mostrarTarjeta && (
         <div className="tarjeta-overlay">
           <div className="tarjeta-modal">
-            <h3>Empleado eliminado correctamente</h3>
+            <h3>perfil eliminado correctamente</h3>
             <button onClick={() => {
               setMostrarTarjeta(false);
               navigate("/ClientesAdmin");
@@ -172,7 +172,7 @@ export default function ClienteDetalle() {
         <FiArrowLeft />
       </button>
 
-      <h2>Detalleee del Cliente</h2>
+      <h2>Detalle del Cliente</h2>
 
       <div className="cliente-form">
         {/* Campos */}
