@@ -16,7 +16,7 @@ export default function NavbarCoordinador() {
   return (
     <nav className="navbar-coordinador">
       <div className="nav-logo">
-        <Link to="/" className="logo-text">ChibchaWeb</Link>
+        <Link to="/tickets" className="logo-text">ChibchaWeb</Link>
       </div>
 
       <ul className="nav-links">
