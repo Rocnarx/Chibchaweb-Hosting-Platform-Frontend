@@ -1,3 +1,4 @@
+/* ========== CONTENEDOR PRINCIPAL ========== */
 .login-container {
   display: flex;
   justify-content: center;
@@ -8,6 +9,7 @@
   position: relative;
 }
 
+/* ========== BOTÓN VOLVER ========== */
 .btn-back {
   position: absolute;
   top: 24px;
@@ -20,10 +22,10 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -32,11 +34,7 @@
   transform: translateX(-2px);
 }
 
-
-.btn-back:hover {
-  background-color: #522500;
-}
-
+/* ========== CAJA DE LOGIN ========== */
 .login-box {
   background-color: #fff7f0;
   padding: 40px 30px;
@@ -102,24 +100,117 @@ form button:disabled {
   opacity: 0.8;
 }
 
+/* ========== MENSAJE DE ERROR ========== */
 .mensaje {
   margin-top: 10px;
   color: #c00;
   font-size: 14px;
 }
 
-.enlace {
+/* ========== ENLACES ========== */
+.enlace, .enlace-prueba {
   margin-top: 20px;
   font-size: 13px;
   color: #4b2e00;
 }
 
-.enlace a {
+.enlace a, .enlace-prueba a {
   color: #6b3b00;
   text-decoration: underline;
 }
 
-/* ===== MODO OSCURO: Login ===== */
+.recuperar-link {
+  margin-top: 1rem;
+  cursor: pointer;
+  color: #e38b31;
+  text-decoration: underline;
+}
+
+/* ========== MODAL ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #fff7f0;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 420px;
+  animation: fadeIn 0.3s ease-in-out;
+  text-align: center;
+}
+
+.modal h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: #6b3b00;
+}
+
+.modal input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid #d6b89c;
+  border-radius: 8px;
+  background-color: #fffaf7;
+  font-size: 1rem;
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: #6b3b00;
+}
+
+.modal button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease;
+  background-color: #6b3b00;
+  color: white;
+  border: none;
+}
+
+.modal button:hover {
+  background-color: #522500;
+}
+
+.modal .cancel-button {
+  background-color: #bbb;
+  color: #333;
+}
+
+.modal .cancel-button:hover {
+  background-color: #999;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========== MODO OSCURO ========== */
 body.dark-mode .login-container {
   background: linear-gradient(to bottom right, #1e1e1e, #2c2c2c);
   color: #ffffff;
@@ -167,19 +258,38 @@ body.dark-mode form button:hover {
   background-color: #e38b31;
 }
 
-body.dark-mode form button:disabled {
-  background-color: #c88e4a;
-  opacity: 0.8;
-}
-
 body.dark-mode .mensaje {
   color: #ff7070;
 }
 
-body.dark-mode .enlace {
+body.dark-mode .enlace, body.dark-mode .enlace-prueba {
   color: #cccccc;
 }
 
-body.dark-mode .enlace a {
+body.dark-mode .enlace a, body.dark-mode .enlace-prueba a {
   color: #FFA94D;
+}
+
+body.dark-mode .modal {
+  background-color: #2c2c2c;
+  color: white;
+}
+
+body.dark-mode .modal input {
+  background-color: #1e1e1e;
+  color: white;
+  border: 1px solid #777;
+}
+
+body.dark-mode .modal input:focus {
+  border-color: #FFA94D;
+}
+
+body.dark-mode .modal button {
+  background-color: #FFA94D;
+  color: black;
+}
+
+body.dark-mode .modal button:hover {
+  background-color: #e38b31;
 }

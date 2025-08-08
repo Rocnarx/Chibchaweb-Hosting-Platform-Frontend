@@ -8,11 +8,12 @@ import {
   FiTrash2,
   FiRefreshCcw,
 } from "react-icons/fi";
-import "./ClienteDetalle.css"; // Reutiliza el CSS existente
+import "./TecnicoDetalle.css";
 
-export default function EmpleadoDetalle() {
+
+export default function TecnicoDetalle() {
   const { correo } = useParams();
-  const [empleado, setEmpleado] = useState(null);
+  const [tecnico, setTecnico] = useState(null);
   const [formData, setFormData] = useState({});
   const [modoEdicion, setModoEdicion] = useState(false);
   const [error, setError] = useState("");
@@ -20,16 +21,33 @@ export default function EmpleadoDetalle() {
   const [mostrarTarjeta, setMostrarTarjeta] = useState(false);
   const navigate = useNavigate();
 
+  const tiposCuenta = {
+    1: "CLIENTE",
+    2: "DISTRIBUIDOR",
+    3: "ADMIN",
+    4: "EMPLEADO",
+    5: "POSTULADO",
+    6: "ELIMINADA",
+    7: "INHABILITADO",
+  };
+
+  const paises = {
+    76: "Brasil",
+    170: "Colombia",
+    218: "Ecuador",
+    604: "Perú",
+    862: "Venezuela",
+  };
+
   const mostrarAlerta = (mensaje, tipo = "info") => {
     setAlerta({ mensaje, tipo });
     setTimeout(() => setAlerta(null), 3000);
   };
 
   useEffect(() => {
-    const obtenerEmpleado = async () => {
+    const obtenerTecnico = async () => {
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/cuenta_por_correo`, {
-
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -38,18 +56,18 @@ export default function EmpleadoDetalle() {
           body: JSON.stringify({ correo }),
         });
 
-        if (!res.ok) throw new Error("No se pudo obtener el empleado");
+        if (!res.ok) throw new Error("No se pudo obtener el técnico");
 
         const data = await res.json();
-        setEmpleado(data);
+        setTecnico(data);
         setFormData(data);
       } catch (err) {
         console.error(err);
-        setError("No se pudo cargar la información del empleado.");
+        setError("No se pudo cargar la información del técnico.");
       }
     };
 
-    obtenerEmpleado();
+    obtenerTecnico();
   }, [correo]);
 
   const handleChange = (e) => {
@@ -60,7 +78,7 @@ export default function EmpleadoDetalle() {
 
   const handleGuardar = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_empleado/${empleado.IDEMPLEADO}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${tecnico.IDCUENTA}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +91,7 @@ export default function EmpleadoDetalle() {
 
       mostrarAlerta("Cambios guardados correctamente.", "success");
       setModoEdicion(false);
-      setEmpleado(formData);
+      setTecnico(formData);
     } catch (err) {
       console.error(err);
       mostrarAlerta("No se pudo guardar los cambios.", "error");
@@ -81,56 +99,56 @@ export default function EmpleadoDetalle() {
   };
 
   const handleCancelar = () => {
-    setFormData(empleado);
+    setFormData(tecnico);
     setModoEdicion(false);
   };
 
   const handleEliminar = async () => {
-    const confirmar = window.confirm("¿Estás seguro de que deseas eliminar este empleado?");
+    const confirmar = window.confirm("¿Estás seguro de que deseas eliminar esta cuenta?");
     if (!confirmar) return;
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_empleado/${empleado.IDEMPLEADO}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${tecnico.IDCUENTA}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "Chibcha-api-key": import.meta.env.VITE_API_KEY,
         },
-        body: JSON.stringify({ ...formData, ESTADO: "ELIMINADO" }),
+        body: JSON.stringify({ ...formData, IDTIPOCUENTA: 6 }),
       });
 
-      if (!res.ok) throw new Error("Error al eliminar el empleado");
+      if (!res.ok) throw new Error("Error al eliminar la cuenta");
 
       setMostrarTarjeta(true);
     } catch (err) {
       console.error(err);
-      mostrarAlerta("No se pudo eliminar el empleado", "error");
+      mostrarAlerta("No se pudo eliminar la cuenta", "error");
     }
   };
 
   const handleRestaurar = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_empleado/${empleado.IDEMPLEADO}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${tecnico.IDCUENTA}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "Chibcha-api-key": import.meta.env.VITE_API_KEY,
         },
-        body: JSON.stringify({ ...formData, ESTADO: "ACTIVO" }),
+        body: JSON.stringify({ ...formData, IDTIPOCUENTA: 4 }),
       });
 
-      if (!res.ok) throw new Error("Error al restaurar el empleado");
+      if (!res.ok) throw new Error("Error al restaurar la cuenta");
 
-      mostrarAlerta("Empleado restaurado exitosamente.", "success");
-      setFormData({ ...formData, ESTADO: "ACTIVO" });
+      mostrarAlerta("Cuenta restaurada exitosamente.", "success");
+      setFormData({ ...formData, IDTIPOCUENTA: 4 });
     } catch (err) {
       console.error(err);
-      mostrarAlerta("No se pudo restaurar el empleado.", "error");
+      mostrarAlerta("No se pudo restaurar la cuenta.", "error");
     }
   };
 
   if (error) return <p className="error">{error}</p>;
-  if (!empleado) return <p className="cargando">Cargando información...</p>;
+  if (!tecnico) return <p className="cargando">Cargando información...</p>;
 
   return (
     <div className="cliente-detalle-container">
@@ -143,10 +161,10 @@ export default function EmpleadoDetalle() {
       {mostrarTarjeta && (
         <div className="tarjeta-overlay">
           <div className="tarjeta-modal">
-            <h3>Empleado eliminado correctamente</h3>
+            <h3>Técnico eliminado correctamente</h3>
             <button onClick={() => {
               setMostrarTarjeta(false);
-              navigate("/EmpleadosAdmin");
+              navigate("/TecnicosAdmin");
             }}>
               OK
             </button>
@@ -158,15 +176,15 @@ export default function EmpleadoDetalle() {
         <FiArrowLeft />
       </button>
 
-      <h2>Detalle del Empleado</h2>
+      <h2>Detalle del Técnico</h2>
 
       <div className="cliente-form">
-        <label>ID Empleado:
-          <input type="text" name="IDEMPLEADO" value={formData.IDEMPLEADO || ""} disabled />
+        <label>ID Usuario:
+          <input type="text" name="IDCUENTA" value={formData.IDCUENTA || ""} disabled />
         </label>
 
         <label>Nombre:
-          <input type="text" name="NOMBRE" value={formData.NOMBRE || ""} onChange={handleChange} disabled={!modoEdicion} />
+          <input type="text" name="NOMBRECUENTA" value={formData.NOMBRECUENTA || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
         <label>Correo:
@@ -177,20 +195,26 @@ export default function EmpleadoDetalle() {
           <input type="text" name="TELEFONO" value={formData.TELEFONO || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
-        <label>Cargo:
-          <input type="text" name="CARGO" value={formData.CARGO || ""} onChange={handleChange} disabled={!modoEdicion} />
+        <label>Dirección:
+          <input type="text" name="DIRECCION" value={formData.DIRECCION || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
 
-        <label>Área:
-          <input type="text" name="AREA" value={formData.AREA || ""} onChange={handleChange} disabled={!modoEdicion} />
+        <label>País:
+          <select name="IDPAIS" value={formData.IDPAIS || ""} onChange={handleChange} disabled={!modoEdicion}>
+            <option value={76}>Brasil</option>
+            <option value={170}>Colombia</option>
+            <option value={218}>Ecuador</option>
+            <option value={604}>Perú</option>
+            <option value={862}>Venezuela</option>
+          </select>
         </label>
 
-        <label>Fecha de ingreso:
-          <input type="date" name="FECHA_INGRESO" value={formData.FECHA_INGRESO?.slice(0, 10) || ""} onChange={handleChange} disabled={!modoEdicion} />
+        <label>Tipo de cuenta:
+          <input type="text" value={tiposCuenta[formData.IDTIPOCUENTA] || "DESCONOCIDO"} disabled />
         </label>
 
-        <label>Estado:
-          <input type="text" value={formData.ESTADO || "ACTIVO"} disabled />
+        <label>ID del plan:
+          <input type="number" name="IDPLAN" value={formData.IDPLAN || ""} onChange={handleChange} disabled={!modoEdicion} />
         </label>
       </div>
 
@@ -210,13 +234,13 @@ export default function EmpleadoDetalle() {
           </div>
         )}
 
-        {formData.ESTADO === "ELIMINADO" ? (
+        {formData.IDTIPOCUENTA === 6 ? (
           <button className="btn btn-guardar" onClick={handleRestaurar}>
-            <FiRefreshCcw /> Restaurar empleado
+            <FiRefreshCcw /> Restaurar cuenta
           </button>
         ) : (
           <button className="btn btn-eliminar" onClick={handleEliminar}>
-            <FiTrash2 /> Eliminar empleado
+            <FiTrash2 /> Eliminar cuenta
           </button>
         )}
       </div>

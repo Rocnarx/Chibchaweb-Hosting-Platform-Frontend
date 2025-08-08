@@ -16,7 +16,6 @@ import Tarjeta from "./pages/Tarjeta";
 import MetodosPago from "./pages/MetodosPago";
 import PaqueteAdquirido from "./pages/PaqueteAdquirido";
 
-
 // Componentes compartidos
 import FormularioD from "./pages/FormularioRegistroDistribuidor";
 import FormularioE from "./pages/FormularioRegistroEmpleado";
@@ -97,7 +96,6 @@ function App() {
           <Route path="/vista-soporte-admin" element={<VistaSoporteAdmin />} />
           <Route path="/contacto" element={<Contacto />} />
 
-
           {/* Rutas protegidas comunes */}
           <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />
           <Route path="/carrito" element={<RutaProtegida requiereVerificacion={true}><Carrito /></RutaProtegida>} />
@@ -116,23 +114,17 @@ function App() {
           {esAdmin && <Route path="/EmpleadosAdmin" element={<EmpleadosAdmin />} />}
           {esAdmin && <Route path="/CoordinadoresAdmin" element={<CoordinadoresAdmin />} />}
           {esAdmin && <Route path="/postulado/:correo" element={<PostuladoDetalle />} />}
-          {esAdmin && <Route path="/empleados/:correo" element={<EmpleadoDetalle />} />}
+          {esAdmin && <Route path="/empleado/:correo" element={<EmpleadoDetalle />} />}
           {esAdmin && <Route path="/estadisticas" element={<Estadisticas />} />}
-          
-          {/* Rutas para clientes */}
-          {!esAdmin && !esCoordinador && <Route path="/dominios" element={<Dominios />} />}
-          {!esAdmin && !esCoordinador && <Route path="/dominios/:nombre" element={<Dominios />} />}
 
           {/* Rutas para coordinadores */}
-
-          {/* Rutas exclusivas para coordinadores */}
           {esCoordinador && <Route path="/tickets" element={<TicketsCoordinador />} />}
           {esCoordinador && <Route path="/asignar-tickets" element={<AsignarTickets />} />}
 
           {/* Rutas exclusivas para clientes */}
           {!esAdmin && !esCoordinador && <Route path="/dominios" element={<Dominios />} />}
+          {!esAdmin && !esCoordinador && <Route path="/dominios/:nombre" element={<Dominios />} />}
           {!esAdmin && !esCoordinador && <Route path="/paquete-adquirido" element={<PaqueteAdquirido />} />}
-
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />

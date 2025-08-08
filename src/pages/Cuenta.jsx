@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import "./Cuenta.css";
-import "./CuentaDistribuidor.css"; // ✅ nuevos estilos separados
+import "./CuentaDistribuidor.css";
 import { FiLogOut } from "react-icons/fi";
 
 export default function Cuenta() {
@@ -12,8 +12,11 @@ export default function Cuenta() {
   const [modoEdicion, setModoEdicion] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [formData, setFormData] = useState({});
+  const [mostrarDialogo, setMostrarDialogo] = useState(false);
+  const [contrasenaActual, setContrasenaActual] = useState("");
+  const [contrasenaNueva, setContrasenaNueva] = useState("");
+  const [cambiandoContrasena, setCambiandoContrasena] = useState(false);
 
-  // ✅ estado para sección distribuidor
   const [infoDistribuidor, setInfoDistribuidor] = useState(null);
   const [distLoading, setDistLoading] = useState(false);
   const [distError, setDistError] = useState("");
@@ -40,8 +43,7 @@ export default function Cuenta() {
   useEffect(() => {
     const datosIniciales = {
       IDCUENTA: usuario.idcuenta,
-      IDTIPOCUENTA:
-        typeof usuario.tipocuenta === "number" ? usuario.tipocuenta : 1,
+      IDTIPOCUENTA: typeof usuario.tipocuenta === "number" ? usuario.tipocuenta : 1,
       IDPLAN:
         typeof usuario.plan === "number"
           ? usuario.plan
@@ -57,9 +59,8 @@ export default function Cuenta() {
     };
     setFormData(datosIniciales);
 
-    // ✅ Cargar datos de ahorro para DISTRIBUIDOR
     if (usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR") {
-      const load = async () => {
+      const loadDistribuidor = async () => {
         try {
           setDistLoading(true);
           setDistError("");
@@ -80,7 +81,7 @@ export default function Cuenta() {
           setDistLoading(false);
         }
       };
-      load();
+      loadDistribuidor();
     } else {
       setInfoDistribuidor(null);
       setDistError("");
@@ -98,10 +99,7 @@ export default function Cuenta() {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        name === "IDPAIS" || name === "IDPLAN" || name === "TELEFONO"
-          ? parseInt(value)
-          : value,
+      [name]: name === "IDPAIS" || name === "IDPLAN" || name === "TELEFONO" ? parseInt(value) : value,
     }));
   };
 
@@ -155,7 +153,42 @@ export default function Cuenta() {
     }
   };
 
-  // ⚠️ Roles que NO pueden ver métodos de pago
+  const cambiarContrasena = async () => {
+    if (!contrasenaActual || !contrasenaNueva) {
+      alert("Por favor llena ambos campos.");
+      return;
+    }
+
+    setCambiandoContrasena(true);
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/cambiar-contrasena`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify({
+          idcuenta: usuario.idcuenta,
+          contrasena_actual: contrasenaActual,
+          contrasena_nueva: contrasenaNueva,
+        }),
+      });
+
+      if (!res.ok) throw new Error("No se pudo actualizar la contraseña.");
+
+      alert("Contraseña actualizada correctamente.");
+      setMostrarDialogo(false);
+      setContrasenaActual("");
+      setContrasenaNueva("");
+    } catch (error) {
+      console.error("❌ Error al cambiar contraseña:", error);
+      alert("Error al actualizar la contraseña.");
+    } finally {
+      setCambiandoContrasena(false);
+    }
+  };
+
   const tiposRestringidos = [
     "COORDINADOR NIVEL 1",
     "COORDINADOR NIVEL 2",
@@ -166,9 +199,7 @@ export default function Cuenta() {
     "ADMIN",
   ];
 
-  const puedeVerMetodosPago = !tiposRestringidos.includes(
-    usuario.tipocuenta?.toUpperCase?.()
-  );
+  const puedeVerMetodosPago = !tiposRestringidos.includes(usuario.tipocuenta?.toUpperCase?.());
 
   return (
     <div className="cuenta-container">
@@ -177,81 +208,32 @@ export default function Cuenta() {
       <div className="cuenta-info">
         {modoEdicion ? (
           <>
-            <div className="cuenta-dato">
-              <strong>Nombre:</strong>
-              <input
-                name="NOMBRECUENTA"
-                value={formData.NOMBRECUENTA}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="cuenta-dato">
-              <strong>Correo:</strong>
-              <input
-                name="CORREO"
-                value={formData.CORREO}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="cuenta-dato">
-              <strong>Teléfono:</strong>
-              <input
-                name="TELEFONO"
-                value={formData.TELEFONO}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="cuenta-dato">
-              <strong>Dirección:</strong>
-              <input
-                name="DIRECCION"
-                value={formData.DIRECCION}
-                onChange={handleInputChange}
-              />
-            </div>
-
+            <div className="cuenta-dato"><strong>Nombre:</strong><input name="NOMBRECUENTA" value={formData.NOMBRECUENTA} onChange={handleInputChange} /></div>
+            <div className="cuenta-dato"><strong>Correo:</strong><input name="CORREO" value={formData.CORREO} onChange={handleInputChange} /></div>
+            <div className="cuenta-dato"><strong>Teléfono:</strong><input name="TELEFONO" value={formData.TELEFONO} onChange={handleInputChange} /></div>
+            <div className="cuenta-dato"><strong>Dirección:</strong><input name="DIRECCION" value={formData.DIRECCION} onChange={handleInputChange} /></div>
             <div className="cuenta-dato">
               <strong>País:</strong>
               <select name="IDPAIS" value={formData.IDPAIS} onChange={handleInputChange}>
                 {Object.entries(paises).map(([codigo, nombre]) => (
-                  <option key={codigo} value={codigo}>
-                    {nombre}
-                  </option>
+                  <option key={codigo} value={codigo}>{nombre}</option>
                 ))}
               </select>
             </div>
           </>
         ) : (
           <>
-            <div className="cuenta-dato">
-              <strong>Nombre:</strong> <span>{usuario.nombrecuenta}</span>
-            </div>
-            <div className="cuenta-dato">
-              <strong>CC:</strong> <span>{usuario.identificacion}</span>
-            </div>
-            <div className="cuenta-dato">
-              <strong>Correo:</strong> <span>{usuario.correo}</span>
-            </div>
-            <div className="cuenta-dato">
-              <strong>Teléfono:</strong>{" "}
-              <span>{usuario.telefono || "No registrado"}</span>
-            </div>
-            <div className="cuenta-dato">
-              <strong>Dirección:</strong>{" "}
-              <span>{usuario.direccion || "No registrada"}</span>
-            </div>
-            <div className="cuenta-dato">
-              <strong>País:</strong>{" "}
-              <span>{paises[usuario.pais] || usuario.pais}</span>
-            </div>
+            <div className="cuenta-dato"><strong>Nombre:</strong><span>{usuario.nombrecuenta}</span></div>
+            <div className="cuenta-dato"><strong>CC:</strong><span>{usuario.identificacion}</span></div>
+            <div className="cuenta-dato"><strong>Correo:</strong><span>{usuario.correo}</span></div>
+            <div className="cuenta-dato"><strong>Teléfono:</strong><span>{usuario.telefono || "No registrado"}</span></div>
+            <div className="cuenta-dato"><strong>Dirección:</strong><span>{usuario.direccion || "No registrada"}</span></div>
+            <div className="cuenta-dato"><strong>País:</strong><span>{paises[usuario.pais] || usuario.pais}</span></div>
           </>
         )}
       </div>
 
-      {/* ===================== SECCIÓN DISTRIBUIDOR ===================== */}
+      {/* ===================== DISTRIBUIDOR ===================== */}
       {usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR" && (
         <section className="distribuidor-card">
           <div className="distribuidor-header">
@@ -261,46 +243,19 @@ export default function Cuenta() {
             )}
           </div>
 
-          {distLoading && (
-            <div className="distribuidor-loading">Cargando información…</div>
-          )}
-
-          {distError && (
-            <div className="distribuidor-error">
-              No se pudo cargar la información: {distError}
-            </div>
-          )}
+          {distLoading && <div className="distribuidor-loading">Cargando información…</div>}
+          {distError && <div className="distribuidor-error">No se pudo cargar la información: {distError}</div>}
 
           {!distLoading && !distError && infoDistribuidor && (
             <>
               <div className="distribuidor-grid">
-                <div className="grid-item">
-                  <span className="label">Comisión</span>
-                  <span className="value">
-                    {infoDistribuidor.distribuidor.comision}%
-                  </span>
-                </div>
-                <div className="grid-item">
-                  <span className="label">Nombre</span>
-                  <span className="value">{infoDistribuidor.distribuidor.nombre}</span>
-                </div>
-
+                <div className="grid-item"><span className="label">Comisión</span><span className="value">{infoDistribuidor.distribuidor.comision}%</span></div>
+                <div className="grid-item"><span className="label">Nombre</span><span className="value">{infoDistribuidor.distribuidor.nombre}</span></div>
               </div>
 
               <div className="distribuidor-stats">
-                <div className="stat">
-                  <div className="stat-title">Total dominios</div>
-                  <div className="stat-value">
-                    {infoDistribuidor.total_dominios_comprados}
-                  </div>
-                </div>
-                <div className="stat">
-                  <div className="stat-title">Total ahorrado</div>
-                  <div className="stat-value currency">
-                    $
-                    {Number(infoDistribuidor.total_ahorrado || 0).toLocaleString()}
-                  </div>
-                </div>
+                <div className="stat"><div className="stat-title">Total dominios</div><div className="stat-value">{infoDistribuidor.total_dominios_comprados}</div></div>
+                <div className="stat"><div className="stat-title">Total ahorrado</div><div className="stat-value currency">${Number(infoDistribuidor.total_ahorrado || 0).toLocaleString()}</div></div>
               </div>
 
               <div className="distribuidor-table-wrapper">
@@ -313,22 +268,16 @@ export default function Cuenta() {
                     </tr>
                   </thead>
                   <tbody>
-                    {infoDistribuidor.dominios?.map((d, idx) => (
-                      <tr key={idx}>
-                        <td>{d.nombre_dominio}</td>
-                        <td>${Number(d.precio_original).toLocaleString()}</td>
-                        <td className="positivo">
-                          ${Number(d.ahorro_por_comision).toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                    {(!infoDistribuidor.dominios ||
-                      infoDistribuidor.dominios.length === 0) && (
-                      <tr>
-                        <td colSpan="3" className="empty">
-                          Aún no hay dominios registrados.
-                        </td>
-                      </tr>
+                    {infoDistribuidor.dominios?.length > 0 ? (
+                      infoDistribuidor.dominios.map((d, idx) => (
+                        <tr key={idx}>
+                          <td>{d.nombre_dominio}</td>
+                          <td>${Number(d.precio_original).toLocaleString()}</td>
+                          <td className="positivo">${Number(d.ahorro_por_comision).toLocaleString()}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr><td colSpan="3" className="empty">Aún no hay dominios registrados.</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -337,39 +286,23 @@ export default function Cuenta() {
           )}
         </section>
       )}
-      {/* =============================================================== */}
+      {/* ======================================================== */}
 
       <div className="botones-accion">
         {modoEdicion ? (
           <>
-            <button
-              className="btn-metodo-pago"
-              onClick={guardarCambios}
-              disabled={guardando}
-            >
-              {guardando ? "Guardando..." : "Guardar cambios"}
-            </button>
-            <button
-              className="btn-cerrar-sesion"
-              onClick={() => setModoEdicion(false)}
-            >
-              Cancelar
-            </button>
+            <button className="btn-metodo-pago" onClick={guardarCambios} disabled={guardando}>{guardando ? "Guardando..." : "Guardar cambios"}</button>
+            <button className="btn-cerrar-sesion" onClick={() => setModoEdicion(false)}>Cancelar</button>
           </>
         ) : (
           <>
-            <button className="btn-metodo-pago" onClick={() => setModoEdicion(true)}>
-              Editar perfil
-            </button>
+            <button className="btn-metodo-pago" onClick={() => setModoEdicion(true)}>Editar perfil</button>
+            <button className="btn-metodo-pago" onClick={() => setMostrarDialogo(true)}>Actualizar contraseña</button>
 
             {puedeVerMetodosPago && (
               <>
-                <button className="btn-metodo-pago" onClick={() => navigate("/Tarjeta")}>
-                  Agregar método de pago
-                </button>
-                <button className="btn-metodo-pago" onClick={() => navigate("/metodos")}>
-                  Mis métodos
-                </button>
+                <button className="btn-metodo-pago" onClick={() => navigate("/Tarjeta")}>Agregar método de pago</button>
+                <button className="btn-metodo-pago" onClick={() => navigate("/metodos")}>Mis métodos</button>
               </>
             )}
 
@@ -380,6 +313,20 @@ export default function Cuenta() {
           </>
         )}
       </div>
+
+      {mostrarDialogo && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Actualizar contraseña</h3>
+            <input type="password" placeholder="Contraseña actual" value={contrasenaActual} onChange={(e) => setContrasenaActual(e.target.value)} />
+            <input type="password" placeholder="Nueva contraseña" value={contrasenaNueva} onChange={(e) => setContrasenaNueva(e.target.value)} />
+            <div className="modal-buttons">
+              <button onClick={cambiarContrasena} disabled={cambiandoContrasena}>{cambiandoContrasena ? "Actualizando..." : "Actualizar"}</button>
+              <button onClick={() => setMostrarDialogo(false)}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

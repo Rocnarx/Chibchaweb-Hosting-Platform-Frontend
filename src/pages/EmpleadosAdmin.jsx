@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaSyncAlt, FaSave } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "./EmpleadosAdmin.css";
 
 export default function EmpleadosAdmin() {
@@ -8,6 +9,8 @@ export default function EmpleadosAdmin() {
   const [nuevoNivel, setNuevoNivel] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate(); // ✅ para redirigir
 
   const niveles = {
     11: "Técnico Nivel 1",
@@ -54,6 +57,10 @@ export default function EmpleadosAdmin() {
   useEffect(() => {
     obtenerTodosLosEmpleados();
   }, []);
+
+  const irADetalle = (correo) => {
+    navigate(`/empleado/${correo}`);
+  };
 
   const manejarReasignar = async (correo) => {
     try {
@@ -105,7 +112,7 @@ export default function EmpleadosAdmin() {
       setNuevoNivel(null);
       setError("");
 
-      await obtenerTodosLosEmpleados(); // ✅ Actualiza empleados sin recargar la página
+      await obtenerTodosLosEmpleados();
     } catch (err) {
       console.error(err);
       setError("Error al guardar los cambios.");
@@ -130,7 +137,13 @@ export default function EmpleadosAdmin() {
         <tbody>
           {empleados.map((emp) => (
             <tr key={emp.idcuenta}>
-              <td>{emp.nombrecuenta}</td>
+              <td
+                className="nombre-enlace"
+                style={{ cursor: "pointer", color: "#924600" }}
+                onClick={() => irADetalle(emp.correo)}
+              >
+                {emp.nombrecuenta}
+              </td>
               <td>{emp.correo}</td>
               <td>{niveles[emp.idtipocuenta] || "Sin asignar"}</td>
               <td>
