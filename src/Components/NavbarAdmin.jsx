@@ -102,7 +102,7 @@ export default function NavbarAdmin() {
             <li>
               <NavLink to="/DistribuidoresAdmin" className="nav-link-admin">
                 <FontAwesomeIcon icon={faGlobe} />
-                {sidebarAbierta && <span>Distribuidoressss</span>}
+                {sidebarAbierta && <span>Distribuidores</span>}
               </NavLink>
             </li>
             <li>
@@ -129,6 +129,12 @@ export default function NavbarAdmin() {
               <NavLink to="/perfil" className="nav-link-admin">
                 <FontAwesomeIcon icon={faUser} />
                 {sidebarAbierta && <span>Perfil</span>}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/comisiones" className="nav-link-admin">
+                <FontAwesomeIcon icon={faMoneyBill} />
+                {sidebarAbierta && <span>Comisiones</span>}
               </NavLink>
             </li>
           </ul>
