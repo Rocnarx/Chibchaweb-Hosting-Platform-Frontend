@@ -103,55 +103,47 @@ export default function Cuenta() {
     }));
   };
 
-  const guardarCambios = async () => {
-    if (!formData.NOMBRECUENTA.trim()) {
-      alert("El nombre no puede estar vacío.");
-      return;
-    }
+// (todo el código anterior permanece igual)
 
-    if (!/\S+@\S+\.\S+/.test(formData.CORREO)) {
-      alert("El correo electrónico no es válido.");
-      return;
-    }
+const guardarCambios = async () => {
+  if (!formData.NOMBRECUENTA.trim()) {
+    alert("El nombre no puede estar vacío.");
+    return;
+  }
 
-    setGuardando(true);
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${formData.IDCUENTA}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+  if (!/\S+@\S+\.\S+/.test(formData.CORREO)) {
+    alert("El correo electrónico no es válido.");
+    return;
+  }
 
-      if (!res.ok) throw new Error("No se pudo guardar.");
+  setGuardando(true);
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/admin/modificar_cuenta/${formData.IDCUENTA}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+        body: JSON.stringify(formData),
+      }
+    );
 
-      const nuevoUsuario = {
-        ...usuario,
-        nombrecuenta: formData.NOMBRECUENTA,
-        correo: formData.CORREO,
-        telefono: formData.TELEFONO,
-        direccion: formData.DIRECCION,
-        pais: formData.IDPAIS,
-        tipocuenta: formData.IDTIPOCUENTA,
-        plan: formData.IDPLAN,
-      };
+    if (!res.ok) throw new Error("No se pudo guardar.");
 
-      setUsuario(nuevoUsuario);
-      localStorage.setItem("usuario", JSON.stringify(nuevoUsuario));
-      setModoEdicion(false);
-      alert("Perfil actualizado con éxito.");
-    } catch (error) {
-      console.error("❌ Error al guardar:", error);
-      alert("Hubo un error al actualizar el perfil.");
-    } finally {
-      setGuardando(false);
-    }
-  };
+    alert("Perfil actualizado con éxito. Por seguridad, inicia sesión nuevamente.");
+    setUsuario(null);
+    localStorage.removeItem("usuario");
+    navigate("/login");
+  } catch (error) {
+    console.error("❌ Error al guardar:", error);
+    alert("Hubo un error al actualizar el perfil.");
+  } finally {
+    setGuardando(false);
+  }
+};
+
 
   const cambiarContrasena = async () => {
     if (!contrasenaActual || !contrasenaNueva) {
