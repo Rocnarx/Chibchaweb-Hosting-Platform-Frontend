@@ -19,7 +19,6 @@ export default function ConfirmarCuenta() {
   const navigate = useNavigate();
   const yaConfirmado = useRef(false); // 🛑 para evitar verificación múltiple
 
-  const { actualizarUsuario } = useUser(); // ✅ Acceder a la función del contexto
 
   useEffect(() => {
     const tokenURL = searchParams.get("token");
@@ -31,41 +30,39 @@ export default function ConfirmarCuenta() {
     }
   }, [searchParams]);
 
-  const confirmarCuenta = async (token, idcuenta) => {
-    setCargando(true);
-    setMensaje("");
-    setEstado(null);
+const confirmarCuenta = async (token, idcuenta) => {
+  setCargando(true);
+  setMensaje("");
+  setEstado(null);
 
-    try {
-      const url = `${import.meta.env.VITE_API_URL}/confirmar-registro?token=${token}&idcuenta=${idcuenta}`;
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-      });
+  try {
+    const url = `${import.meta.env.VITE_API_URL}/confirmar-registro?token=${token}&idcuenta=${idcuenta}`;
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+      },
+    });
 
-      const data = await res.text();
+    const data = await res.text();
 
-      if (res.ok) {
-        // ✅ Actualizar usuario como verificado en el contexto
-        actualizarUsuario && actualizarUsuario({ verificado: true });
-
-        setMensaje("✅ Cuenta confirmada exitosamente. Serás redirigido al inicio de sesión...");
-        setEstado("success");
-        setTimeout(() => navigate("/login"), 2500);
-      } else {
-        setMensaje(`❌ Error: ${data}`);
-        setEstado("error");
-      }
-    } catch (err) {
-      console.error(err);
-      setMensaje("❌ Error al conectar con el servidor.");
+    if (res.ok) {
+      setMensaje("✅ Cuenta confirmada exitosamente. Serás redirigido al inicio de sesión...");
+      setEstado("success");
+      setTimeout(() => navigate("/Home"), 2500);
+    } else {
+      setMensaje(`❌ Error: ${data}`);
       setEstado("error");
-    } finally {
-      setCargando(false);
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setMensaje("❌ Error al conectar con el servidor.");
+    setEstado("error");
+  } finally {
+    setCargando(false);
+  }
+};
+
 
   const manejarSubmit = async (e) => {
     e.preventDefault();
