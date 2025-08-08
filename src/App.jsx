@@ -41,6 +41,7 @@ import EmpleadosAdmin from "./pages/EmpleadosAdmin";
 import EmpleadoDetalle from "./pages/EmpleadoDetalle";
 import CoordinadoresAdmin from "./pages/CoordinadoresAdmin";
 import VistaSoporteAdmin from "./pages/VistaSoporteAdmin";
+import Contacto from "./pages/Contacto";
 
 // Componentes para coordinadores
 import NavbarCoordinador from "./Components/NavbarCoordinador";
@@ -93,6 +94,8 @@ function App() {
           <Route path="/paquetes" element={<PaquetesAdmin />} />
           <Route path="/vista-soporte-empleado" element={<VistaSoporteEmpleado />} />
           <Route path="/vista-soporte-admin" element={<VistaSoporteAdmin />} />
+          <Route path="/contacto" element={<Contacto />} />
+
 
           {/* Rutas protegidas comunes */}
           <Route path="/perfil" element={<RutaProtegida><Cuenta /></RutaProtegida>} />

@@ -67,7 +67,7 @@ export default function FormularioRegistroDistribuidor() {
       password: form.contrasenaCuenta,
       idtipocuenta: "2",
       idpais: form.idpais,
-      idplan: "0",
+      idplan: "1",
     };
 
     try {
