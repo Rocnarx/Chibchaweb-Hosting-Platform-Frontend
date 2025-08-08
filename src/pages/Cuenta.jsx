@@ -275,25 +275,16 @@ export default function Cuenta() {
             <>
               <div className="distribuidor-grid">
                 <div className="grid-item">
-                  <span className="label">ID distribuidor</span>
-                  <span className="value">{infoDistribuidor.distribuidor.id}</span>
-                </div>
-                <div className="grid-item">
-                  <span className="label">Nombre</span>
-                  <span className="value">{infoDistribuidor.distribuidor.nombre}</span>
-                </div>
-                <div className="grid-item">
                   <span className="label">Comisión</span>
                   <span className="value">
                     {infoDistribuidor.distribuidor.comision}%
                   </span>
                 </div>
                 <div className="grid-item">
-                  <span className="label">Límite de dominios</span>
-                  <span className="value">
-                    {infoDistribuidor.distribuidor.limite_dominio}
-                  </span>
+                  <span className="label">Nombre</span>
+                  <span className="value">{infoDistribuidor.distribuidor.nombre}</span>
                 </div>
+
               </div>
 
               <div className="distribuidor-stats">

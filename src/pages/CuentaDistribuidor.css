@@ -140,6 +140,7 @@
 
 .distribuidor-table tbody tr:hover {
   background: #fff7f0;
+    cursor: default;
 }
 
 .distribuidor-table td.positivo {
