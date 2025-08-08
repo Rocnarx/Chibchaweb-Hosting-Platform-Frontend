@@ -135,3 +135,69 @@ body.dark-mode .btn-cerrar-sesion:hover {
   margin-bottom: 10px;
   border: 1px solid #ffeeba;
 }
+/* --- existente --- (tus estilos actuales) */
+
+/* ====== NUEVO: Responsivo base ====== */
+.cuenta-container {
+  width: 90%;
+  max-width: 960px; /* un poco más ancho en desktop */
+}
+
+/* Botonera: mejor wrap en móviles */
+.botones-accion {
+  gap: 12px;
+}
+
+/* Botones: que ocupen ancho completo en pantallas pequeñas */
+@media (max-width: 640px) {
+  .btn-metodo-pago,
+  .btn-cerrar-sesion {
+    width: 100%;
+  }
+}
+
+/* Contenido: padding y tipografías más cómodas según viewport */
+@media (max-width: 768px) {
+  .cuenta-container {
+    margin: 1.5rem auto;
+    padding: 1.25rem;
+  }
+
+  .cuenta-container h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .cuenta-dato {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 14px;
+  }
+
+  .cuenta-dato input,
+  .cuenta-dato select {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+/* Micro-ajustes para pantallas muy pequeñas */
+@media (max-width: 400px) {
+  .cuenta-container {
+    padding: 1rem;
+  }
+
+  .cuenta-container h2 {
+    font-size: 1.35rem;
+  }
+
+  .btn-metodo-pago,
+  .btn-cerrar-sesion {
+    font-size: 0.95rem;
+    padding: 10px 14px;
+  }
+}
+
+/* MODO OSCURO: no cambiamos estructura, solo respetamos tu paleta */
+/* (se mantienen tus reglas dark-mode existentes) */
