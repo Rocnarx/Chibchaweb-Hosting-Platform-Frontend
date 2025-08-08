@@ -170,7 +170,7 @@ export default function Comisiones() {
                         setTempValor(plan.dominios);
                       }}
                     >
-                      Menos de <strong>{plan.dominios}</strong>
+                      Más de <strong>{plan.dominios}</strong>
                     </span>
                   )}
                 </div>
