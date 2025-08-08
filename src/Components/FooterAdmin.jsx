@@ -59,6 +59,16 @@ function FooterAdmin() {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/vista-soporte-admin" className="nav-link-admin">
+              <FontAwesomeIcon icon={faHeadset} /> Soporte
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/estadisticas" className="nav-link-admin">
+              <FontAwesomeIcon icon={faChartLine} /> Estadísticas
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/perfil" className="nav-link-admin">
               <FontAwesomeIcon icon={faUser} /> Perfil
             </NavLink>
