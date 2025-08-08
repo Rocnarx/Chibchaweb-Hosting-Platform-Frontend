@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './Context/UserContext';
 import { ExtensionProvider } from "./Context/ExtensionContext";
 import { AlertaProvider } from "./Context/AlertaContext"; 
+import { StatsProvider } from "./Context/StatsContext"; 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -12,7 +13,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <UserProvider>
         <ExtensionProvider>
           <AlertaProvider>
-            <App />
+            <StatsProvider>
+              <App />
+            </StatsProvider>
           </AlertaProvider>
         </ExtensionProvider>
       </UserProvider>

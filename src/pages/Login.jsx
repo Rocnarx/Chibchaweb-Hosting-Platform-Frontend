@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext";
 import { BiArrowBack } from "react-icons/bi"; 
 import { useEffect } from "react";
+import { useStats } from "../Context/StatsContext";
 
 export default function Login() {
   const [form, setForm] = useState({ usuario: "", password: "" });
@@ -12,6 +13,8 @@ export default function Login() {
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
   const { setUsuario } = useUser();
+  const { preload } = useStats(); 
+
 
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario");
@@ -24,6 +27,7 @@ export default function Login() {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
+  
 
   const manejarSubmit = async (e) => {
     e.preventDefault();
@@ -67,7 +71,13 @@ export default function Login() {
       const verificacionJson = await verificacionRes.json();
       const verificado = verificacionJson.verificado === true;
 
-      setUsuario({ ...datos, verificado });
+      const usuarioFinal = { ...datos, verificado };
+      setUsuario(usuarioFinal);
+
+      // ✅ Prefetch solo si es ADMIN
+      if (usuarioFinal.tipocuenta?.toUpperCase() === "ADMIN") {
+        preload().catch(() => {});
+      }
 
       if (verificado) {
         setMensaje("✅ ¡Bienvenido!");

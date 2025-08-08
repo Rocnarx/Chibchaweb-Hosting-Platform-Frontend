@@ -15,6 +15,7 @@ import Cuenta from "./pages/Cuenta";
 import Tarjeta from "./pages/Tarjeta";
 import MetodosPago from "./pages/MetodosPago";
 import PaqueteAdquirido from "./pages/PaqueteAdquirido";
+import Estadisticas from "./pages/Estadisticas";
 
 
 // Componentes compartidos
@@ -95,6 +96,7 @@ function App() {
           <Route path="/vista-soporte-empleado" element={<VistaSoporteEmpleado />} />
           <Route path="/vista-soporte-admin" element={<VistaSoporteAdmin />} />
           <Route path="/contacto" element={<Contacto />} />
+          <Route path="/estadisticas" element={<Estadisticas />} />
 
 
           {/* Rutas protegidas comunes */}
