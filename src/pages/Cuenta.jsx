@@ -11,6 +11,7 @@ export default function Cuenta() {
   const [modoEdicion, setModoEdicion] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [formData, setFormData] = useState({});
+  const [descuento, setDescuento] = useState(null); // ✅ Nuevo estado para descuentos
 
   const paises = {
     76: "BRASIL",
@@ -44,6 +45,21 @@ export default function Cuenta() {
       IDPAIS: obtenerCodigoDePais(usuario.pais),
     };
     setFormData(datosIniciales);
+
+    // ✅ Si es distribuidor, obtener descuentos
+    if (usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR") {
+      fetch(`${import.meta.env.VITE_API_URL}/reporte/admin/comisiones-distribuidores?idcuenta=${usuario.idcuenta}`, {
+        headers: {
+          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // Ajusta según la estructura que devuelva tu API
+          setDescuento(data.descuento || data.comision || 0);
+        })
+        .catch((err) => console.error("Error obteniendo descuentos:", err));
+    }
   }, [usuario]);
 
   const cerrarSesion = () => {
@@ -109,7 +125,6 @@ export default function Cuenta() {
     }
   };
 
-  // ⚠️ Tipos de usuario que NO pueden ver métodos de pago
   const tiposRestringidos = [
     "COORDINADOR NIVEL 1",
     "COORDINADOR NIVEL 2",
@@ -129,26 +144,23 @@ export default function Cuenta() {
       <div className="cuenta-info">
         {modoEdicion ? (
           <>
+            {/* Campos de edición */}
             <div className="cuenta-dato">
               <strong>Nombre:</strong>
               <input name="NOMBRECUENTA" value={formData.NOMBRECUENTA} onChange={handleInputChange} />
             </div>
-
             <div className="cuenta-dato">
               <strong>Correo:</strong>
               <input name="CORREO" value={formData.CORREO} onChange={handleInputChange} />
             </div>
-
             <div className="cuenta-dato">
               <strong>Teléfono:</strong>
               <input name="TELEFONO" value={formData.TELEFONO} onChange={handleInputChange} />
             </div>
-
             <div className="cuenta-dato">
               <strong>Dirección:</strong>
               <input name="DIRECCION" value={formData.DIRECCION} onChange={handleInputChange} />
             </div>
-
             <div className="cuenta-dato">
               <strong>País:</strong>
               <select name="IDPAIS" value={formData.IDPAIS} onChange={handleInputChange}>
@@ -160,12 +172,21 @@ export default function Cuenta() {
           </>
         ) : (
           <>
+            {/* Vista normal */}
             <div className="cuenta-dato"><strong>Nombre:</strong> <span>{usuario.nombrecuenta}</span></div>
             <div className="cuenta-dato"><strong>CC:</strong> <span>{usuario.identificacion}</span></div>
             <div className="cuenta-dato"><strong>Correo:</strong> <span>{usuario.correo}</span></div>
             <div className="cuenta-dato"><strong>Teléfono:</strong> <span>{usuario.telefono || "No registrado"}</span></div>
             <div className="cuenta-dato"><strong>Dirección:</strong> <span>{usuario.direccion || "No registrada"}</span></div>
             <div className="cuenta-dato"><strong>País:</strong> <span>{paises[usuario.pais] || usuario.pais}</span></div>
+
+            {/* ✅ Mostrar descuentos solo si es distribuidor */}
+            {usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR" && (
+              <div className="cuenta-dato">
+                <strong>Descuentos aplicados:</strong> 
+                <span>{descuento !== null ? `${descuento}%` : "Cargando..."}</span>
+              </div>
+            )}
           </>
         )}
       </div>
@@ -181,14 +202,12 @@ export default function Cuenta() {
         ) : (
           <>
             <button className="btn-metodo-pago" onClick={() => setModoEdicion(true)}>Editar perfil</button>
-
             {puedeVerMetodosPago && (
               <>
                 <button className="btn-metodo-pago" onClick={() => navigate("/Tarjeta")}>Agregar método de pago</button>
                 <button className="btn-metodo-pago" onClick={() => navigate("/metodos")}>Mis métodos</button>
               </>
             )}
-
             <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
               <FiLogOut style={{ marginRight: "8px" }} />
               Cerrar sesión
