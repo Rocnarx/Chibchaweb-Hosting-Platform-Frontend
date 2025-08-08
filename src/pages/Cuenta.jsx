@@ -11,7 +11,11 @@ export default function Cuenta() {
   const [modoEdicion, setModoEdicion] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [formData, setFormData] = useState({});
-  const [descuento, setDescuento] = useState(null); // ✅ Nuevo estado para descuentos
+  const [descuento, setDescuento] = useState(null);
+  const [mostrarDialogo, setMostrarDialogo] = useState(false);
+  const [contrasenaActual, setContrasenaActual] = useState("");
+  const [contrasenaNueva, setContrasenaNueva] = useState("");
+  const [cambiandoContrasena, setCambiandoContrasena] = useState(false);
 
   const paises = {
     76: "BRASIL",
@@ -46,7 +50,6 @@ export default function Cuenta() {
     };
     setFormData(datosIniciales);
 
-    // ✅ Si es distribuidor, obtener descuentos
     if (usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR") {
       fetch(`${import.meta.env.VITE_API_URL}/reporte/admin/comisiones-distribuidores?idcuenta=${usuario.idcuenta}`, {
         headers: {
@@ -55,7 +58,6 @@ export default function Cuenta() {
       })
         .then((res) => res.json())
         .then((data) => {
-          // Ajusta según la estructura que devuelva tu API
           setDescuento(data.descuento || data.comision || 0);
         })
         .catch((err) => console.error("Error obteniendo descuentos:", err));
@@ -125,6 +127,45 @@ export default function Cuenta() {
     }
   };
 
+const cambiarContrasena = async () => {
+  if (!contrasenaActual || !contrasenaNueva) {
+    alert("Por favor llena ambos campos.");
+    return;
+  }
+
+  setCambiandoContrasena(true);
+
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/cambiar-contrasena`, {
+      method: "POST", // <-- cambia esto de PUT a POST
+      headers: {
+        "Content-Type": "application/json",
+        "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+      },
+      body: JSON.stringify({
+        idcuenta: usuario.idcuenta,
+        contrasena_actual: contrasenaActual,
+        contrasena_nueva: contrasenaNueva,
+      }),
+    });
+
+    if (!res.ok) throw new Error("No se pudo actualizar la contraseña.");
+
+    alert("Contraseña actualizada correctamente.");
+    setMostrarDialogo(false);
+    setContrasenaActual("");
+    setContrasenaNueva("");
+  } catch (error) {
+    console.error("❌ Error al cambiar contraseña:", error);
+    alert("Error al actualizar la contraseña.");
+  } finally {
+    setCambiandoContrasena(false);
+  }
+};
+
+
+
+
   const tiposRestringidos = [
     "COORDINADOR NIVEL 1",
     "COORDINADOR NIVEL 2",
@@ -144,7 +185,6 @@ export default function Cuenta() {
       <div className="cuenta-info">
         {modoEdicion ? (
           <>
-            {/* Campos de edición */}
             <div className="cuenta-dato">
               <strong>Nombre:</strong>
               <input name="NOMBRECUENTA" value={formData.NOMBRECUENTA} onChange={handleInputChange} />
@@ -172,18 +212,15 @@ export default function Cuenta() {
           </>
         ) : (
           <>
-            {/* Vista normal */}
             <div className="cuenta-dato"><strong>Nombre:</strong> <span>{usuario.nombrecuenta}</span></div>
             <div className="cuenta-dato"><strong>CC:</strong> <span>{usuario.identificacion}</span></div>
             <div className="cuenta-dato"><strong>Correo:</strong> <span>{usuario.correo}</span></div>
             <div className="cuenta-dato"><strong>Teléfono:</strong> <span>{usuario.telefono || "No registrado"}</span></div>
             <div className="cuenta-dato"><strong>Dirección:</strong> <span>{usuario.direccion || "No registrada"}</span></div>
             <div className="cuenta-dato"><strong>País:</strong> <span>{paises[usuario.pais] || usuario.pais}</span></div>
-
-            {/* ✅ Mostrar descuentos solo si es distribuidor */}
             {usuario.tipocuenta?.toUpperCase() === "DISTRIBUIDOR" && (
               <div className="cuenta-dato">
-                <strong>Descuentos aplicados:</strong> 
+                <strong>Descuentos aplicados:</strong>
                 <span>{descuento !== null ? `${descuento}%` : "Cargando..."}</span>
               </div>
             )}
@@ -202,6 +239,7 @@ export default function Cuenta() {
         ) : (
           <>
             <button className="btn-metodo-pago" onClick={() => setModoEdicion(true)}>Editar perfil</button>
+            <button className="btn-metodo-pago" onClick={() => setMostrarDialogo(true)}>Actualizar contraseña</button>
             {puedeVerMetodosPago && (
               <>
                 <button className="btn-metodo-pago" onClick={() => navigate("/Tarjeta")}>Agregar método de pago</button>
@@ -215,6 +253,33 @@ export default function Cuenta() {
           </>
         )}
       </div>
+
+      {mostrarDialogo && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Actualizar contraseña</h3>
+            <input
+              type="password"
+              placeholder="Contraseña actual"
+              value={contrasenaActual}
+              onChange={(e) => setContrasenaActual(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Nueva contraseña"
+              value={contrasenaNueva}
+              onChange={(e) => setContrasenaNueva(e.target.value)}
+            />
+            <div className="modal-buttons">
+              <button onClick={cambiarContrasena} disabled={cambiandoContrasena}>
+                {cambiandoContrasena ? "Actualizando..." : "Actualizar"}
+              </button>
+              <button onClick={() => setMostrarDialogo(false)}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+  

@@ -1,5 +1,5 @@
 /* === Contenedor Principal === */
-.cliente-detalle-container {
+.empleado-detalle-container {
   max-width: 1000px;
   margin: 40px auto;
   padding: 40px;
@@ -21,22 +21,22 @@ h2 {
 }
 
 /* Formulario */
-.cliente-form {
+.empleado-form {
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr;
 }
 @media (min-width: 600px) {
-  .cliente-form {
+  .empleado-form {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (min-width: 900px) {
-  .cliente-form {
+  .empleado-form {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-.cliente-form label {
+.empleado-form label {
   font-weight: 600;
   font-size: 0.95rem;
   color: #444;
@@ -44,8 +44,8 @@ h2 {
   flex-direction: column;
 }
 
-.cliente-form input,
-.cliente-form select {
+.empleado-form input,
+.empleado-form select {
   margin-top: 8px;
   padding: 12px 16px;
   font-size: 1rem;
@@ -55,14 +55,14 @@ h2 {
   transition: all 0.3s ease;
 }
 
-.cliente-form input:focus,
-.cliente-form select:focus {
+.empleado-form input:focus,
+.empleado-form select:focus {
   border-color: #8a5a2d;
   box-shadow: 0 0 0 2px rgba(138, 90, 45, 0.25);
   outline: none;
 }
 
-.cliente-form select:disabled {
+.empleado-form select:disabled {
   background-color: #f0f0f0;
   color: #888;
 }
@@ -149,14 +149,13 @@ h2 {
   color: #8a5a2d;
 }
 
+/* Botón cancelar alineado */
 .cancelar-derecha {
-  margin-left: auto;
+  margin-left: 80%;
 }
 
-
-
 /* === MODO OSCURO === */
-body.dark-mode .cliente-detalle-container {
+body.dark-mode .empleado-detalle-container {
   background-color: #1f1f1f;
   color: #eaeaea;
   box-shadow: 0 12px 30px rgba(255, 255, 255, 0.05);
@@ -166,19 +165,19 @@ body.dark-mode h2 {
   color: #f1c07d;
 }
 
-body.dark-mode .cliente-form label {
+body.dark-mode .empleado-form label {
   color: #dddddd;
 }
 
-body.dark-mode .cliente-form input,
-body.dark-mode .cliente-form select {
+body.dark-mode .empleado-form input,
+body.dark-mode .empleado-form select {
   background-color: #2a2a2a;
   border-color: #555;
   color: #f0f0f0;
 }
 
-body.dark-mode .cliente-form input:focus,
-body.dark-mode .cliente-form select:focus {
+body.dark-mode .empleado-form input:focus,
+body.dark-mode .empleado-form select:focus {
   border-color: #f1c07d;
   box-shadow: 0 0 0 2px rgba(241, 192, 125, 0.3);
 }
@@ -251,8 +250,7 @@ body.dark-mode .cargando {
     opacity: 0;
     transform: translateY(-10px);
   }
-  10%,
-  90% {
+  10%, 90% {
     opacity: 1;
     transform: translateY(0);
   }
@@ -261,7 +259,9 @@ body.dark-mode .cargando {
     transform: translateY(-10px);
   }
 }
-  .tarjeta-overlay {
+
+/* Tarjeta modal */
+.tarjeta-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -303,7 +303,6 @@ body.dark-mode .cargando {
   background-color: #704720;
 }
 
-/* Modo oscuro */
 body.dark-mode .tarjeta-modal {
   background-color: #2a2a2a;
   color: #fff;
@@ -314,9 +313,4 @@ body.dark-mode .tarjeta-modal button {
 }
 body.dark-mode .tarjeta-modal button:hover {
   background-color: #d9a860;
-}
-.grupo-edicion {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
 }

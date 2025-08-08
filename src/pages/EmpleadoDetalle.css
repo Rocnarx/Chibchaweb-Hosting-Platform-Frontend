@@ -1,138 +1,80 @@
-.empleado-detalle-container {
-  max-width: 750px;
+.cliente-detalle-container {
+  max-width: 1000px;
   margin: 40px auto;
   padding: 40px;
-  background-color: #fff7f0;
-  border: 1px solid #e6cbb2;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(107, 59, 0, 0.1);
-  font-family: 'Segoe UI', sans-serif;
-  color: #3e2a16;
-  position: relative;
+  background: #fdfaf6;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  color: #333;
 }
 
-.empleado-detalle-container h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
+.titulo-seccion {
+  font-size: 1.8rem;
   margin-bottom: 30px;
-  color: #4a2e00;
+  text-align: center;
+  color: #6b3b00;
 }
 
-.detalle-box {
-  padding: 10px 0;
+.grupo-campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
 }
 
-.detalle-box p {
-  font-size: 1rem;
-  margin: 12px 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e5d6c2;
-  color: #5c3b22;
-}
-
-.detalle-box strong {
-  font-weight: 600;
-  color: #4a2e00;
-}
-
-/* Botón volver */
-.btn-volver {
-  background-color: #6b3b00;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 50px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-.btn-volver:hover {
-  background-color: #522500;
-}
-
-/* Botón despedir */
-.btn-despedir {
-  background-color: #e53935;
-  color: white;
-  padding: 12px 28px;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-top: 30px;
+.campo label {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, box-shadow 0.2s ease;
-}
-
-.btn-despedir:hover {
-  background-color: #c53030;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-/* Mensajes */
-.mensaje {
-  color: #22a35e;
-  font-weight: 600;
-  text-align: center;
-  margin-top: 20px;
-}
-
-.error {
-  color: #d32f2f;
   font-weight: bold;
-  text-align: center;
-  margin-top: 20px;
+  margin-bottom: 6px;
+  color: #6b3b00;
 }
 
-/* ========== MODO OSCURO ========== */
-body.dark-mode .empleado-detalle-container {
-  background-color: #2c2c2c;
-  color: #f1f1f1;
-  border: 1px solid #555;
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.05);
+.campo p,
+.campo input {
+  font-size: 1rem;
+  padding: 8px;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-body.dark-mode .empleado-detalle-container h2 {
-  color: #FFA94D;
+.campo input {
+  border: 1px solid #ccc;
+  background-color: #fffaf3;
 }
 
-body.dark-mode .detalle-box p {
-  color: #ddd;
-  border-bottom: 1px solid #444;
+.grupo-edicion {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+  gap: 1rem;
 }
 
-body.dark-mode .detalle-box strong {
-  color: #FFA94D;
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-body.dark-mode .btn-volver {
-  background-color: #FFA94D;
-  color: #000000;
-}
-body.dark-mode .btn-volver:hover {
-  background-color: #e38b31;
+.btn-guardar {
+  background-color: #6b3b00;
+  color: #fff7f0;
 }
 
-body.dark-mode .btn-despedir {
-  background-color: #ff4d4f;
-}
-body.dark-mode .btn-despedir:hover {
-  background-color: #ff3333;
+.btn-volver {
+  background-color: #e0e0e0;
+  color: #333;
 }
 
-body.dark-mode .mensaje {
-  color: #34d399;
+.btn:hover {
+  opacity: 0.9;
 }
 
-body.dark-mode .error {
-  color: #ff7070;
+.cancelar-derecha {
+  margin-left: auto;
 }

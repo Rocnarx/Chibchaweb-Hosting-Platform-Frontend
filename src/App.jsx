@@ -42,7 +42,7 @@ import EmpleadoDetalle from "./pages/EmpleadoDetalle";
 import CoordinadoresAdmin from "./pages/CoordinadoresAdmin";
 import VistaSoporteAdmin from "./pages/VistaSoporteAdmin";
 import Contacto from "./pages/Contacto";
-
+import DetalleEmpleado from './pages/EmpleadoDetalle';
 // Componentes para coordinadores
 import NavbarCoordinador from "./Components/NavbarCoordinador";
 import FooterCoordinador from "./Components/FooterCoordinador";
@@ -115,7 +115,8 @@ function App() {
           {esAdmin && <Route path="/EmpleadosAdmin" element={<EmpleadosAdmin />} />}
           {esAdmin && <Route path="/CoordinadoresAdmin" element={<CoordinadoresAdmin />} />}
           {esAdmin && <Route path="/postulado/:correo" element={<PostuladoDetalle />} />}
-          {esAdmin && <Route path="/empleados/:correo" element={<EmpleadoDetalle />} />}
+          {esAdmin && <Route path="/empleado/:correo" element={<EmpleadoDetalle />} />}
+
 
           {/* Rutas exclusivas para coordinadores */}
           {esCoordinador && <Route path="/tickets" element={<TicketsCoordinador />} />}
