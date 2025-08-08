@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "./AsignarTickets.css";
 import { useUser } from "../Context/UserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTag,
+  faUser,
+  faLayerGroup,
+  faEnvelope,
+  faCircleCheck,
+  faArrowUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function AsignarTickets() {
   const [tickets, setTickets] = useState([]);
@@ -31,9 +40,6 @@ export default function AsignarTickets() {
         if (usuario?.tipocuenta === "COORDINADOR NIVEL 1") nivelPermitido = 1;
         else if (usuario?.tipocuenta === "COORDINADOR NIVEL 2") nivelPermitido = 2;
         else if (usuario?.tipocuenta === "COORDINADOR NIVEL 3") nivelPermitido = 3;
-
-        console.log("Tipo de cuenta:", usuario?.tipocuenta);
-        console.log("Nivel permitido:", nivelPermitido);
 
         const filtrados = nivelPermitido
           ? data.filter(ticket => ticket.nivel === nivelPermitido)
@@ -112,60 +118,58 @@ export default function AsignarTickets() {
     }
   };
 
-const asignarTicket = async () => {
-  if (!ticketSeleccionado?.id_ticket || !empleadoIDCuenta) {
-    alert("Faltan datos para asignar el ticket.");
-    return;
-  }
-
-  setAsignando(true);
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/asignarTicket/${ticketSeleccionado.id_ticket}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-        body: JSON.stringify({ IDEMPLEADO: empleadoIDCuenta }),
-      }
-    );
-
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData?.detail || "Error al asignar el ticket.");
+  const asignarTicket = async () => {
+    if (!ticketSeleccionado?.id_ticket || !empleadoIDCuenta) {
+      alert("Faltan datos para asignar el ticket.");
+      return;
     }
 
-    const cambioEstado = await fetch(
-      `${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketSeleccionado.id_ticket}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Chibcha-api-key": import.meta.env.VITE_API_KEY,
-        },
-        body: JSON.stringify({ estado: 1 }),
+    setAsignando(true);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/asignarTicket/${ticketSeleccionado.id_ticket}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          },
+          body: JSON.stringify({ IDEMPLEADO: empleadoIDCuenta }),
+        }
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData?.detail || "Error al asignar el ticket.");
       }
-    );
 
-    if (!cambioEstado.ok) {
-      const errorData = await cambioEstado.json();
-      throw new Error(errorData?.detail || "Error al cambiar el estado del ticket.");
+      const cambioEstado = await fetch(
+        `${import.meta.env.VITE_API_URL}/CambiarEstadoTicket/${ticketSeleccionado.id_ticket}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Chibcha-api-key": import.meta.env.VITE_API_KEY,
+          },
+          body: JSON.stringify({ estado: 1 }),
+        }
+      );
+
+      if (!cambioEstado.ok) {
+        const errorData = await cambioEstado.json();
+        throw new Error(errorData?.detail || "Error al cambiar el estado del ticket.");
+      }
+
+      alert(`Ticket asignado exitosamente a: ${correoSeleccionado}`);
+      setTickets(tickets.filter(t => t.id_ticket !== ticketSeleccionado.id_ticket));
+      cerrarModal();
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Error al asignar el ticket: " + err.message);
+    } finally {
+      setAsignando(false);
     }
-
-    alert(`Ticket asignado exitosamente a: ${correoSeleccionado}`);
-
-    setTickets(tickets.filter(t => t.id_ticket !== ticketSeleccionado.id_ticket));
-    cerrarModal();
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Error al asignar el ticket: " + err.message);
-  } finally {
-    setAsignando(false);
-  }
-};
-
+  };
 
   const escalarTicket = async (idTicket, nivelActual) => {
     const nuevoNivel = nivelActual + 1;
@@ -199,22 +203,44 @@ const asignarTicket = async () => {
     <div className="asignar-tickets-container">
       <h2>Asignar Tickets</h2>
       {error && <p className="error">{error}</p>}
+
       <div className="ticket-list">
         {tickets.map((ticket) => (
           <div key={ticket.id_ticket} className="ticket-card">
-            <h3>{ticket.asunto || "Sin asunto"}</h3>
-            <p><strong>Descripción:</strong> {ticket.descripcion}</p>
-            <p><strong>Nivel:</strong> {ticket.nivel}</p>
-            <p><strong>Cliente:</strong> {ticket.cliente?.nombre}</p>
-            <button onClick={() => abrirAsignacion(ticket)}>Asignar</button>
-            {(ticket.nivel === 1 || ticket.nivel === 2) && (
-              <button
-                className="escalar-btn"
-                onClick={() => escalarTicket(ticket.id_ticket, ticket.nivel)}
-              >
-                Escalar
+            <div className="ticket-header">
+              <h3>
+                <FontAwesomeIcon icon={faTag} /> {ticket.asunto || "Sin asunto"}
+              </h3>
+            </div>
+
+            <div className="ticket-info">
+              <p>
+                <strong><FontAwesomeIcon icon={faEnvelope} /> Descripción:</strong>{" "}
+                {ticket.descripcion}
+              </p>
+              <p>
+                <strong><FontAwesomeIcon icon={faLayerGroup} /> Nivel:</strong>{" "}
+                {ticket.nivel}
+              </p>
+              <p>
+                <strong><FontAwesomeIcon icon={faUser} /> Cliente:</strong>{" "}
+                {ticket.cliente?.nombre}
+              </p>
+            </div>
+
+            <div className="ticket-actions">
+              <button onClick={() => abrirAsignacion(ticket)}>
+                <FontAwesomeIcon icon={faCircleCheck} /> Asignar
               </button>
-            )}
+              {(ticket.nivel === 1 || ticket.nivel === 2) && (
+                <button
+                  className="escalar-btn"
+                  onClick={() => escalarTicket(ticket.id_ticket, ticket.nivel)}
+                >
+                  <FontAwesomeIcon icon={faArrowUp} /> Escalar
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -223,7 +249,7 @@ const asignarTicket = async () => {
         <div className="modal">
           <div className="modal-content">
             <span className="cerrar" onClick={cerrarModal}>&times;</span>
-            <h3>Asignar Ticket:</h3>
+            <h3><FontAwesomeIcon icon={faCircleCheck} /> Asignar Ticket:</h3>
             <p><strong>Descripción:</strong> {ticketSeleccionado.descripcion}</p>
             <p><strong>Nivel:</strong> {ticketSeleccionado.nivel}</p>
 
