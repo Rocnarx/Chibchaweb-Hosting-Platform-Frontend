@@ -133,7 +133,7 @@ export default function Tarjeta() {
       case "Visa":
         return "/visa.png";
       case "Mastercard":
-        return "/mastercard.png";
+        return "/Mastercard.png";
       case "American Express":
         return "/amex.png";
       case "Discover":
@@ -155,7 +155,7 @@ export default function Tarjeta() {
             ) : (
               <>
                 <img src="/visa.png" alt="Visa" />
-                <img src="/mastercard.png" alt="MasterCard" />
+                <img src="/Mastercard.png" alt="MasterCard" />
                 <img src="/diner.png" alt="Diners" />
               </>
             )}
@@ -194,10 +194,14 @@ export default function Tarjeta() {
               type="text"
               name="cvc"
               maxLength={4}
+              inputMode="numeric"
+              pattern="\d*"
               placeholder="123"
               value={form.cvc}
-              onChange={manejarCambio}
-              required
+              onChange={(e) => {
+              const soloNumeros = e.target.value.replace(/\D/g, ""); // elimina todo lo que no sea dígito
+              setForm({ ...form, cvc: soloNumeros });
+            }}
             />
           </div>
         </div>
